@@ -1,11 +1,11 @@
 {
-  "version": "1.0.2",
-  "tag": "v1.0.2",
+  "version": "1.0.3",
+  "tag": "v1.0.3",
   "date": "2026-04-26",
-  "notes": "v1.0.2\n\nAdded:\n- One-click installer exe (no PowerShell needed)\n- Firebase Firestore license validation\n- Silent logging (logs to file, clean terminal)\n- Discord activation key instructions\n\nChanged:\n- License validation via Firebase (no more admin server/tunnel)\n- Install folder: xixero1445\n- Download: single installer exe instead of raw binary\n\nRemoved:\n- Admin server dependency (port 7861)\n- Cloudflare tunnel requirement\n- BoltDB local database",
+  "notes": "v1.0.3\n\nAdded:\n- New CLI: xixero license <KEY>, xixero stop, xixero status\n- Running 'xixero' without subcommand starts the server\n- Firebase Firestore license validation\n- One-click installer exe (no terminal needed)\n- API token auto-injected into web UI\n- Silent logging (clean terminal)\n\nChanged:\n- License activation via terminal only\n- Web UI opens directly to dashboard (no login page)\n- Server blocked without valid license\n- Discord @xixero1445 for license keys\n\nRemoved:\n- Auth/login page from web UI\n- Admin server (port 7861)\n- Cloudflare tunnel\n- BoltDB dependency",
   "installer": {
     "file": "xixero-setup.exe",
     "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-    "size": 5636096
+    "size": 5373952
   }
 }

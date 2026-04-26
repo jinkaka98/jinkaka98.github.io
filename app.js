@@ -86,7 +86,8 @@ function escapeHtml(str) {
 
 // --- Copy Code ---
 function copyCode(btn) {
-  const code = btn.closest('.code-block').querySelector('code')
+  const parent = btn.closest('.code-block') || btn.closest('.install-box__cmd') || btn.parentElement
+  const code = parent.querySelector('code')
   navigator.clipboard.writeText(code.textContent).then(() => {
     const orig = btn.textContent
     btn.textContent = 'Copied!'
