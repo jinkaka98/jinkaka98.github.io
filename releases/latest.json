@@ -1,18 +1,18 @@
 {
-  "version": "1.0.0",
-  "tag": "v1.0.0",
+  "version": "1.0.1",
+  "tag": "v1.0.1",
   "date": "2026-04-26",
-  "notes": "Initial release of Xixero - Local AI Gateway.\n\nFeatures:\n- Multi-provider AI proxy (OpenAI, enowX, Trae)\n- OpenAI-compatible API endpoint\n- Streaming support (SSE)\n- Priority-based routing rules\n- License management system\n- Web UI dashboard\n- Auto-update support\n- AES-256-GCM encrypted API keys",
+  "notes": "v1.0.1 - Auto-open browser, serve UI from GitHub Pages, install folder renamed to xixero1445",
   "binaries": {
     "windows-amd64": {
       "file": "xixero-windows-amd64.exe",
       "url": "https://jinkaka98.github.io/releases/xixero-windows-amd64.exe",
-      "size": 8225280
+      "size": 8228864
     },
     "linux-amd64": {
       "file": "xixero-linux-amd64",
       "url": "https://jinkaka98.github.io/releases/xixero-linux-amd64",
-      "size": 7884962
+      "size": 7889058
     },
     "linux-arm64": {
       "file": "xixero-linux-arm64",
@@ -22,12 +22,12 @@
     "darwin-amd64": {
       "file": "xixero-darwin-amd64",
       "url": "https://jinkaka98.github.io/releases/xixero-darwin-amd64",
-      "size": 8025456
+      "size": 8029584
     },
     "darwin-arm64": {
       "file": "xixero-darwin-arm64",
       "url": "https://jinkaka98.github.io/releases/xixero-darwin-arm64",
-      "size": 7460306
+      "size": 7476850
     }
   }
 }

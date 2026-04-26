@@ -1,64 +1,38 @@
-# ═══════════════════════════════════════════════════════
-#  Xixero Installer for Windows
-#  https://jinkaka98.github.io
-#
-#  No Go, Python, or Node.js required.
-#  Downloads pre-built binary from jinkaka98.github.io
-# ═══════════════════════════════════════════════════════
-
 $baseUrl = "https://jinkaka98.github.io/releases"
-$installDir = "$env:LOCALAPPDATA\xixero"
+$installDir = "$env:LOCALAPPDATA\xixero1445"
 $exePath = "$installDir\xixero.exe"
 
-function Write-Step($num, $total, $msg) {
-    Write-Host "[$num/$total] " -NoNewline -ForegroundColor DarkYellow
-    Write-Host $msg -ForegroundColor Yellow
-}
-function Write-OK($msg)   { Write-Host "       $msg" -ForegroundColor Green }
-function Write-Info($msg)  { Write-Host "       $msg" -ForegroundColor DarkGray }
-function Write-Err($msg)  { Write-Host "  ERROR: $msg" -ForegroundColor Red }
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-# ─── Header ───
 Write-Host ""
-Write-Host "  ╔═══════════════════════════════════╗" -ForegroundColor DarkYellow
-Write-Host "  ║                                   ║" -ForegroundColor DarkYellow
-Write-Host "  ║      XIXERO INSTALLER             ║" -ForegroundColor DarkYellow
-Write-Host "  ║      Local AI Gateway             ║" -ForegroundColor DarkYellow
-Write-Host "  ║                                   ║" -ForegroundColor DarkYellow
-Write-Host "  ╚═══════════════════════════════════╝" -ForegroundColor DarkYellow
+Write-Host "  =====================================" -ForegroundColor DarkYellow
+Write-Host "       XIXERO INSTALLER" -ForegroundColor DarkYellow
+Write-Host "       Local AI Gateway" -ForegroundColor DarkYellow
+Write-Host "  =====================================" -ForegroundColor DarkYellow
 Write-Host ""
 
-# ─── Step 1: System Check ───
-Write-Step 1 5 "Checking system requirements..."
+# --- Step 1: System Check ---
+Write-Host "[1/5] Checking system..." -ForegroundColor Yellow
 
 if ($env:OS -ne "Windows_NT") {
-    Write-Err "Windows only. For Linux/macOS download from jinkaka98.github.io"
-    exit 1
+    Write-Host "  ERROR: Windows only." -ForegroundColor Red; exit 1
 }
-Write-Info "Windows OK"
 
-$psVer = $PSVersionTable.PSVersion
-if ($psVer.Major -lt 5) {
-    Write-Err "PowerShell 5+ required (you have $($psVer.Major))"
-    exit 1
+$psv = $PSVersionTable.PSVersion
+if ($psv.Major -lt 5) {
+    Write-Host "  ERROR: PowerShell 5+ required." -ForegroundColor Red; exit 1
 }
-Write-Info "PowerShell $($psVer.Major).$($psVer.Minor)"
-
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Write-Info "TLS 1.2"
 
 try {
-    $null = Invoke-WebRequest -Uri "https://jinkaka98.github.io" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
-    Write-Info "Internet OK"
+    $null = Invoke-WebRequest "https://jinkaka98.github.io" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
 } catch {
-    Write-Err "Cannot reach jinkaka98.github.io - check internet"
-    exit 1
+    Write-Host "  ERROR: No internet." -ForegroundColor Red; exit 1
 }
 
-Write-OK "All checks passed"
+Write-Host "       OK (PS $($psv.Major).$($psv.Minor), TLS 1.2, Internet)" -ForegroundColor Green
 
-# ─── Step 2: Check Version ───
-Write-Step 2 5 "Checking latest version..."
+# --- Step 2: Check Version ---
+Write-Host "[2/5] Checking latest version..." -ForegroundColor Yellow
 
 $version = $null
 $downloadUrl = $null
@@ -68,170 +42,139 @@ try {
     $version = $latest.version
     $downloadUrl = $latest.binaries.'windows-amd64'.url
     $fileSize = $latest.binaries.'windows-amd64'.size
-
-    Write-OK "Latest: v$version"
-    if ($fileSize) {
-        Write-Info "Size: $([math]::Round($fileSize / 1MB, 1))MB"
-    }
+    $sizeMB = [math]::Round($fileSize / 1MB, 1)
+    Write-Host "       v$version ($sizeMB MB)" -ForegroundColor Green
 } catch {
-    Write-Info "No release metadata found"
-    # Fallback: try direct binary URL
     $downloadUrl = "$baseUrl/xixero-windows-amd64.exe"
-    Write-Info "Trying direct download..."
+    Write-Host "       Trying direct download..." -ForegroundColor DarkGray
 }
 
-# Check existing
 if (Test-Path $exePath) {
     try {
-        $currentVer = (& $exePath version 2>&1) -join " "
-        Write-Info "Installed: $currentVer"
+        $cur = (& $exePath version 2>&1) -join " "
+        Write-Host "       Installed: $cur" -ForegroundColor DarkGray
     } catch {}
 }
 
-# ─── Step 3: Download ───
-Write-Step 3 5 "Downloading Xixero..."
+# --- Step 3: Download ---
+Write-Host "[3/5] Downloading..." -ForegroundColor Yellow
 
 New-Item -ItemType Directory -Path $installDir -Force | Out-Null
 
 if ($downloadUrl) {
-    # Backup existing
     if (Test-Path $exePath) {
         Copy-Item $exePath "$exePath.bak" -Force -ErrorAction SilentlyContinue
-        Write-Info "Backed up existing binary"
     }
 
     try {
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest -Uri $downloadUrl -OutFile $exePath -UseBasicParsing -TimeoutSec 120 -ErrorAction Stop
         $ProgressPreference = 'Continue'
-
-        $dlSize = [math]::Round((Get-Item $exePath).Length / 1MB, 1)
-        Write-OK "Downloaded (${dlSize}MB)"
+        $dl = [math]::Round((Get-Item $exePath).Length / 1MB, 1)
+        Write-Host "       Downloaded ($dl MB)" -ForegroundColor Green
     } catch {
-        $errMsg = $_.Exception.Message
-        if ($errMsg -like "*404*") {
-            Write-Err "Binary not published yet"
-            Write-Host ""
-            Write-Host "  No release available. Ask admin for the binary." -ForegroundColor DarkYellow
-            Write-Host "  Place xixero.exe in: $installDir" -ForegroundColor DarkGray
-            Write-Host ""
+        $msg = $_.Exception.Message
+        if ($msg -like "*404*") {
+            Write-Host "  ERROR: Binary not available yet." -ForegroundColor Red
+            Write-Host "  Ask admin for the binary or try again later." -ForegroundColor DarkGray
         } else {
-            Write-Err "Download failed: $errMsg"
-            # Restore backup
+            Write-Host "  ERROR: $msg" -ForegroundColor Red
             if (Test-Path "$exePath.bak") {
                 Move-Item "$exePath.bak" $exePath -Force
-                Write-Info "Restored previous version"
+                Write-Host "       Restored previous version." -ForegroundColor DarkGray
             }
         }
     }
-} else {
-    Write-Err "No download URL available"
 }
 
-# ─── Step 4: PATH + Conflict Detection ───
-Write-Step 4 5 "Configuring PATH..."
+# --- Step 4: PATH ---
+Write-Host "[4/5] Configuring PATH..." -ForegroundColor Yellow
 
-# Check for conflicting "xixero" commands (old Python version, etc.)
+# Detect old xixero in PATH
 $conflicts = Get-Command xixero -All -ErrorAction SilentlyContinue | Where-Object {
     $_.Source -ne $exePath -and $_.Source -notlike "$installDir*"
 }
 
 if ($conflicts) {
     Write-Host ""
-    Write-Host "  ┌─ WARNING: Conflicting 'xixero' found ────────┐" -ForegroundColor Red
+    Write-Host "  WARNING: Old 'xixero' found:" -ForegroundColor Red
     foreach ($c in $conflicts) {
-        Write-Host "  │  $($c.Source)" -ForegroundColor Yellow
+        Write-Host "    $($c.Source)" -ForegroundColor Yellow
     }
-    Write-Host "  │                                                │" -ForegroundColor Red
-    Write-Host "  │  This old version will override the new one.   │" -ForegroundColor White
-    Write-Host "  │  Removing conflict from PATH...                │" -ForegroundColor White
-    Write-Host "  └────────────────────────────────────────────────┘" -ForegroundColor Red
-    Write-Host ""
+    Write-Host "  Fixing PATH priority..." -ForegroundColor White
 
-    # Remove conflicting paths from both User and Machine PATH
     foreach ($c in $conflicts) {
-        $conflictDir = Split-Path $c.Source -Parent
-
-        # Remove from User PATH
-        $uPath = [Environment]::GetEnvironmentVariable("Path", "User")
-        if ($uPath -like "*$conflictDir*") {
-            $newUPath = ($uPath -split ';' | Where-Object { $_ -ne $conflictDir }) -join ';'
-            [Environment]::SetEnvironmentVariable("Path", $newUPath, "User")
-            Write-Info "Removed from User PATH: $conflictDir"
+        $dir = Split-Path $c.Source -Parent
+        $uP = [Environment]::GetEnvironmentVariable("Path", "User")
+        if ($uP -like "*$dir*") {
+            $uP = ($uP -split ';' | Where-Object { $_ -ne $dir }) -join ';'
+            [Environment]::SetEnvironmentVariable("Path", $uP, "User")
+            Write-Host "    Removed from User PATH" -ForegroundColor DarkGray
         }
-
-        # Remove from Machine PATH (needs admin, try anyway)
-        $mPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-        if ($mPath -like "*$conflictDir*") {
+        $mP = [Environment]::GetEnvironmentVariable("Path", "Machine")
+        if ($mP -like "*$dir*") {
             try {
-                $newMPath = ($mPath -split ';' | Where-Object { $_ -ne $conflictDir }) -join ';'
-                [Environment]::SetEnvironmentVariable("Path", $newMPath, "Machine")
-                Write-Info "Removed from System PATH: $conflictDir"
+                $mP = ($mP -split ';' | Where-Object { $_ -ne $dir }) -join ';'
+                [Environment]::SetEnvironmentVariable("Path", $mP, "Machine")
+                Write-Host "    Removed from System PATH" -ForegroundColor DarkGray
             } catch {
-                Write-Host "  Could not auto-fix System PATH (needs admin)." -ForegroundColor DarkYellow
-                Write-Host "  Manually remove this from System PATH:" -ForegroundColor DarkYellow
-                Write-Host "    $conflictDir" -ForegroundColor Yellow
-                Write-Host "  System Properties > Environment Variables > Path > Edit" -ForegroundColor DarkGray
-                Write-Host ""
+                Write-Host "    System PATH needs admin fix:" -ForegroundColor DarkYellow
+                Write-Host "    Remove: $dir" -ForegroundColor Yellow
             }
         }
     }
+    Write-Host ""
 }
 
-# Add our install dir to User PATH (at the BEGINNING for priority)
+# Add our dir to PATH (prepend for priority)
 $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($userPath -notlike "*$installDir*") {
-    # Prepend so our binary takes priority
     [Environment]::SetEnvironmentVariable("Path", "$installDir;$userPath", "User")
-    Write-OK "Added to PATH (high priority)"
+    Write-Host "       Added to PATH" -ForegroundColor Green
 } else {
-    Write-Info "Already in PATH"
+    Write-Host "       Already in PATH" -ForegroundColor DarkGray
 }
 
-# Update current session PATH
-$env:Path = "$installDir;" + ($env:Path -split ';' | Where-Object { $_ -ne $installDir }) -join ';'
+$env:Path = "$installDir;" + (($env:Path -split ';' | Where-Object { $_ -ne $installDir }) -join ';')
 
-# ─── Step 5: Verify ───
-Write-Step 5 5 "Verifying..."
+# --- Step 5: Verify ---
+Write-Host "[5/5] Verifying..." -ForegroundColor Yellow
 
 if (Test-Path $exePath) {
     try {
-        $verOut = (& $exePath version 2>&1) -join " "
-        Write-Info $verOut
+        $v = (& $exePath version 2>&1) -join " "
+        Write-Host "       $v" -ForegroundColor Green
     } catch {
-        Write-Info "Binary OK (version check skipped)"
+        Write-Host "       Binary OK" -ForegroundColor Green
     }
 
-    # Cleanup backup
     Remove-Item "$exePath.bak" -Force -ErrorAction SilentlyContinue
 
     Write-Host ""
-    Write-Host "  ╔═══════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "  ║      INSTALLATION COMPLETE!               ║" -ForegroundColor Green
-    Write-Host "  ╚═══════════════════════════════════════════╝" -ForegroundColor Green
+    Write-Host "  =====================================" -ForegroundColor Green
+    Write-Host "       INSTALLATION COMPLETE" -ForegroundColor Green
+    Write-Host "  =====================================" -ForegroundColor Green
     Write-Host ""
     Write-Host "  Location : $installDir" -ForegroundColor White
     if ($version) { Write-Host "  Version  : v$version" -ForegroundColor White }
     Write-Host ""
-    Write-Host "  ┌─ Quick Start ─────────────────────────────┐" -ForegroundColor Cyan
-    Write-Host "  │                                            │" -ForegroundColor Cyan
-    Write-Host "  │  1. Open a NEW terminal                    │" -ForegroundColor White
-    Write-Host "  │                                            │" -ForegroundColor Cyan
-    Write-Host "  │  2. Activate license:                      │" -ForegroundColor White
-    Write-Host "  │     xixero activate YOUR-LICENSE-KEY       │" -ForegroundColor Yellow
-    Write-Host "  │                                            │" -ForegroundColor Cyan
-    Write-Host "  │  3. Start gateway:                         │" -ForegroundColor White
-    Write-Host "  │     xixero start                           │" -ForegroundColor Yellow
-    Write-Host "  │                                            │" -ForegroundColor Cyan
-    Write-Host "  │  4. IDE endpoint:                          │" -ForegroundColor White
-    Write-Host "  │     http://localhost:7860/v1                │" -ForegroundColor Yellow
-    Write-Host "  │                                            │" -ForegroundColor Cyan
-    Write-Host "  └────────────────────────────────────────────┘" -ForegroundColor Cyan
+    Write-Host "  --- Quick Start ---" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  1. Open a NEW terminal" -ForegroundColor White
+    Write-Host ""
+    Write-Host "  2. Activate license:" -ForegroundColor White
+    Write-Host "     xixero activate YOUR-LICENSE-KEY" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  3. Start gateway:" -ForegroundColor White
+    Write-Host "     xixero start" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  4. Browser opens automatically at:" -ForegroundColor White
+    Write-Host "     http://localhost:7860" -ForegroundColor Yellow
     Write-Host ""
 } else {
     Write-Host ""
-    Write-Host "  Binary not yet available." -ForegroundColor DarkYellow
-    Write-Host "  PATH is configured. Run installer again when release is ready." -ForegroundColor DarkGray
-    Write-Host "    irm https://jinkaka98.github.io/install.ps1 | iex" -ForegroundColor Cyan
+    Write-Host "  Binary not available yet." -ForegroundColor DarkYellow
+    Write-Host "  Run installer again when release is ready:" -ForegroundColor DarkGray
+    Write-Host "  irm https://jinkaka98.github.io/install.ps1 | iex" -ForegroundColor Cyan
     Write-Host ""
 }
