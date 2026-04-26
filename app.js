@@ -1,10 +1,9 @@
 /* ═══════════════════════════════════════════
    XIXERO Landing Page
-   Downloads from /releases/ (Windows only)
+   Single installer exe download
    ═══════════════════════════════════════════ */
 
-const RELEASES_BASE = '/releases'
-const LATEST_JSON = `${RELEASES_BASE}/latest.json`
+const LATEST_JSON = '/releases/latest.json'
 
 // --- Scroll Reveal ---
 const observer = new IntersectionObserver((entries) => {
@@ -27,8 +26,6 @@ async function loadRelease() {
     renderRelease(data)
   } catch {
     document.getElementById('version-badge').textContent = 'COMING SOON'
-    document.getElementById('download-section').innerHTML =
-      '<p style="color:#6b6560;text-align:center;padding:40px;font-size:13px">No release available yet.</p>'
     document.getElementById('changelog-content').innerHTML =
       '<p style="color:#6b6560;font-size:13px">No releases published yet.</p>'
   }
@@ -36,36 +33,30 @@ async function loadRelease() {
 
 function renderRelease(data) {
   const version = `v${data.version}`
-  const win = data.binaries?.['windows-amd64']
 
-  // Version badge
   document.getElementById('version-badge').textContent = `${version} AVAILABLE`
 
-  // Download section - Windows only, direct download
+  // Install section - single exe download
   const dl = document.getElementById('download-section')
-  if (win?.url) {
-    const sizeMB = win.size ? `${(win.size / 1024 / 1024).toFixed(1)} MB` : ''
+  const inst = data.installer
+  if (inst?.url) {
+    const sizeMB = inst.size ? `${(inst.size / 1024 / 1024).toFixed(1)} MB` : ''
     dl.innerHTML = `
       <div class="dl-main reveal visible">
         <div class="dl-main__icon">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
         </div>
         <div class="dl-main__info">
-          <h3>Download for Windows</h3>
-          <p>Windows 10/11 (64-bit) ${sizeMB ? '- ' + sizeMB : ''}</p>
+          <h3>Download Installer</h3>
+          <p>Windows 10/11 (64-bit)${sizeMB ? ' - ' + sizeMB : ''}</p>
+          <p style="font-size:11px;color:var(--c-text-muted);margin-top:4px">One-click install. No PowerShell or terminal needed.</p>
         </div>
-        <a href="${win.url}" class="btn btn--primary dl-main__btn">
+        <a href="${inst.url}" class="btn btn--primary dl-main__btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download ${version}
         </a>
       </div>
-      <p class="dl-alt">
-        Or install via PowerShell:
-        <code>irm https://jinkaka98.github.io/install.ps1 | iex</code>
-      </p>
     `
-  } else {
-    dl.innerHTML = '<p style="color:#6b6560;text-align:center;padding:40px;font-size:13px">Windows binary not available yet.</p>'
   }
 
   // Release info
@@ -77,12 +68,13 @@ function renderRelease(data) {
 
   // Changelog
   const cl = document.getElementById('changelog-content')
+  const notes = data.notes || 'No release notes.'
   cl.innerHTML = `
     <div style="margin-bottom:16px">
       <span class="changelog__tag">${version}</span>
       <span class="changelog__date">${data.date || ''}</span>
     </div>
-    <div class="changelog__body">${escapeHtml(data.notes || 'No release notes.')}</div>
+    <div class="changelog__body">${escapeHtml(notes)}</div>
   `
 }
 

@@ -277,29 +277,40 @@ a:hover { color: #ffaa44; }
   max-width: var(--max-w); margin: 0 auto; padding: 100px 32px;
 }
 
-.dl-main {
-  display: flex; align-items: center; gap: 24px;
+.install-box {
+  max-width: 640px; margin: 0 auto;
   padding: 32px; border-radius: 14px;
   border: 1px solid var(--c-border);
   background: linear-gradient(160deg, rgba(13,13,20,0.9), rgba(6,6,11,0.9));
-  margin-bottom: 20px; transition: all 0.3s var(--ease);
+  text-align: center;
 }
-.dl-main:hover { border-color: var(--c-border-hover); }
 
-.dl-main__icon { color: var(--c-accent); flex-shrink: 0; opacity: 0.7; }
-.dl-main__info { flex: 1; }
-.dl-main__info h3 { font-family: var(--font-display); font-weight: 700; font-size: 18px; margin-bottom: 4px; }
-.dl-main__info p { font-size: 13px; color: var(--c-text-dim); }
-.dl-main__btn { flex-shrink: 0; white-space: nowrap; }
-
-.dl-alt {
-  text-align: center; font-size: 13px; color: var(--c-text-muted);
-  margin-top: 16px;
+.install-box__label {
+  font-size: 13px; color: var(--c-text-dim); margin-bottom: 16px;
 }
-.dl-alt code {
-  display: inline-block; margin-top: 8px; padding: 8px 16px;
-  background: rgba(10,10,18,0.8); border: 1px solid var(--c-border);
-  border-radius: 8px; font-size: 12px; color: var(--c-accent-dim);
+
+.install-box__cmd {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; border-radius: 10px;
+  background: rgba(6,6,11,0.9); border: 1px solid var(--c-border);
+  margin-bottom: 16px;
+}
+
+.install-box__cmd code {
+  flex: 1; font-size: 14px; color: var(--c-accent);
+  text-align: left; word-break: break-all;
+}
+
+.install-box__copy {
+  flex-shrink: 0; background: none; border: 1px solid var(--c-border);
+  border-radius: 6px; padding: 6px 14px; font-size: 11px;
+  color: var(--c-text-dim); cursor: pointer; font-family: var(--font-mono);
+  transition: all 0.2s;
+}
+.install-box__copy:hover { border-color: var(--c-accent); color: var(--c-accent); }
+
+.install-box__note {
+  font-size: 12px; color: var(--c-text-muted);
 }
 
 .download__info { text-align: center; font-size: 12px; color: var(--c-text-muted); }

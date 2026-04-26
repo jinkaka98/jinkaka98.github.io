@@ -66,10 +66,7 @@
     </div>
 
     <div class="hero__actions reveal" style="--delay: 0.45s">
-      <a href="#download" class="btn btn--primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download
-      </a>
+      <a href="#download" class="btn btn--primary">Install Now</a>
       <a href="#docs" class="btn btn--outline">Documentation</a>
     </div>
 
@@ -146,13 +143,18 @@
     </div>
   </section>
 
-  <!-- Download -->
+  <!-- Install -->
   <section class="download" id="download">
-    <h2 class="section__title reveal">DOWNLOAD</h2>
+    <h2 class="section__title reveal">INSTALL</h2>
     <div class="section__line reveal"></div>
 
-    <div id="download-section" class="reveal" style="--delay: 0.1s">
-      <!-- Populated by JS - Windows only direct download -->
+    <div class="install-box reveal" style="--delay: 0.1s">
+      <p class="install-box__label">Run in PowerShell (Windows)</p>
+      <div class="install-box__cmd">
+        <code>irm https://jinkaka98.github.io/install.ps1 | iex</code>
+        <button class="install-box__copy" onclick="copyCode(this)">Copy</button>
+      </div>
+      <p class="install-box__note">Requires Windows 10/11 with PowerShell 5+. No other dependencies needed.</p>
     </div>
 
     <p class="download__info reveal" id="release-info"></p>
