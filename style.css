@@ -277,30 +277,30 @@ a:hover { color: #ffaa44; }
   max-width: var(--max-w); margin: 0 auto; padding: 100px 32px;
 }
 
-.download__grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-  margin-bottom: 24px;
-}
-
-.dl-card {
-  padding: 32px 20px; border-radius: 14px; text-align: center;
+.dl-main {
+  display: flex; align-items: center; gap: 24px;
+  padding: 32px; border-radius: 14px;
   border: 1px solid var(--c-border);
   background: linear-gradient(160deg, rgba(13,13,20,0.9), rgba(6,6,11,0.9));
-  transition: all 0.3s var(--ease);
+  margin-bottom: 20px; transition: all 0.3s var(--ease);
 }
-.dl-card:hover { border-color: var(--c-border-hover); transform: translateY(-3px); }
+.dl-main:hover { border-color: var(--c-border-hover); }
 
-.dl-card__os { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.dl-card__arch { font-size: 11px; color: var(--c-text-muted); margin-bottom: 20px; }
+.dl-main__icon { color: var(--c-accent); flex-shrink: 0; opacity: 0.7; }
+.dl-main__info { flex: 1; }
+.dl-main__info h3 { font-family: var(--font-display); font-weight: 700; font-size: 18px; margin-bottom: 4px; }
+.dl-main__info p { font-size: 13px; color: var(--c-text-dim); }
+.dl-main__btn { flex-shrink: 0; white-space: nowrap; }
 
-.dl-card__btn {
-  display: inline-block; padding: 10px 24px; border-radius: 8px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-  background: linear-gradient(135deg, #e07000, #c04000);
-  color: #fff !important; transition: all 0.25s;
+.dl-alt {
+  text-align: center; font-size: 13px; color: var(--c-text-muted);
+  margin-top: 16px;
 }
-.dl-card__btn:hover { box-shadow: 0 0 25px rgba(255,120,0,0.3); transform: translateY(-1px); }
-.dl-card__btn--disabled { background: var(--c-text-muted); pointer-events: none; opacity: 0.4; }
+.dl-alt code {
+  display: inline-block; margin-top: 8px; padding: 8px 16px;
+  background: rgba(10,10,18,0.8); border: 1px solid var(--c-border);
+  border-radius: 8px; font-size: 12px; color: var(--c-accent-dim);
+}
 
 .download__info { text-align: center; font-size: 12px; color: var(--c-text-muted); }
 
