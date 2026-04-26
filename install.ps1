@@ -162,14 +162,14 @@ if (Test-Path $exePath) {
     Write-Host ""
     Write-Host "  1. Open a NEW terminal" -ForegroundColor White
     Write-Host ""
-    Write-Host "  2. Activate license:" -ForegroundColor White
-    Write-Host "     xixero activate YOUR-LICENSE-KEY" -ForegroundColor Yellow
+    Write-Host "  2. Get license key:" -ForegroundColor White
+    Write-Host "     Discord: @xixero1445 (send DM)" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "  3. Start gateway:" -ForegroundColor White
-    Write-Host "     xixero start" -ForegroundColor Yellow
+    Write-Host "  3. Activate license:" -ForegroundColor White
+    Write-Host "     xixero license YOUR-KEY" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "  4. Browser opens automatically at:" -ForegroundColor White
-    Write-Host "     http://localhost:7860" -ForegroundColor Yellow
+    Write-Host "  4. Start (browser opens automatically):" -ForegroundColor White
+    Write-Host "     xixero" -ForegroundColor Yellow
     Write-Host ""
 } else {
     Write-Host ""

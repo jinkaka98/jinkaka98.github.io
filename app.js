@@ -20,14 +20,15 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 // --- Load Release ---
 async function loadRelease() {
   try {
-    const resp = await fetch(LATEST_JSON)
+    const resp = await fetch(LATEST_JSON + '?t=' + Date.now()) // cache bust
     if (!resp.ok) throw new Error('No release')
     const data = await resp.json()
     renderRelease(data)
-  } catch {
+  } catch (e) {
+    console.error('Failed to load release:', e)
     document.getElementById('version-badge').textContent = 'COMING SOON'
-    document.getElementById('changelog-content').innerHTML =
-      '<p style="color:#6b6560;font-size:13px">No releases published yet.</p>'
+    const cl = document.getElementById('changelog-content')
+    if (cl) cl.innerHTML = '<p style="color:#6b6560;font-size:13px">Could not load release info.</p>'
   }
 }
 
