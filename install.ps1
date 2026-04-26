@@ -128,17 +128,68 @@ if ($downloadUrl) {
     Write-Err "No download URL available"
 }
 
-# ─── Step 4: PATH ───
+# ─── Step 4: PATH + Conflict Detection ───
 Write-Step 4 5 "Configuring PATH..."
 
+# Check for conflicting "xixero" commands (old Python version, etc.)
+$conflicts = Get-Command xixero -All -ErrorAction SilentlyContinue | Where-Object {
+    $_.Source -ne $exePath -and $_.Source -notlike "$installDir*"
+}
+
+if ($conflicts) {
+    Write-Host ""
+    Write-Host "  ┌─ WARNING: Conflicting 'xixero' found ────────┐" -ForegroundColor Red
+    foreach ($c in $conflicts) {
+        Write-Host "  │  $($c.Source)" -ForegroundColor Yellow
+    }
+    Write-Host "  │                                                │" -ForegroundColor Red
+    Write-Host "  │  This old version will override the new one.   │" -ForegroundColor White
+    Write-Host "  │  Removing conflict from PATH...                │" -ForegroundColor White
+    Write-Host "  └────────────────────────────────────────────────┘" -ForegroundColor Red
+    Write-Host ""
+
+    # Remove conflicting paths from both User and Machine PATH
+    foreach ($c in $conflicts) {
+        $conflictDir = Split-Path $c.Source -Parent
+
+        # Remove from User PATH
+        $uPath = [Environment]::GetEnvironmentVariable("Path", "User")
+        if ($uPath -like "*$conflictDir*") {
+            $newUPath = ($uPath -split ';' | Where-Object { $_ -ne $conflictDir }) -join ';'
+            [Environment]::SetEnvironmentVariable("Path", $newUPath, "User")
+            Write-Info "Removed from User PATH: $conflictDir"
+        }
+
+        # Remove from Machine PATH (needs admin, try anyway)
+        $mPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+        if ($mPath -like "*$conflictDir*") {
+            try {
+                $newMPath = ($mPath -split ';' | Where-Object { $_ -ne $conflictDir }) -join ';'
+                [Environment]::SetEnvironmentVariable("Path", $newMPath, "Machine")
+                Write-Info "Removed from System PATH: $conflictDir"
+            } catch {
+                Write-Host "  Could not auto-fix System PATH (needs admin)." -ForegroundColor DarkYellow
+                Write-Host "  Manually remove this from System PATH:" -ForegroundColor DarkYellow
+                Write-Host "    $conflictDir" -ForegroundColor Yellow
+                Write-Host "  System Properties > Environment Variables > Path > Edit" -ForegroundColor DarkGray
+                Write-Host ""
+            }
+        }
+    }
+}
+
+# Add our install dir to User PATH (at the BEGINNING for priority)
 $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($userPath -notlike "*$installDir*") {
-    [Environment]::SetEnvironmentVariable("Path", "$userPath;$installDir", "User")
-    $env:Path = "$env:Path;$installDir"
-    Write-OK "Added to PATH"
+    # Prepend so our binary takes priority
+    [Environment]::SetEnvironmentVariable("Path", "$installDir;$userPath", "User")
+    Write-OK "Added to PATH (high priority)"
 } else {
     Write-Info "Already in PATH"
 }
+
+# Update current session PATH
+$env:Path = "$installDir;" + ($env:Path -split ';' | Where-Object { $_ -ne $installDir }) -join ';'
 
 # ─── Step 5: Verify ───
 Write-Step 5 5 "Verifying..."
