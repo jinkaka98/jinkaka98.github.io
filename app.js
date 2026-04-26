@@ -1,9 +1,11 @@
 /* ═══════════════════════════════════════════
    XIXERO — Landing Page Logic
+   Downloads from jinkaka98.github.io/releases/
+   (repo xixero is private, binaries hosted here)
    ═══════════════════════════════════════════ */
 
-const GITHUB_REPO = 'jinkaka98/xixero'
-const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`
+const RELEASES_BASE = '/releases'
+const LATEST_JSON = `${RELEASES_BASE}/latest.json`
 
 // ─── Scroll Reveal ───
 const observer = new IntersectionObserver((entries) => {
@@ -17,43 +19,44 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 
-// ─── Fetch GitHub Release ───
+// ─── Load Release Info ───
 async function loadRelease() {
   try {
-    const resp = await fetch(GITHUB_API)
+    const resp = await fetch(LATEST_JSON)
     if (!resp.ok) throw new Error('No release')
     const data = await resp.json()
     renderRelease(data)
   } catch {
-    document.getElementById('version-badge').textContent = 'PRE-RELEASE'
+    document.getElementById('version-badge').textContent = 'COMING SOON'
     document.getElementById('download-grid').innerHTML = renderNoRelease()
     document.getElementById('changelog-content').innerHTML =
-      '<p class="changelog__loading">No releases published yet.</p>'
+      '<p class="changelog__loading">No releases published yet. Check back soon.</p>'
   }
 }
 
 function renderRelease(release) {
-  const version = release.tag_name || 'latest'
+  const version = `v${release.version}`
 
   // Version badge
   document.getElementById('version-badge').textContent = `${version} AVAILABLE`
 
   // Download cards
   const platforms = [
-    { os: 'Windows', arch: 'x64', pattern: /windows.*amd64|xixero.*\.exe/i },
-    { os: 'Linux', arch: 'x64', pattern: /linux.*amd64/i },
-    { os: 'macOS', arch: 'Intel', pattern: /darwin.*amd64/i },
-    { os: 'macOS', arch: 'Apple Silicon', pattern: /darwin.*arm64/i },
+    { os: 'Windows', arch: 'x64', key: 'windows-amd64' },
+    { os: 'Linux', arch: 'x64', key: 'linux-amd64' },
+    { os: 'macOS', arch: 'Intel', key: 'darwin-amd64' },
+    { os: 'macOS', arch: 'Apple Silicon', key: 'darwin-arm64' },
   ]
 
   const grid = document.getElementById('download-grid')
   grid.innerHTML = platforms.map(p => {
-    const asset = (release.assets || []).find(a => p.pattern.test(a.name))
-    const url = asset?.browser_download_url
+    const bin = release.binaries?.[p.key]
+    const url = bin?.url
+    const size = bin?.size ? `${(bin.size / 1024 / 1024).toFixed(1)}MB` : ''
     return `
       <div class="dl-card reveal visible">
         <div class="dl-card__os">${p.os}</div>
-        <div class="dl-card__arch">${p.arch}</div>
+        <div class="dl-card__arch">${p.arch}${size ? ` · ${size}` : ''}</div>
         ${url
           ? `<a href="${url}" class="dl-card__btn">DOWNLOAD</a>`
           : `<span class="dl-card__btn dl-card__btn--disabled">N/A</span>`
@@ -64,7 +67,7 @@ function renderRelease(release) {
 
   // Release info
   const info = document.getElementById('release-info')
-  info.textContent = `Latest: ${version} · ${new Date(release.published_at).toLocaleDateString()}`
+  info.textContent = `Latest: ${version} · ${release.date || ''}`
   info.classList.add('visible')
 
   // Changelog
@@ -72,9 +75,9 @@ function renderRelease(release) {
   cl.innerHTML = `
     <div>
       <span class="changelog__tag">${version}</span>
-      <span class="changelog__date">${new Date(release.published_at).toLocaleDateString()}</span>
+      <span class="changelog__date">${release.date || ''}</span>
     </div>
-    <div class="changelog__body">${escapeHtml(release.body || 'No release notes.')}</div>
+    <div class="changelog__body">${release.notes ? escapeHtml(release.notes) : 'Initial release.'}</div>
   `
 }
 
@@ -111,16 +114,10 @@ function copyCode(btn) {
 }
 
 // ─── Nav scroll effect ───
-let lastScroll = 0
 const nav = document.getElementById('nav')
 window.addEventListener('scroll', () => {
-  const y = window.scrollY
-  if (y > 100) {
-    nav.style.borderBottomColor = 'rgba(255, 140, 0, 0.25)'
-  } else {
-    nav.style.borderBottomColor = ''
-  }
-  lastScroll = y
+  nav.style.borderBottomColor = window.scrollY > 100
+    ? 'rgba(255, 140, 0, 0.25)' : ''
 }, { passive: true })
 
 // ─── Smooth anchor scroll ───
