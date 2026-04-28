@@ -1,13 +1,23 @@
 {
   "version": "0.1.2",
-  "download_url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
   "release_notes": "*add TRAE IDE Connection on version 3.5.53",
   "is_critical": true,
   "min_version": "0.1.0",
-  "file_size": 5289231,
-  "file_size_human": "5.0 MB",
-  "installer_filename": "Xixero_0.1.2_x64_en-US.msi",
   "platform": "windows-x64",
   "published_at": "2026-04-28T12:15:46.767Z",
-  "published_by": "Administrator"
+  "published_by": "Administrator",
+  "downloads": {
+    "msi": {
+      "url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
+      "filename": "Xixero_0.1.2_x64_en-US.msi",
+      "size": 7503872,
+      "size_human": "7.2 MB"
+    },
+    "exe": {
+      "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
+      "filename": "Xixero_0.1.2_x64-setup.exe",
+      "size": 5289231,
+      "size_human": "5.0 MB"
+    }
+  }
 }
