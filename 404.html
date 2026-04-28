@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Xixero</title>
+    <meta name="description" content="The page you're looking for doesn't exist.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    
+    <style>
+        :root {
+            --color-bg-primary: #000000;
+            --color-bg-secondary: #0a0a0f;
+            --color-accent: #3b82f6;
+            --color-accent-glow: rgba(59, 130, 246, 0.3);
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #a1a1aa;
+            --color-text-muted: #71717a;
+            --font-heading: 'Syne', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --border-radius: 8px;
+            --transition-fast: 200ms ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .error-container {
+            text-align: center;
+            max-width: 600px;
+            padding: var(--space-xl);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .error-code {
+            font-family: var(--font-heading);
+            font-size: clamp(4rem, 15vw, 8rem);
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .error-code::before {
+            content: '404';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            background: linear-gradient(45deg, var(--color-accent), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            10% { transform: translate(-2px, -2px); }
+            20% { transform: translate(2px, 2px); }
+            30% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            50% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            70% { transform: translate(-2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            90% { transform: translate(-2px, -2px); }
+        }
+        
+        .error-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--color-text-primary);
+        }
+        
+        .error-message {
+            font-size: 1.125rem;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-2xl);
+            line-height: 1.6;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: var(--space-lg);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            box-shadow: 0 4px 12px var(--color-accent-glow);
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--color-accent-glow);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text-primary);
+            border: 1px solid #27272a;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--color-bg-secondary);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+        
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            animation: grid-move 20s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+        
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--color-text-primary);
+            text-shadow: 0 0 20px var(--color-accent-glow);
+            margin-bottom: var(--space-xl);
+            display: inline-block;
+        }
+        
+        @media (max-width: 768px) {
+            .error-container {
+                padding: var(--space-md);
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .error-message {
+                font-size: 1rem;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    
+    <div class="error-container">
+        <div class="logo">XIXERO</div>
+        
+        <div class="error-code">404</div>
+        
+        <h1 class="error-title">Page Not Found</h1>
+        
+        <p class="error-message">
+            The page you're looking for doesn't exist or has been moved.<br>
+            Let's get you back to the gateway.
+        </p>
+        
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9,22 9,12 15,12 15,22"/>
+                </svg>
+                Go Home
+            </a>
+            
+            <button onclick="history.back()" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5"/>
+                    <path d="M12 19l-7-7 7-7"/>
+                </svg>
+                Go Back
+            </button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "tag": "v0.1.0",
+  "date": "2025-07-15",
+  "notes": "Initial release\n\n- AI reverse proxy engine\n- OpenAI, Anthropic, OpenRouter support\n- MITM proxy for Trae.ai\n- Model remapping\n- SSE streaming support\n- License validation",
+  "installer": {
+    "file": "xixero-setup.exe",
+    "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
+    "size": 5268531
+  }
+}
