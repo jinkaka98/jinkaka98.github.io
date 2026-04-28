@@ -1,7 +1,9 @@
 // DOM Elements
 const versionBadge = document.getElementById('version-badge');
-const downloadBtn = document.getElementById('download-btn');
-const downloadInfo = document.getElementById('download-info');
+const downloadBtnMsi = document.getElementById('download-btn-msi');
+const downloadInfoMsi = document.getElementById('download-info-msi');
+const downloadBtnExe = document.getElementById('download-btn-exe');
+const downloadInfoExe = document.getElementById('download-info-exe');
 const changelogContent = document.getElementById('changelog-content');
 const copyBtn = document.getElementById('copy-btn');
 const installCommand = document.getElementById('install-command');
@@ -50,17 +52,37 @@ function updateVersionInfo(version = null) {
     }
 }
 
-// Update download button
-function updateDownloadButton(version = null, size = null) {
-    if (!downloadBtn || !downloadInfo) return;
-    
+// Update download buttons (MSI + EXE)
+function updateDownloadButton(version = null) {
     const versionText = version || (releaseData ? `v${releaseData.version}` : 'v0.1.0');
-    const sizeText = size || (releaseData ? formatFileSize(releaseData.installer.size) : '5.0 MB');
-    
-    downloadInfo.textContent = `${versionText} • ${sizeText}`;
-    
-    if (releaseData && releaseData.installer.url) {
-        downloadBtn.href = releaseData.installer.url;
+
+    // New format: releaseData.downloads.msi / .exe
+    const msi = releaseData?.downloads?.msi;
+    const exe = releaseData?.downloads?.exe;
+
+    // MSI button
+    if (downloadBtnMsi && downloadInfoMsi) {
+        if (msi) {
+            downloadInfoMsi.textContent = `${versionText} • ${msi.size_human} • Recommended`;
+            downloadBtnMsi.href = msi.url;
+        } else {
+            // Fallback: old format
+            const dlUrl = releaseData?.installer?.url || releaseData?.download_url || 'releases/xixero-setup.msi';
+            const sizeText = releaseData?.file_size_human || releaseData?.installer?.size ? formatFileSize(releaseData.installer.size) : '';
+            downloadInfoMsi.textContent = `${versionText}${sizeText ? ' • ' + sizeText : ''} • Recommended`;
+            downloadBtnMsi.href = dlUrl;
+        }
+    }
+
+    // EXE button
+    if (downloadBtnExe && downloadInfoExe) {
+        if (exe) {
+            downloadInfoExe.textContent = `${versionText} • ${exe.size_human} • NSIS Setup`;
+            downloadBtnExe.href = exe.url;
+        } else {
+            downloadInfoExe.textContent = `${versionText} • NSIS Setup`;
+            downloadBtnExe.href = 'releases/xixero-setup.exe';
+        }
     }
 }
 
@@ -77,9 +99,9 @@ function updateChangelog(fallbackData = null) {
     changelogItem.innerHTML = `
         <div class="changelog-header">
             <span class="changelog-version">v${data.version}</span>
-            <span class="changelog-date">${formatDate(data.date)}</span>
+            <span class="changelog-date">${formatDate(data.date || data.published_at)}</span>
         </div>
-        <div class="changelog-notes">${data.notes}</div>
+        <div class="changelog-notes">${data.notes || data.release_notes || ''}</div>
     `;
     
     changelogContent.appendChild(changelogItem);

@@ -417,6 +417,10 @@ a:hover {
 }
 
 .download-main {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
     margin-bottom: var(--space-3xl);
 }
 
@@ -447,6 +451,20 @@ a:hover {
     font-weight: 400;
     opacity: 0.8;
     font-family: var(--font-mono);
+}
+
+.download-btn-alt {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+}
+
+.download-btn-alt:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.1);
 }
 
 .download-alt {
