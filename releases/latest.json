@@ -1,11 +1,13 @@
 {
-  "version": "0.1.0",
-  "tag": "v0.1.0",
-  "date": "2025-07-15",
-  "notes": "Initial release\n\n- AI reverse proxy engine\n- OpenAI, Anthropic, OpenRouter support\n- MITM proxy for Trae.ai\n- Model remapping\n- SSE streaming support\n- License validation",
-  "installer": {
-    "file": "xixero-setup.exe",
-    "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-    "size": 5268531
-  }
+  "version": "0.1.2",
+  "download_url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
+  "release_notes": "*add TRAE IDE Connection on version 3.5.53",
+  "is_critical": true,
+  "min_version": "0.1.0",
+  "file_size": 5289231,
+  "file_size_human": "5.0 MB",
+  "installer_filename": "Xixero_0.1.2_x64-setup.exe",
+  "platform": "windows-x64",
+  "published_at": "2026-04-28T12:15:46.767Z",
+  "published_by": "Administrator"
 }
