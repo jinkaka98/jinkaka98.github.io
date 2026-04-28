@@ -9,6 +9,7 @@ const copyBtn = document.getElementById('copy-btn');
 const installCommand = document.getElementById('install-command');
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.getElementById('nav-menu');
+const navbar = document.getElementById('navbar');
 
 // State
 let releaseData = null;
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupCopyButton();
     setupSmoothScroll();
+    setupScrollEffects();
 });
 
 // Load release data from JSON
@@ -29,106 +31,94 @@ async function loadReleaseData() {
         releaseData = await response.json();
         
         updateVersionInfo();
-        updateDownloadButton();
+        updateDownloadButtons();
         updateChangelog();
     } catch (error) {
         console.error('Failed to load release data:', error);
         // Fallback to default values
-        updateVersionInfo('v0.1.0');
-        updateDownloadButton('v0.1.0', '5.0 MB');
+        updateVersionInfo('v0.1.2');
+        updateDownloadButtons();
         updateChangelog({
-            version: '0.1.0',
-            date: '2025-07-15',
-            notes: 'Initial release\n\n- AI reverse proxy engine\n- OpenAI, Anthropic, OpenRouter support\n- MITM proxy for Trae.ai\n- Model remapping\n- SSE streaming support\n- License validation'
+            version: '0.1.2',
+            published_at: '2026-04-28T12:15:46.767Z',
+            release_notes: '*add TRAE IDE Connection on version 3.5.53'
         });
     }
 }
 
 // Update version badge
 function updateVersionInfo(version = null) {
-    const versionText = version || (releaseData ? `v${releaseData.version}` : 'v0.1.0');
+    const versionText = version || (releaseData ? `v${releaseData.version}` : 'v0.1.2');
     if (versionBadge) {
         versionBadge.textContent = versionText;
     }
 }
 
-// Update download buttons (MSI + EXE)
-function updateDownloadButton(version = null) {
-    const versionText = version || (releaseData ? `v${releaseData.version}` : 'v0.1.0');
-
-    // New format: releaseData.downloads.msi / .exe
-    const msi = releaseData?.downloads?.msi;
-    const exe = releaseData?.downloads?.exe;
-
-    // MSI button
-    if (downloadBtnMsi && downloadInfoMsi) {
-        if (msi) {
-            downloadInfoMsi.textContent = `${versionText} • ${msi.size_human} • Recommended`;
-            downloadBtnMsi.href = msi.url;
-        } else {
-            // Fallback: old format
-            const dlUrl = releaseData?.installer?.url || releaseData?.download_url || 'releases/xixero-setup.msi';
-            const sizeText = releaseData?.file_size_human || releaseData?.installer?.size ? formatFileSize(releaseData.installer.size) : '';
-            downloadInfoMsi.textContent = `${versionText}${sizeText ? ' • ' + sizeText : ''} • Recommended`;
-            downloadBtnMsi.href = dlUrl;
+// Update download buttons with dynamic data
+function updateDownloadButtons() {
+    if (!releaseData) {
+        // Fallback values
+        if (downloadInfoMsi) {
+            downloadInfoMsi.textContent = 'v0.1.2 • 7.2 MB • Recommended';
         }
+        if (downloadInfoExe) {
+            downloadInfoExe.textContent = 'v0.1.2 • 5.0 MB • NSIS Setup';
+        }
+        return;
     }
 
-    // EXE button
-    if (downloadBtnExe && downloadInfoExe) {
-        if (exe) {
-            downloadInfoExe.textContent = `${versionText} • ${exe.size_human} • NSIS Setup`;
-            downloadBtnExe.href = exe.url;
-        } else {
-            downloadInfoExe.textContent = `${versionText} • NSIS Setup`;
-            downloadBtnExe.href = 'releases/xixero-setup.exe';
-        }
+    // Support both old and new JSON formats
+    const msiInfo = releaseData.downloads?.msi || releaseData.installer;
+    const exeInfo = releaseData.downloads?.exe || releaseData.installer;
+
+    if (downloadInfoMsi && msiInfo) {
+        const msiSize = msiInfo.size_human || '7.2 MB';
+        downloadInfoMsi.textContent = `v${releaseData.version} • ${msiSize} • Recommended`;
+    }
+
+    if (downloadInfoExe && exeInfo) {
+        const exeSize = exeInfo.size_human || '5.0 MB';
+        downloadInfoExe.textContent = `v${releaseData.version} • ${exeSize} • NSIS Setup`;
+    }
+
+    // Update download URLs if available
+    if (downloadBtnMsi && msiInfo?.url) {
+        downloadBtnMsi.href = msiInfo.url;
+    }
+
+    if (downloadBtnExe && exeInfo?.url) {
+        downloadBtnExe.href = exeInfo.url;
     }
 }
 
-// Update changelog
+// Update changelog section
 function updateChangelog(fallbackData = null) {
     if (!changelogContent) return;
-    
+
     const data = releaseData || fallbackData;
     if (!data) return;
-    
-    const changelogItem = document.createElement('div');
-    changelogItem.className = 'changelog-item';
-    
-    changelogItem.innerHTML = `
-        <div class="changelog-header">
-            <span class="changelog-version">v${data.version}</span>
-            <span class="changelog-date">${formatDate(data.date || data.published_at)}</span>
+
+    const publishedDate = data.published_at ? 
+        new Date(data.published_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        }) : 'Recent';
+
+    const changelogHTML = `
+        <div class="changelog-item">
+            <div class="changelog-header">
+                <div class="changelog-version">v${data.version}</div>
+                <div class="changelog-date">${publishedDate}</div>
+            </div>
+            <div class="changelog-notes">${data.release_notes || 'Latest updates and improvements'}</div>
         </div>
-        <div class="changelog-notes">${data.notes || data.release_notes || ''}</div>
     `;
-    
-    changelogContent.appendChild(changelogItem);
+
+    changelogContent.innerHTML = changelogHTML;
 }
 
-// Format file size
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-}
-
-// Format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
-
-// Scroll reveal animation
+// Setup scroll reveal animations
 function setupScrollReveal() {
     const revealElements = document.querySelectorAll('[data-reveal]');
     
@@ -143,79 +133,72 @@ function setupScrollReveal() {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     });
-    
+
     revealElements.forEach(element => {
         revealObserver.observe(element);
     });
 }
 
-// Navigation functionality
+// Setup navigation functionality
 function setupNavigation() {
     if (!navToggle || !navMenu) return;
-    
+
     navToggle.addEventListener('click', () => {
+        const isActive = navToggle.classList.contains('active');
+        
         navToggle.classList.toggle('active');
         navMenu.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', !isActive);
+        
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = isActive ? '' : 'hidden';
     });
-    
-    // Close menu when clicking on links
-    const navLinks = navMenu.querySelectorAll('.nav-link');
+
+    // Close menu when clicking nav links
+    const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             navToggle.classList.remove('active');
             navMenu.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
         });
     });
-    
+
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
             navToggle.classList.remove('active');
             navMenu.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
         }
-    });
-    
-    // Navbar scroll effect
-    let lastScrollY = window.scrollY;
-    const navbar = document.getElementById('navbar');
-    
-    window.addEventListener('scroll', () => {
-        const currentScrollY = window.scrollY;
-        
-        if (navbar) {
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                navbar.style.transform = 'translateY(-100%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-        }
-        
-        lastScrollY = currentScrollY;
     });
 }
 
-// Copy button functionality
+// Setup copy button functionality
 function setupCopyButton() {
     if (!copyBtn || !installCommand) return;
-    
+
     copyBtn.addEventListener('click', async () => {
         try {
             await navigator.clipboard.writeText(installCommand.textContent);
             
             // Visual feedback
+            copyBtn.classList.add('copied');
             const originalHTML = copyBtn.innerHTML;
             copyBtn.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <polyline points="20,6 9,17 4,12"/>
                 </svg>
             `;
             
             setTimeout(() => {
+                copyBtn.classList.remove('copied');
                 copyBtn.innerHTML = originalHTML;
             }, 2000);
-            
-        } catch (error) {
-            console.error('Failed to copy text:', error);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
             
             // Fallback for older browsers
             const textArea = document.createElement('textarea');
@@ -224,23 +207,30 @@ function setupCopyButton() {
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
+            
+            // Visual feedback
+            copyBtn.classList.add('copied');
+            setTimeout(() => {
+                copyBtn.classList.remove('copied');
+            }, 2000);
         }
     });
 }
 
-// Smooth scroll for anchor links
+// Setup smooth scroll for anchor links
 function setupSmoothScroll() {
     const anchorLinks = document.querySelectorAll('a[href^="#"]');
     
     anchorLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (href === '#') return;
             
-            const targetId = link.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                const offsetTop = targetElement.offsetTop - 100; // Account for fixed navbar
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                
+                const offsetTop = target.offsetTop - 80; // Account for fixed navbar
                 
                 window.scrollTo({
                     top: offsetTop,
@@ -251,64 +241,75 @@ function setupSmoothScroll() {
     });
 }
 
-// Utility functions
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+// Setup scroll effects (navbar background)
+function setupScrollEffects() {
+    if (!navbar) return;
+
+    let ticking = false;
+
+    function updateNavbar() {
+        const scrolled = window.scrollY > 50;
+        navbar.classList.toggle('scrolled', scrolled);
+        ticking = false;
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(updateNavbar);
+            ticking = true;
+        }
+    }
+
+    window.addEventListener('scroll', requestTick);
 }
 
-// Performance optimizations
-const debouncedResize = debounce(() => {
-    // Handle resize events if needed
-}, 250);
+// Keyboard navigation improvements
+document.addEventListener('keydown', (e) => {
+    // Escape key closes mobile menu
+    if (e.key === 'Escape' && navMenu && navMenu.classList.contains('active')) {
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        navToggle.focus();
+    }
+});
 
-window.addEventListener('resize', debouncedResize);
+// Handle window resize
+window.addEventListener('resize', () => {
+    // Close mobile menu on resize to desktop
+    if (window.innerWidth > 768 && navMenu && navMenu.classList.contains('active')) {
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+});
 
 // Preload critical resources
 function preloadResources() {
-    const criticalResources = [
-        'releases/latest.json'
-    ];
-    
-    criticalResources.forEach(resource => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.href = resource;
-        link.as = 'fetch';
-        link.crossOrigin = 'anonymous';
-        document.head.appendChild(link);
-    });
+    // Preload the releases JSON
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = 'releases/latest.json';
+    document.head.appendChild(link);
 }
 
 // Initialize preloading
 preloadResources();
 
-// Error handling
-window.addEventListener('error', (e) => {
-    console.error('JavaScript error:', e.error);
-});
-
-window.addEventListener('unhandledrejection', (e) => {
-    console.error('Unhandled promise rejection:', e.reason);
-});
-
-// Analytics placeholder (if needed in the future)
-function trackEvent(eventName, properties = {}) {
-    // Placeholder for analytics tracking
-    console.log('Event:', eventName, properties);
+// Performance monitoring (optional)
+if ('performance' in window) {
+    window.addEventListener('load', () => {
+        const loadTime = performance.now();
+        console.log(`Page loaded in ${Math.round(loadTime)}ms`);
+    });
 }
 
-// Export functions for potential external use
-window.XixeroApp = {
-    loadReleaseData,
-    trackEvent,
-    formatFileSize,
-    formatDate
-};
+// Service worker registration (for future PWA features)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Uncomment when service worker is implemented
+        // navigator.serviceWorker.register('/sw.js');
+    });
+}
