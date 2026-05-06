@@ -1,22 +1,22 @@
 {
-  "version": "0.1.2",
-  "release_notes": "*add TRAE IDE Connection on version 3.5.53",
-  "is_critical": true,
+  "version": "0.1.3",
+  "release_notes": "Fix stuck validating on login, add timeout handling for license validation",
+  "is_critical": false,
   "min_version": "0.1.0",
   "platform": "windows-x64",
-  "published_at": "2026-04-28T12:15:46.767Z",
+  "published_at": "2026-05-06T12:00:00.000Z",
   "published_by": "Administrator",
   "downloads": {
     "msi": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
-      "filename": "Xixero_0.1.2_x64_en-US.msi",
-      "size": 7503872,
+      "filename": "Xixero_0.1.3_x64_en-US.msi",
+      "size": 7512064,
       "size_human": "7.2 MB"
     },
     "exe": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-      "filename": "Xixero_0.1.2_x64-setup.exe",
-      "size": 5289231,
+      "filename": "Xixero_0.1.3_x64-setup.exe",
+      "size": 5295146,
       "size_human": "5.0 MB"
     }
   }
