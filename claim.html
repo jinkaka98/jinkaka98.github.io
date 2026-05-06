@@ -217,7 +217,7 @@
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
     import {
-        getFirestore, collection, query, where, orderBy, limit,
+        getFirestore, collection, query, where, limit,
         getDocs, doc, updateDoc, addDoc, getCountFromServer, Timestamp
     } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
 
@@ -267,11 +267,10 @@
         showState(stateClaiming);
 
         try {
-            // Query one available key
+            // Query one available key (no orderBy to avoid composite index requirement)
             const q = query(
                 collection(db, 'free_keys'),
                 where('status', '==', 'available'),
-                orderBy('created_at', 'asc'),
                 limit(1)
             );
             const snapshot = await getDocs(q);
