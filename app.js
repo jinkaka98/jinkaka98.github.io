@@ -91,31 +91,60 @@ function updateDownloadButtons() {
     }
 }
 
-// Update changelog section
-function updateChangelog(fallbackData = null) {
+// Update changelog section — loads from changelog.json (shows latest 3 entries)
+async function updateChangelog(fallbackData = null) {
     if (!changelogContent) return;
 
-    const data = releaseData || fallbackData;
-    if (!data) return;
+    try {
+        const response = await fetch('releases/changelog.json');
+        const entries = await response.json();
 
-    const publishedDate = data.published_at ? 
-        new Date(data.published_at).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        }) : 'Recent';
+        if (!entries || entries.length === 0) throw new Error('Empty changelog');
 
-    const changelogHTML = `
-        <div class="changelog-item">
-            <div class="changelog-header">
-                <div class="changelog-version">v${data.version}</div>
-                <div class="changelog-date">${publishedDate}</div>
+        // Show up to 3 most recent entries (already sorted newest-first)
+        const recent = entries.slice(0, 3);
+        let html = '';
+
+        recent.forEach(entry => {
+            const publishedDate = entry.published_at
+                ? new Date(entry.published_at).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                })
+                : 'Recent';
+
+            html += `
+                <div class="changelog-item" style="margin-bottom:16px;">
+                    <div class="changelog-header">
+                        <div class="changelog-version">v${entry.version}</div>
+                        <div class="changelog-date">${publishedDate}</div>
+                    </div>
+                    <div class="changelog-notes">${entry.release_notes || 'Latest updates and improvements'}</div>
+                </div>
+            `;
+        });
+
+        changelogContent.innerHTML = html;
+    } catch (error) {
+        // Fallback: use releaseData or provided fallback
+        const data = releaseData || fallbackData;
+        if (!data) return;
+
+        const publishedDate = data.published_at
+            ? new Date(data.published_at).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            })
+            : 'Recent';
+
+        changelogContent.innerHTML = `
+            <div class="changelog-item">
+                <div class="changelog-header">
+                    <div class="changelog-version">v${data.version}</div>
+                    <div class="changelog-date">${publishedDate}</div>
+                </div>
+                <div class="changelog-notes">${data.release_notes || 'Latest updates and improvements'}</div>
             </div>
-            <div class="changelog-notes">${data.release_notes || 'Latest updates and improvements'}</div>
-        </div>
-    `;
-
-    changelogContent.innerHTML = changelogHTML;
+        `;
+    }
 }
 
 // Setup scroll reveal animations

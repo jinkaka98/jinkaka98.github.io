@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Claim Key - Xixero</title>
+    <meta name="description" content="Claim a free 24-hour Xixero license key. Limited stock available.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="./index.html" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
+                    <span class="logo">XIXERO</span>
+                    <span class="version-badge" id="version-badge">v0.1.4</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="./index.html#features" class="nav-link">Features</a>
+                <a href="./download.html" class="nav-link">Download</a>
+                <a href="./changelog.html" class="nav-link">Changelog</a>
+                <a href="https://discord.gg/TFErxnnEfY" class="nav-link nav-link-discord" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                    Discord
+                </a>
+            </div>
+            
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main">
+        <!-- Page Hero -->
+        <section class="page-hero">
+            <div class="container">
+                <div class="page-hero-content">
+                    <h1 class="page-hero-title">Free Claim Key</h1>
+                    <p class="page-hero-subtitle">Get a free 24-hour trial license key for Xixero. Limited stock available.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Claim Section -->
+        <section class="claim-section">
+            <div class="container">
+                <div class="claim-card" id="claim-card">
+                    
+                    <!-- State: Loading -->
+                    <div id="state-loading" class="claim-state">
+                        <div class="claim-spinner"></div>
+                        <p class="claim-state-text">Checking available keys...</p>
+                    </div>
+
+                    <!-- State: Available (ready to claim) -->
+                    <div id="state-available" class="claim-state" style="display:none;">
+                        <div class="claim-stock-badge">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/>
+                                <rect x="2" y="7" width="20" height="5" rx="1"/>
+                                <path d="M12 22V7"/>
+                                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                            </svg>
+                            <span id="stock-count">0</span> keys available
+                        </div>
+                        <h2 class="claim-title">Claim Your Free Key</h2>
+                        <p class="claim-description">
+                            Get a free 24-hour license key for Xixero. 
+                            Click the button below to claim your key.
+                        </p>
+                        <div class="claim-info-grid">
+                            <div class="claim-info-item">
+                                <span class="claim-info-label">Duration</span>
+                                <span class="claim-info-value">24 Hours</span>
+                            </div>
+                            <div class="claim-info-item">
+                                <span class="claim-info-label">Devices</span>
+                                <span class="claim-info-value">1 Device</span>
+                            </div>
+                            <div class="claim-info-item">
+                                <span class="claim-info-label">Plan</span>
+                                <span class="claim-info-value">Free Trial</span>
+                            </div>
+                        </div>
+                        <!-- This link goes through ouo.io (not in exclude_domains) then redirects back -->
+                        <a href="https://jinkaka98.github.io/claim.html?r=1" class="claim-btn" id="claim-btn" data-ouo="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Claim Free Key
+                        </a>
+                        <p class="claim-note">You will be redirected through a short link before receiving your key.</p>
+                    </div>
+
+                    <!-- State: Claiming (processing) -->
+                    <div id="state-claiming" class="claim-state" style="display:none;">
+                        <div class="claim-spinner"></div>
+                        <p class="claim-state-text">Claiming your key...</p>
+                    </div>
+
+                    <!-- State: Success (key revealed) -->
+                    <div id="state-success" class="claim-state" style="display:none;">
+                        <div class="claim-success-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22,4 12,14.01 9,11.01"/>
+                            </svg>
+                        </div>
+                        <h2 class="claim-title">Key Claimed!</h2>
+                        <p class="claim-description">Here is your free 24-hour license key. Copy it and activate in Xixero.</p>
+                        <div class="claim-key-display">
+                            <code id="claimed-key">XIXERO-XXXXX-XXXXX</code>
+                            <button class="claim-copy-btn" id="copy-key-btn" title="Copy key">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="claim-expiry-note">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            Expires: <span id="expiry-time">—</span>
+                        </div>
+                        <a href="./download.html" class="claim-btn claim-btn-secondary">
+                            Download Xixero
+                        </a>
+                    </div>
+
+                    <!-- State: Out of Stock -->
+                    <div id="state-empty" class="claim-state" style="display:none;">
+                        <div class="claim-empty-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <h2 class="claim-title">Out of Stock</h2>
+                        <p class="claim-description">
+                            All free keys have been claimed. Check back later or join our Discord for updates.
+                        </p>
+                        <a href="https://discord.gg/TFErxnnEfY" class="claim-btn claim-btn-secondary" target="_blank" rel="noopener">
+                            Join Discord
+                        </a>
+                    </div>
+
+                    <!-- State: Error -->
+                    <div id="state-error" class="claim-state" style="display:none;">
+                        <div class="claim-empty-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="15" y1="9" x2="9" y2="15"/>
+                                <line x1="9" y1="9" x2="15" y2="15"/>
+                            </svg>
+                        </div>
+                        <h2 class="claim-title">Something went wrong</h2>
+                        <p class="claim-description" id="error-message">Failed to claim key. Please try again.</p>
+                        <button class="claim-btn claim-btn-secondary" onclick="window.location.href='claim.html'">
+                            Try Again
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span class="footer-brand">Built by jinkaka98</span>
+                </div>
+                <div class="footer-right">
+                    <a href="https://discord.gg/TFErxnnEfY" class="footer-link" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/jinkaka98/xixero" class="footer-link" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK (CDN) -->
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+    import {
+        getFirestore, collection, query, where, orderBy, limit,
+        getDocs, doc, updateDoc, addDoc, getCountFromServer, Timestamp
+    } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
+
+    // Firebase config (public — safe to expose, protected by security rules)
+    const firebaseConfig = {
+        apiKey: "AIzaSyA0XF-bKB7tK0eBKkXm0oQTIDu31czKNhA",
+        authDomain: "ixero-95d56.firebaseapp.com",
+        projectId: "ixero-95d56",
+        storageBucket: "ixero-95d56.firebasestorage.app",
+        messagingSenderId: "1015803439365",
+        appId: "1:1015803439365:web:7267b83d2a4faa98baaf6c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // DOM elements
+    const stateLoading = document.getElementById('state-loading');
+    const stateAvailable = document.getElementById('state-available');
+    const stateClaiming = document.getElementById('state-claiming');
+    const stateSuccess = document.getElementById('state-success');
+    const stateEmpty = document.getElementById('state-empty');
+    const stateError = document.getElementById('state-error');
+    const stockCount = document.getElementById('stock-count');
+    const claimedKeyEl = document.getElementById('claimed-key');
+    const expiryTimeEl = document.getElementById('expiry-time');
+    const copyKeyBtn = document.getElementById('copy-key-btn');
+    const errorMessage = document.getElementById('error-message');
+
+    function showState(state) {
+        [stateLoading, stateAvailable, stateClaiming, stateSuccess, stateEmpty, stateError]
+            .forEach(el => { if (el) el.style.display = 'none'; });
+        if (state) state.style.display = 'flex';
+    }
+
+    // Check if user is returning from ouo.io (has ?r=1 param)
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldClaim = urlParams.get('r') === '1';
+
+    async function getAvailableCount() {
+        const q = query(collection(db, 'free_keys'), where('status', '==', 'available'));
+        const snap = await getCountFromServer(q);
+        return snap.data().count;
+    }
+
+    async function claimKey() {
+        showState(stateClaiming);
+
+        try {
+            // Query one available key
+            const q = query(
+                collection(db, 'free_keys'),
+                where('status', '==', 'available'),
+                orderBy('created_at', 'asc'),
+                limit(1)
+            );
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                showState(stateEmpty);
+                return;
+            }
+
+            const keyDoc = snapshot.docs[0];
+            const keyData = keyDoc.data();
+
+            // Mark as claimed
+            const now = new Date();
+            await updateDoc(doc(db, 'free_keys', keyDoc.id), {
+                status: 'claimed',
+                claimed_at: Timestamp.fromDate(now),
+            });
+
+            // Also create a license entry so the xixero app can verify it
+            const expiresAt = new Date(now.getTime() + (keyData.expires_duration || 86400) * 1000);
+            await addDoc(collection(db, 'licenses'), {
+                key: keyData.key,
+                active: true,
+                plan: 'free',
+                hwid: null,
+                max_devices: keyData.max_devices || 1,
+                expires_at: Timestamp.fromDate(expiresAt),
+                created_at: Timestamp.fromDate(now),
+                signature: keyData.signature,
+                label: 'Free Claim',
+            });
+
+            // Show success
+            if (claimedKeyEl) claimedKeyEl.textContent = keyData.key;
+            if (expiryTimeEl) {
+                expiryTimeEl.textContent = expiresAt.toLocaleString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+            }
+            showState(stateSuccess);
+
+            // Clean URL
+            window.history.replaceState({}, '', 'claim.html');
+
+        } catch (err) {
+            console.error('Claim failed:', err);
+            if (errorMessage) errorMessage.textContent = `Failed to claim key: ${err.message}`;
+            showState(stateError);
+        }
+    }
+
+    async function init() {
+        try {
+            if (shouldClaim) {
+                // User returned from ouo.io — claim immediately
+                await claimKey();
+            } else {
+                // Normal visit — show stock count
+                const count = await getAvailableCount();
+                if (count > 0) {
+                    if (stockCount) stockCount.textContent = count.toString();
+                    showState(stateAvailable);
+                } else {
+                    showState(stateEmpty);
+                }
+            }
+        } catch (err) {
+            console.error('Init failed:', err);
+            if (errorMessage) errorMessage.textContent = `Connection error: ${err.message}`;
+            showState(stateError);
+        }
+    }
+
+    // Copy key button
+    if (copyKeyBtn) {
+        copyKeyBtn.addEventListener('click', () => {
+            const key = claimedKeyEl?.textContent;
+            if (key) {
+                navigator.clipboard.writeText(key);
+                copyKeyBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                `;
+                setTimeout(() => {
+                    copyKeyBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                    `;
+                }, 2000);
+            }
+        });
+    }
+
+    // Navigation
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    }
+
+    // Start
+    init();
+    </script>
+
+    <!-- ouo.io Full Page Script — intercepts the claim link -->
+    <!-- Note: jinkaka98.github.io is NOT excluded so the claim button link gets intercepted -->
+    <script type="text/javascript">
+        var ouo_token = '8LsxHpRg';
+        var exclude_domains = ['discord.gg', 'github.com', 'fonts.googleapis.com', 'gstatic.com', 'firebaseapp.com', 'googleapis.com'];
+    </script>
+    <script src="//cdn.ouo.io/js/full-page-script.js"></script>
+</body>
+</html>

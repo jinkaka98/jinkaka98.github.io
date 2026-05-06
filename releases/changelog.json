@@ -1,0 +1,16 @@
+[
+  {
+    "version": "0.1.4",
+    "release_notes": "*repair FULL WINDOW\n*Create optimal update dan download",
+    "is_critical": true,
+    "published_at": "2026-05-06T16:47:07.888Z",
+    "published_by": "Administrator"
+  },
+  {
+    "version": "0.1.3",
+    "release_notes": "*Initial public release\n*Basic AI Gateway functionality",
+    "is_critical": false,
+    "published_at": "2026-04-28T12:15:46.767Z",
+    "published_by": "Administrator"
+  }
+]
