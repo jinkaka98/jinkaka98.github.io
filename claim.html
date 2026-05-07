@@ -213,15 +213,15 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK (CDN) — only for stock count read -->
+    <!-- Firebase SDK (CDN) — direct Firestore for claim -->
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
     import {
-        getFirestore, collection, query, where,
-        getCountFromServer
+        getFirestore, collection, query, where, limit,
+        getDocs, doc, updateDoc, addDoc, getCountFromServer, Timestamp
     } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
 
-    // Firebase config (public — safe to expose, protected by security rules)
+    // Firebase config
     const firebaseConfig = {
         apiKey: "AIzaSyA0XF-bKB7tK0eBKkXm0oQTIDu31czKNhA",
         authDomain: "ixero-95d56.firebaseapp.com",
@@ -233,9 +233,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    // Cloud Function URL (deployed to asia-southeast1)
-    const CLAIM_FUNCTION_URL = 'https://asia-southeast1-ixero-95d56.cloudfunctions.net/claimFreeKey';
 
     // DOM elements
     const stateLoading = document.getElementById('state-loading');
@@ -270,26 +267,46 @@
         showState(stateClaiming);
 
         try {
-            // Call Cloud Function to claim key (server-side signing)
-            const response = await fetch(CLAIM_FUNCTION_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            });
+            // Query one available key from free_keys
+            const q = query(
+                collection(db, 'free_keys'),
+                where('status', '==', 'available'),
+                limit(1)
+            );
+            const snapshot = await getDocs(q);
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                if (data.error === 'out_of_stock') {
-                    showState(stateEmpty);
-                    return;
-                }
-                throw new Error(data.message || 'Failed to claim key');
+            if (snapshot.empty) {
+                showState(stateEmpty);
+                return;
             }
 
+            const keyDoc = snapshot.docs[0];
+            const keyData = keyDoc.data();
+
+            // Mark as claimed in free_keys
+            const now = new Date();
+            await updateDoc(doc(db, 'free_keys', keyDoc.id), {
+                status: 'claimed',
+                claimed_at: Timestamp.fromDate(now),
+            });
+
+            // Create license entry with expires_at = NOW + 24h
+            // No signature needed — app skips signature check for plan 'free'
+            const expiresAt = new Date(now.getTime() + (keyData.expires_duration || 86400) * 1000);
+            await addDoc(collection(db, 'licenses'), {
+                key: keyData.key,
+                active: true,
+                plan: 'free',
+                hwid: null,
+                max_devices: keyData.max_devices || 1,
+                expires_at: Timestamp.fromDate(expiresAt),
+                created_at: Timestamp.fromDate(now),
+                label: 'Free Claim',
+            });
+
             // Show success
-            if (claimedKeyEl) claimedKeyEl.textContent = data.key;
+            if (claimedKeyEl) claimedKeyEl.textContent = keyData.key;
             if (expiryTimeEl) {
-                const expiresAt = new Date(data.expires_at);
                 expiryTimeEl.textContent = expiresAt.toLocaleString('en-US', {
                     month: 'short', day: 'numeric', year: 'numeric',
                     hour: '2-digit', minute: '2-digit'
@@ -310,7 +327,7 @@
     async function init() {
         try {
             if (shouldClaim) {
-                // User returned from ouo.io — claim via Cloud Function
+                // User returned from ouo.io — claim directly via Firestore
                 await claimKey();
             } else {
                 // Normal visit — show stock count
