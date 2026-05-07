@@ -213,12 +213,12 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK (CDN) -->
+    <!-- Firebase SDK (CDN) — only for stock count read -->
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
     import {
-        getFirestore, collection, query, where, limit,
-        getDocs, doc, updateDoc, addDoc, getCountFromServer, Timestamp
+        getFirestore, collection, query, where,
+        getCountFromServer
     } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
 
     // Firebase config (public — safe to expose, protected by security rules)
@@ -233,6 +233,9 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    // Cloud Function URL (deployed to asia-southeast1)
+    const CLAIM_FUNCTION_URL = 'https://asia-southeast1-ixero-95d56.cloudfunctions.net/claimFreeKey';
 
     // DOM elements
     const stateLoading = document.getElementById('state-loading');
@@ -267,46 +270,26 @@
         showState(stateClaiming);
 
         try {
-            // Query one available key (no orderBy to avoid composite index requirement)
-            const q = query(
-                collection(db, 'free_keys'),
-                where('status', '==', 'available'),
-                limit(1)
-            );
-            const snapshot = await getDocs(q);
+            // Call Cloud Function to claim key (server-side signing)
+            const response = await fetch(CLAIM_FUNCTION_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
 
-            if (snapshot.empty) {
-                showState(stateEmpty);
-                return;
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.error === 'out_of_stock') {
+                    showState(stateEmpty);
+                    return;
+                }
+                throw new Error(data.message || 'Failed to claim key');
             }
 
-            const keyDoc = snapshot.docs[0];
-            const keyData = keyDoc.data();
-
-            // Mark as claimed
-            const now = new Date();
-            await updateDoc(doc(db, 'free_keys', keyDoc.id), {
-                status: 'claimed',
-                claimed_at: Timestamp.fromDate(now),
-            });
-
-            // Also create a license entry so the xixero app can verify it
-            const expiresAt = new Date(now.getTime() + (keyData.expires_duration || 86400) * 1000);
-            await addDoc(collection(db, 'licenses'), {
-                key: keyData.key,
-                active: true,
-                plan: 'free',
-                hwid: null,
-                max_devices: keyData.max_devices || 1,
-                expires_at: Timestamp.fromDate(expiresAt),
-                created_at: Timestamp.fromDate(now),
-                signature: keyData.signature,
-                label: 'Free Claim',
-            });
-
             // Show success
-            if (claimedKeyEl) claimedKeyEl.textContent = keyData.key;
+            if (claimedKeyEl) claimedKeyEl.textContent = data.key;
             if (expiryTimeEl) {
+                const expiresAt = new Date(data.expires_at);
                 expiryTimeEl.textContent = expiresAt.toLocaleString('en-US', {
                     month: 'short', day: 'numeric', year: 'numeric',
                     hour: '2-digit', minute: '2-digit'
@@ -327,7 +310,7 @@
     async function init() {
         try {
             if (shouldClaim) {
-                // User returned from ouo.io — claim immediately
+                // User returned from ouo.io — claim via Cloud Function
                 await claimKey();
             } else {
                 // Normal visit — show stock count
