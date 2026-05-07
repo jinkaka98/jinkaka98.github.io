@@ -1,5 +1,12 @@
 [
   {
+    "version": "0.2.1",
+    "release_notes": "*FIX UPDATE BUTON DAN DOWNLAOD ISSUE",
+    "is_critical": true,
+    "published_at": "2026-05-07T06:09:06.523Z",
+    "published_by": "Administrator"
+  },
+  {
     "version": "0.2.0",
     "release_notes": "*ADD ANTYGRAFITY CONNECTOR WITH ENOWXAI\n*ADD STABIL TRAE CONNECTOR WITH ENOWXAI\n*ADD CLAIM KEY 6 HOURS 1 ADS\n*BUY PREMIUM KEY FOR LICENSE VARIATION\n*ADD BUTTON DONATION RISPECT\n\n\nFIX BUGS\n*FREE KEY CLAIM\n*MULTIPLE TRAE WITH ANTYGRAFITY BUGS",
     "is_critical": true,

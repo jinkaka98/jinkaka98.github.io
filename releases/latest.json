@@ -1,22 +1,22 @@
 {
-  "version": "0.2.0",
-  "release_notes": "*ADD ANTYGRAFITY CONNECTOR WITH ENOWXAI\n*ADD STABIL TRAE CONNECTOR WITH ENOWXAI\n*ADD CLAIM KEY 6 HOURS 1 ADS\n*BUY PREMIUM KEY FOR LICENSE VARIATION\n*ADD BUTTON DONATION RISPECT\n\n\nFIX BUGS\n*FREE KEY CLAIM\n*MULTIPLE TRAE WITH ANTYGRAFITY BUGS",
+  "version": "0.2.1",
+  "release_notes": "*FIX UPDATE BUTON DAN DOWNLAOD ISSUE",
   "is_critical": true,
-  "min_version": "0.2.0",
+  "min_version": "0.2.1",
   "platform": "windows-x64",
-  "published_at": "2026-05-07T05:45:39.204Z",
+  "published_at": "2026-05-07T06:09:06.523Z",
   "published_by": "Administrator",
   "downloads": {
     "msi": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
-      "filename": "Xixero_0.2.0_x64_en-US.msi",
+      "filename": "Xixero_0.2.1_x64_en-US.msi",
       "size": 7622656,
       "size_human": "7.3 MB"
     },
     "exe": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-      "filename": "Xixero_0.2.0_x64-setup.exe",
-      "size": 5375646,
+      "filename": "Xixero_0.2.1_x64-setup.exe",
+      "size": 5378742,
       "size_human": "5.1 MB"
     }
   }
