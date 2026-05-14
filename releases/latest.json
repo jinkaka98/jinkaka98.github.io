@@ -1,23 +1,23 @@
 {
-  "version": "0.2.1",
-  "release_notes": "*FIX UPDATE BUTON DAN DOWNLAOD ISSUE",
+  "version": "0.2.4",
+  "release_notes": "*FIX bugs natygrafity-mjs not found\n*add New Method Proses\n*add store free no ads\n*add DONATION page.\n",
   "is_critical": true,
-  "min_version": "0.2.1",
+  "min_version": "0.2.4",
   "platform": "windows-x64",
-  "published_at": "2026-05-07T06:09:06.523Z",
+  "published_at": "2026-05-14T09:20:34.782Z",
   "published_by": "Administrator",
   "downloads": {
     "msi": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
-      "filename": "Xixero_0.2.1_x64_en-US.msi",
-      "size": 7622656,
-      "size_human": "7.3 MB"
+      "filename": "Xixero_0.2.4_x64_en-US.msi",
+      "size": 13938688,
+      "size_human": "13.3 MB"
     },
     "exe": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-      "filename": "Xixero_0.2.1_x64-setup.exe",
-      "size": 5378742,
-      "size_human": "5.1 MB"
+      "filename": "Xixero_0.2.4_x64-setup.exe",
+      "size": 8348284,
+      "size_human": "8.0 MB"
     }
   }
 }
