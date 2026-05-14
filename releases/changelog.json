@@ -1,5 +1,12 @@
 [
   {
+    "version": "0.2.7",
+    "release_notes": "*Bugs update \n*Bugs Blackdisplay",
+    "is_critical": true,
+    "published_at": "2026-05-14T10:59:56.087Z",
+    "published_by": "Administrator"
+  },
+  {
     "version": "0.2.6",
     "release_notes": "bugs update",
     "is_critical": true,
