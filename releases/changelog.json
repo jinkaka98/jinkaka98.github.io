@@ -1,5 +1,12 @@
 [
   {
+    "version": "0.2.6",
+    "release_notes": "bugs update",
+    "is_critical": true,
+    "published_at": "2026-05-14T10:43:11.553Z",
+    "published_by": "Administrator"
+  },
+  {
     "version": "0.2.4",
     "release_notes": "*FIX bugs natygrafity-mjs not found\n*add New Method Proses\n*add store free no ads\n*add DONATION page.\n",
     "is_critical": true,
