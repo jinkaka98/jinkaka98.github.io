@@ -1,22 +1,22 @@
 {
-  "version": "0.2.7",
-  "release_notes": "*Bugs update \n*Bugs Blackdisplay",
+  "version": "0.3.5",
+  "release_notes": "*Disable Trae (maintence dan upgrade future)",
   "is_critical": true,
-  "min_version": "0.2.7",
+  "min_version": "0.3.5",
   "platform": "windows-x64",
-  "published_at": "2026-05-14T10:59:56.087Z",
+  "published_at": "2026-05-15T02:09:38.069Z",
   "published_by": "Administrator",
   "downloads": {
     "msi": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
-      "filename": "Xixero_0.2.7_x64_en-US.msi",
-      "size": 13942784,
-      "size_human": "13.3 MB"
+      "filename": "Xixero_0.3.5_x64_en-US.msi",
+      "size": 14049280,
+      "size_human": "13.4 MB"
     },
     "exe": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-      "filename": "Xixero_0.2.7_x64-setup.exe",
-      "size": 8346986,
+      "filename": "Xixero_0.3.5_x64-setup.exe",
+      "size": 8400420,
       "size_human": "8.0 MB"
     }
   }

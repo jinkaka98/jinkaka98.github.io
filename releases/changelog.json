@@ -1,5 +1,12 @@
 [
   {
+    "version": "0.3.5",
+    "release_notes": "*Disable Trae (maintence dan upgrade future)",
+    "is_critical": true,
+    "published_at": "2026-05-15T02:09:38.069Z",
+    "published_by": "Administrator"
+  },
+  {
     "version": "0.2.7",
     "release_notes": "*Bugs update \n*Bugs Blackdisplay",
     "is_critical": true,
