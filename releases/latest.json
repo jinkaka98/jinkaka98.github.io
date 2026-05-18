@@ -1,22 +1,22 @@
 {
-  "version": "0.3.5",
-  "release_notes": "*Disable Trae (maintence dan upgrade future)",
+  "version": "0.3.6",
+  "release_notes": "*Fix Model Enowxai claude-sonnet to kiro/claude-sonnet",
   "is_critical": true,
-  "min_version": "0.3.5",
+  "min_version": "0.3.6",
   "platform": "windows-x64",
-  "published_at": "2026-05-15T02:09:38.069Z",
+  "published_at": "2026-05-18T14:42:57.108Z",
   "published_by": "Administrator",
   "downloads": {
     "msi": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.msi",
-      "filename": "Xixero_0.3.5_x64_en-US.msi",
+      "filename": "Xixero_0.3.6_x64_en-US.msi",
       "size": 14049280,
       "size_human": "13.4 MB"
     },
     "exe": {
       "url": "https://jinkaka98.github.io/releases/xixero-setup.exe",
-      "filename": "Xixero_0.3.5_x64-setup.exe",
-      "size": 8400420,
+      "filename": "Xixero_0.3.6_x64-setup.exe",
+      "size": 8399106,
       "size_human": "8.0 MB"
     }
   }

@@ -1,5 +1,12 @@
 [
   {
+    "version": "0.3.6",
+    "release_notes": "*Fix Model Enowxai claude-sonnet to kiro/claude-sonnet",
+    "is_critical": true,
+    "published_at": "2026-05-18T14:42:57.108Z",
+    "published_by": "Administrator"
+  },
+  {
     "version": "0.3.5",
     "release_notes": "*Disable Trae (maintence dan upgrade future)",
     "is_critical": true,
