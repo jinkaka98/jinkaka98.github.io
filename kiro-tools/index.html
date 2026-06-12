@@ -74,11 +74,28 @@
                             Setup &amp; Connect
                         </button>
                         <ol class="setup-steps">
-                            <li>Browser will show a folder picker dialog</li>
-                            <li>Navigate to: <code style="color:var(--color-accent);background:var(--color-surface-base);padding:1px 6px;border-radius:4px;font-size:0.75rem;">AppData/Roaming/9router</code></li>
-                            <li>Click "Select Folder" then "Allow" when prompted</li>
-                            <li>Done! Tool auto-connects to your 9Router</li>
+                            <li>Browser shows a folder picker</li>
+                            <li id="pathHint">Navigate to your 9Router data folder</li>
+                            <li>Click "Select Folder" → browser asks "Allow?" → click <strong>Allow</strong></li>
+                            <li>Auto-connected! Only needed once (browser remembers)</li>
                         </ol>
+                        <script>
+                        // Auto-detect OS and show correct path
+                        (function(){
+                            const hint = document.getElementById('pathHint');
+                            const ua = navigator.userAgent.toLowerCase();
+                            let pathInfo = '';
+                            if (ua.includes('win')) {
+                                const user = '&lt;username&gt;';
+                                pathInfo = '<code style="color:var(--color-accent);background:var(--color-surface-base);padding:2px 6px;border-radius:4px;font-size:0.7rem;display:inline-block;margin-top:4px;">C:\\Users\\' + user + '\\AppData\\Roaming\\9router</code><br><span style="font-size:0.75rem;color:var(--color-text-tertiary);">Shortcut: type <code style="padding:1px 4px;background:var(--color-surface-base);border-radius:3px;font-size:0.7rem;">%APPDATA%\\9router</code> in the address bar of the folder picker</span>';
+                            } else if (ua.includes('mac') || ua.includes('darwin')) {
+                                pathInfo = '<code style="color:var(--color-accent);background:var(--color-surface-base);padding:2px 6px;border-radius:4px;font-size:0.7rem;display:inline-block;margin-top:4px;">~/.9router</code><br><span style="font-size:0.75rem;color:var(--color-text-tertiary);">Press Cmd+Shift+. to show hidden folders, then select .9router in your home directory</span>';
+                            } else {
+                                pathInfo = '<code style="color:var(--color-accent);background:var(--color-surface-base);padding:2px 6px;border-radius:4px;font-size:0.7rem;display:inline-block;margin-top:4px;">~/.9router</code><br><span style="font-size:0.75rem;color:var(--color-text-tertiary);">Show hidden files (Ctrl+H), then select .9router in your home directory</span>';
+                            }
+                            hint.innerHTML = 'Navigate to your 9Router data folder:<br>' + pathInfo;
+                        })();
+                        </script>
                         <div class="status-msg" id="setupStatus"></div>
                     </div>
 
@@ -198,15 +215,41 @@ window.parent.postMessage({type:'kiro-bridge-ready'}, '*');
 
         try {
             // Step 1: User picks the 9Router data directory
+            // Browser remembers last folder via 'id' — second time opens same folder
             const dirHandle = await window.showDirectoryPicker({
-                id: 'kiro-9router-dir',
-                mode: 'readwrite',
-                startIn: 'desktop'
+                id: '9router-data-folder',
+                mode: 'readwrite'
             });
 
-            showStatus('setupStatus', 'Folder selected. Writing bridge file...', 'warn');
+            showStatus('setupStatus', 'Verifying folder...', 'warn');
 
-            // Step 2: Find or create "public" subfolder
+            // Step 2: Verify this is a 9Router data folder
+            let is9Router = false;
+            try {
+                await dirHandle.getFileHandle('machine-id');
+                is9Router = true;
+            } catch(e) {
+                try {
+                    const dbDir = await dirHandle.getDirectoryHandle('db');
+                    await dbDir.getFileHandle('data.sqlite');
+                    is9Router = true;
+                } catch(e2) {}
+            }
+
+            if (!is9Router) {
+                const ua = navigator.userAgent.toLowerCase();
+                const pathTip = ua.includes('win')
+                    ? 'On Windows: C:\\Users\\<you>\\AppData\\Roaming\\9router (type %APPDATA%\\9router in address bar)'
+                    : 'On Mac/Linux: ~/.9router (enable hidden files first)';
+                showStatus('setupStatus', 'This is not a 9Router folder (no machine-id found). ' + pathTip, 'err');
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+                return;
+            }
+
+            showStatus('setupStatus', '9Router folder confirmed. Writing bridge file...', 'warn');
+
+            // Step 3: Find or create "public" subfolder
             let publicDir;
             try {
                 publicDir = await dirHandle.getDirectoryHandle('public', { create: true });
@@ -217,7 +260,7 @@ window.parent.postMessage({type:'kiro-bridge-ready'}, '*');
                 return;
             }
 
-            // Step 3: Write kiro-bridge.html to public folder
+            // Step 4: Write kiro-bridge.html to public folder
             const fileHandle = await publicDir.getFileHandle('kiro-bridge.html', { create: true });
             const writable = await fileHandle.createWritable();
             await writable.write(BRIDGE_HTML);
