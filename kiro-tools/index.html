@@ -17,20 +17,25 @@
         .kiro-sub{color:var(--color-text-secondary);font-size:0.9375rem}
         .kiro-body{padding:32px}
         .kiro-label{font-size:0.8125rem;font-weight:600;color:var(--color-text-primary);margin-bottom:8px}
-        .kiro-textarea{width:100%;height:160px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);padding:14px;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.6;resize:vertical;outline:none}
+        .kiro-textarea{width:100%;height:180px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);padding:14px;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.6;resize:vertical;outline:none}
         .kiro-textarea:focus{border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-glow)}
-        .big-btn{display:block;width:100%;padding:16px;margin-top:16px;background:var(--color-accent);color:#000;border:none;border-radius:var(--radius-full);font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px var(--color-accent-glow);transition:all 0.2s;text-align:center}
-        .big-btn:hover{background:var(--color-accent-hover);transform:translateY(-2px);box-shadow:0 8px 24px var(--color-accent-glow)}
-        .big-btn-green{background:#10b981;box-shadow:0 4px 16px rgba(16,185,129,0.3)}
-        .big-btn-green:hover{background:#059669;box-shadow:0 8px 24px rgba(16,185,129,0.4)}
-        .divider{margin:28px 0;border:none;border-top:1px solid var(--color-border)}
-        .next-step{margin-top:24px;padding:24px;background:rgba(16,185,129,0.06);border:2px solid rgba(16,185,129,0.2);border-radius:var(--radius-lg);display:none}
-        .next-step.show{display:block}
-        .next-step-title{font-size:1rem;font-weight:700;color:#10b981;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-        .next-step p{font-size:0.9375rem;color:var(--color-text-secondary);line-height:1.7;margin-bottom:12px}
-        .next-step p:last-child{margin-bottom:0}
-        .next-step strong{color:var(--color-text-primary)}
-        .next-step .highlight{display:inline-block;padding:4px 10px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:6px;font-family:var(--font-mono);font-size:0.8125rem;color:var(--color-accent);margin:4px 0}
+        .big-btn{display:block;width:100%;padding:16px;margin-top:16px;background:var(--color-accent);color:#000;border:none;border-radius:var(--radius-full);font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px var(--color-accent-glow);transition:all 0.2s}
+        .big-btn:hover:not(:disabled){background:var(--color-accent-hover);transform:translateY(-2px);box-shadow:0 8px 24px var(--color-accent-glow)}
+        .big-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
+        .kiro-log{margin-top:20px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);height:220px;overflow-y:auto;padding:14px;font-family:var(--font-mono);font-size:0.75rem;line-height:1.7;color:var(--color-text-secondary)}
+        .kiro-log div{margin-bottom:3px}
+        .kiro-log .s{color:#10b981}.kiro-log .k{color:#f59e0b}.kiro-log .f{color:#ef4444}.kiro-log .i{color:var(--color-accent)}
+        .kiro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);text-align:center}
+        .sv{font-size:1.5rem;font-weight:700}.sl{font-size:0.625rem;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+        .status-bar{margin-bottom:20px;padding:12px 16px;border-radius:var(--radius-md);font-size:0.8125rem;display:flex;align-items:center;gap:8px}
+        .status-bar.ok{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:#10b981}
+        .status-bar.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#ef4444}
+        .status-bar.loading{background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);color:var(--color-accent)}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(139,92,246,0.3);border-top-color:var(--color-accent);border-radius:50%;animation:spin 0.7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .setup-msg{text-align:center;padding:40px 20px;color:var(--color-text-secondary);font-size:0.9375rem;line-height:1.7}
+        .setup-msg a{color:var(--color-accent);text-decoration:underline}
+        .hidden{display:none!important}
         .kiro-note{max-width:600px;margin:16px auto 0;padding:12px 20px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);color:var(--color-accent-hover);font-size:0.8125rem;line-height:1.6}
     </style>
 </head>
@@ -48,78 +53,173 @@
                     </div>
 
                     <div class="kiro-body">
-                        <!-- STEP 1 -->
-                        <div class="kiro-label">Paste semua Refresh Token di sini (satu per baris):</div>
-                        <textarea id="tokens" class="kiro-textarea" placeholder="aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3"></textarea>
+                        <!-- Status -->
+                        <div class="status-bar loading" id="status">
+                            <span class="spinner"></span> Menghubungkan ke 9Router...
+                        </div>
 
-                        <button class="big-btn" onclick="generate()">Buat Script Import</button>
+                        <!-- Setup message (if not connected) -->
+                        <div class="setup-msg hidden" id="setupMsg">
+                            <p style="font-size:1.125rem;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">9Router belum terhubung</p>
+                            <p>Pastikan 9Router sudah berjalan dan sudah di-setup.<br>
+                            Download file setup (.bat), jalankan sekali, restart 9Router.</p>
+                            <button class="big-btn" onclick="downloadSetup()" style="margin-top:16px;width:auto;display:inline-block;padding:14px 28px;">Download Setup (.bat)</button>
+                            <p style="margin-top:16px;font-size:0.8125rem;color:var(--color-text-tertiary);">Setelah setup selesai dan 9Router di-restart, <a href="javascript:location.reload()">refresh halaman ini</a>.</p>
+                        </div>
 
-                        <!-- STEP 2 (muncul setelah klik) -->
-                        <div class="next-step" id="step2">
-                            <div class="next-step-title">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Script siap! Sekarang jalankan:
+                        <!-- Import form (when connected) -->
+                        <div class="hidden" id="importForm">
+                            <div class="kiro-label">Paste Refresh Token (satu per baris):</div>
+                            <textarea id="tokens" class="kiro-textarea" placeholder="aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3"></textarea>
+                            <button class="big-btn" id="btnProcess" onclick="processTokens()">Import Sekarang</button>
+                            <div class="kiro-log" id="log"></div>
+                            <div class="kiro-stats">
+                                <div><div class="sv" id="sT" style="color:var(--color-text-primary)">0</div><div class="sl">Total</div></div>
+                                <div><div class="sv" id="sS" style="color:#10b981">0</div><div class="sl">Berhasil</div></div>
+                                <div><div class="sv" id="sK" style="color:#f59e0b">0</div><div class="sl">Sudah Ada</div></div>
+                                <div><div class="sv" id="sF" style="color:#ef4444">0</div><div class="sl">Gagal</div></div>
                             </div>
-
-                            <p><strong>1.</strong> Buka 9Router kamu di tab baru:</p>
-                            <a href="http://localhost:20128" target="_blank" class="big-btn big-btn-green" style="display:inline-block;width:auto;padding:12px 24px;font-size:0.875rem;text-decoration:none;margin-bottom:16px;">Buka 9Router →</a>
-
-                            <p><strong>2.</strong> Di halaman 9Router, klik <strong>address bar</strong> (kolom URL di atas), hapus isinya, lalu paste ini:</p>
-                            <div class="highlight" id="scriptDisplay" style="cursor:pointer;padding:10px 14px;display:block;word-break:break-all;max-height:60px;overflow:hidden;position:relative;" onclick="copyScript()">
-                                <span id="scriptPreview" style="opacity:0.7;font-size:0.75rem;"></span>
-                            </div>
-                            <button class="big-btn" onclick="copyScript()" style="margin-top:8px;font-size:0.875rem;padding:12px;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                <span id="copyBtnText">Copy Script</span>
-                            </button>
-
-                            <p style="margin-top:16px;"><strong>3.</strong> Tekan <strong>Enter</strong>. Selesai! Token akan otomatis ditambahkan satu per satu.</p>
-
-                            <p style="font-size:0.8125rem;color:var(--color-text-tertiary);margin-top:12px;padding-top:12px;border-top:1px solid var(--color-border);">
-                                Catatan: Chrome akan menghapus kata "javascript:" saat kamu paste. Kalau tidak jalan, ketik dulu <span class="highlight" style="display:inline;padding:2px 6px;">javascript:</span> secara manual di address bar, baru paste sisanya.
-                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="kiro-note">
-                    Script ini aman — hanya berjalan di halaman 9Router kamu sendiri, menggunakan sesi login yang sudah ada. Token tidak dikirim ke server manapun selain 9Router lokal kamu.
+                    Token dikirim langsung dari browser kamu ke 9Router lokal. Tidak ada data yang keluar ke server lain.
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Bridge iframe (hidden, communicates with 9Router) -->
+    <iframe id="bridge" style="display:none"></iframe>
+
     <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-brand">&copy; 2025 Xixero.</div><div class="footer-right"><a href="https://github.com/jinkaka98" class="footer-link" target="_blank">GitHub</a></div></div></div></footer>
     <script src="../app.js"></script>
     <script>
-    let generatedScript = '';
+    const $=id=>document.getElementById(id);
+    let bridgeReady=false, pending={};
 
-    function generate() {
-        const raw = document.getElementById('tokens').value.trim();
-        if (!raw) { alert('Paste minimal 1 refresh token dulu.'); return; }
-        const tokens = raw.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
-        if (!tokens.length) { alert('Tidak ada token valid.'); return; }
+    // Listen for bridge messages
+    window.addEventListener('message',e=>{
+        if(e.data?.type==='kiro-bridge-ready'){
+            bridgeReady=true;
+            $('status').className='status-bar ok';
+            $('status').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Terhubung ke 9Router';
+            $('importForm').classList.remove('hidden');
+        }
+        if(e.data?.type==='kiro-result'){
+            const r=pending[e.data.id];
+            if(r){r(e.data);delete pending[e.data.id];}
+        }
+    });
 
-        const code = `(async()=>{const t=${JSON.stringify(tokens)};let s=0,k=0,f=0;for(let i=0;i<t.length;i++){try{const r=await fetch('/api/oauth/kiro/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refreshToken:t[i]})});const d=await r.json();if(r.ok&&d.success){s++;document.title='✓ '+s+' imported'}else{const e=(d.error||'').toLowerCase();if(e.includes('duplicate')||e.includes('already')||e.includes('exists'))k++;else f++}}catch(e){f++}if(i<t.length-1)await new Promise(r=>setTimeout(r,500))}document.title='Done: '+s+' ok, '+k+' skip, '+f+' fail';alert('Selesai!\\n\\n✓ Berhasil: '+s+'\\n⊘ Sudah ada: '+k+'\\n✗ Gagal: '+f)})()`;
+    // Try connect
+    (function(){
+        $('bridge').src='http://localhost:20128/kiro-bridge.html';
+        setTimeout(()=>{
+            if(!bridgeReady){
+                $('status').className='status-bar err';
+                $('status').textContent='Tidak dapat terhubung ke 9Router';
+                $('setupMsg').classList.remove('hidden');
+            }
+        },4000);
+    })();
 
-        generatedScript = 'javascript:' + code;
-
-        // Show step 2
-        document.getElementById('step2').classList.add('show');
-        document.getElementById('scriptPreview').textContent = generatedScript.slice(0, 120) + '...';
-
-        // Auto copy
-        copyScript();
+    // Import via bridge
+    function importToken(token){
+        return new Promise(resolve=>{
+            const id=Math.random().toString(36).slice(2);
+            pending[id]=resolve;
+            $('bridge').contentWindow.postMessage({type:'kiro-import',token,id},'*');
+            setTimeout(()=>{if(pending[id]){delete pending[id];resolve({status:'fail',msg:'Timeout'})}},15000);
+        });
     }
 
-    function copyScript() {
-        navigator.clipboard.writeText(generatedScript).then(() => {
-            const btn = document.getElementById('copyBtnText');
-            btn.textContent = '✓ Sudah di-copy!';
-            setTimeout(() => { btn.textContent = 'Copy Script'; }, 2000);
-        }).catch(() => {
-            prompt('Copy manual (Ctrl+A lalu Ctrl+C):', generatedScript);
-        });
+    function addLog(msg,cls){
+        const d=document.createElement('div');d.className=cls;
+        d.textContent='['+new Date().toLocaleTimeString('en-GB',{hour12:false})+'] '+msg;
+        $('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight;
+    }
+
+    async function processTokens(){
+        const raw=$('tokens').value.trim();
+        if(!raw){alert('Paste minimal 1 token dulu.');return;}
+        const tokens=raw.split(/\r?\n/).map(t=>t.trim()).filter(Boolean);
+        if(!tokens.length){alert('Tidak ada token valid.');return;}
+
+        const btn=$('btnProcess');btn.disabled=true;btn.textContent='Mengimport...';
+        $('log').innerHTML='';['sT','sS','sK','sF'].forEach(x=>$(x).textContent='0');
+        addLog('Mulai import '+tokens.length+' token...','i');
+
+        let sc=0,sk=0,fl=0;
+        for(let i=0;i<tokens.length;i++){
+            const tk=tokens[i],ms=tk.length>14?tk.slice(0,10)+'...'+tk.slice(-4):tk.slice(0,6)+'...';
+            addLog('['+(i+1)+'/'+tokens.length+'] '+ms,'i');
+            const r=await importToken(tk);
+            if(r.status==='success'){addLog('Berhasil: '+(r.email||'ok'),'s');sc++;}
+            else if(r.status==='skip'){addLog('Sudah ada','k');sk++;}
+            else{addLog('Gagal: '+(r.msg||'error'),'f');fl++;}
+            $('sT').textContent=i+1;$('sS').textContent=sc;$('sK').textContent=sk;$('sF').textContent=fl;
+            if(i<tokens.length-1)await new Promise(r=>setTimeout(r,500));
+        }
+        addLog('Selesai! '+sc+' berhasil, '+sk+' sudah ada, '+fl+' gagal.','i');
+        btn.disabled=false;btn.textContent='Import Sekarang';
+    }
+
+    // Download setup .bat
+    function downloadSetup(){
+        const bat=`@echo off
+title Kiro Tools Setup
+echo.
+echo ========================================
+echo   Kiro Tools - Setup (sekali saja)
+echo ========================================
+echo.
+
+set "SERVER=%APPDATA%\\npm\\node_modules\\9router\\app\\server.js"
+
+if not exist "%SERVER%" (
+    echo ERROR: 9Router tidak ditemukan.
+    echo Install dulu: npm install -g 9router
+    pause
+    exit /b 1
+)
+
+findstr /C:"kiro-bridge" "%SERVER%" >nul 2>&1
+if %errorlevel%==0 (
+    echo Sudah di-setup! Tinggal restart 9Router.
+    pause
+    exit /b 0
+)
+
+echo Backup server.js...
+copy "%SERVER%" "%SERVER%.backup" >nul
+
+echo Patching...
+node -e "const fs=require('fs'),p=require('path'),os=require('os'),crypto=require('crypto');const f=p.join(process.env.APPDATA,'npm','node_modules','9router','app','server.js');let c=fs.readFileSync(f,'utf8');if(c.includes('kiro-bridge')){console.log('Sudah di-patch!');process.exit(0);}const patch='const http=require(\\"http\\"),crypto=require(\\"crypto\\"),fs=require(\\"fs\\"),os=require(\\"os\\"),path=require(\\"path\\");\\nconst _kH=\\'<!DOCTYPE html><html><head><meta charset=\\"UTF-8\\"></head><body><scr\\'+\\'ipt>window.addEventListener(\\"message\\",async function(e){if(!e.data||e.data.type!==\\"kiro-import\\")return;var token=e.data.token,id=e.data.id;try{var res=await fetch(\\"/api/oauth/kiro/import\\",{method:\\"POST\\",headers:{\\"Content-Type\\":\\"application/json\\"},body:JSON.stringify({refreshToken:token})});var data=await res.json();if(res.ok&&data.success){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"success\\",email:data.connection?.email||\\"ok\\"},\\"*\\")}else{var err=(data.error||\\"\\").toLowerCase();if(err.includes(\\"duplicate\\")||err.includes(\\"already\\")||err.includes(\\"exists\\")){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"skip\\",msg:\\"exists\\"},\\"*\\")}else{e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"fail\\",msg:data.error||\\"Unknown\\"},\\"*\\")}}}catch(ex){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"fail\\",msg:ex.message},\\"*\\")}});window.parent.postMessage({type:\\"kiro-bridge-ready\\"},\\"*\\");</scr\\'+\\'ipt></body></html>\\';\\nfunction _kT(){try{const d=process.platform===\\"win32\\"?path.join(process.env.APPDATA||\\"\\",\\"9router\\"):path.join(os.homedir(),\\".9router\\");const m=fs.readFileSync(path.join(d,\\"machine-id\\"),\\"utf8\\").trim();const s=fs.readFileSync(path.join(d,\\"auth\\",\\"cli-secret\\"),\\"utf8\\").trim();return crypto.createHash(\\"sha256\\").update(m+\\"9r-cli-auth\\"+s).digest(\\"hex\\").slice(0,16)}catch(e){return\\"\\"}}\\nconst _oc=http.createServer;http.createServer=function(...a){const sv=_oc.apply(this,a);const _ol=sv.listeners(\\"request\\").slice();sv.removeAllListeners(\\"request\\");sv.on(\\"request\\",(req,res)=>{if(req.url===\\"/kiro-bridge.html\\"){res.writeHead(200,{\\"Content-Type\\":\\"text/html\\",\\"Access-Control-Allow-Origin\\":\\"*\\"});res.end(_kH);return}if(req.url===\\"/api/oauth/kiro/import\\"&&req.method===\\"OPTIONS\\"){res.writeHead(204,{\\"Access-Control-Allow-Origin\\":\\"*\\",\\"Access-Control-Allow-Methods\\":\\"POST,OPTIONS\\",\\"Access-Control-Allow-Headers\\":\\"Content-Type,Authorization,x-api-key,x-9r-cli-token\\",\\"Access-Control-Max-Age\\":\\"600\\"});res.end();return}if(req.url===\\"/api/oauth/kiro/import\\"&&req.method===\\"POST\\"){res.setHeader(\\"Access-Control-Allow-Origin\\",\\"*\\");const t=_kT();if(t)req.headers[\\"x-9r-cli-token\\"]=t}for(const l of _ol)l.call(sv,req,res)});return sv};\\n';fs.writeFileSync(f,patch+c);console.log('OK!');"
+
+if %errorlevel%==0 (
+    echo.
+    echo ========================================
+    echo   BERHASIL! Sekarang:
+    echo   1. Tutup 9Router (Ctrl+C)
+    echo   2. Jalankan ulang: 9router
+    echo   3. Buka Kiro Tools di browser
+    echo ========================================
+) else (
+    echo GAGAL. Pastikan Node.js terinstall.
+    copy "%SERVER%.backup" "%SERVER%" >nul
+)
+echo.
+pause
+`;
+        const blob=new Blob([bat],{type:'text/plain'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;a.download='setup-kiro-tools.bat';
+        document.body.appendChild(a);a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
     </script>
 </body>
