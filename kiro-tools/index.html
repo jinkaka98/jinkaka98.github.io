@@ -28,23 +28,25 @@
         .kiro-log .s{color:#10b981}.kiro-log .k{color:#f59e0b}.kiro-log .f{color:#ef4444}.kiro-log .i{color:var(--color-accent)}
         .kiro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);text-align:center}
         .sv{font-size:1.25rem;font-weight:700}.sl{font-size:0.625rem;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
-        /* Setup Section */
         .setup-section{text-align:center;padding:40px 32px}
         .setup-icon{width:64px;height:64px;margin:0 auto 20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center}
         .setup-title{font-size:1.125rem;font-weight:600;margin-bottom:8px}
-        .setup-desc{color:var(--color-text-secondary);font-size:0.875rem;line-height:1.6;max-width:420px;margin:0 auto 24px}
+        .setup-desc{color:var(--color-text-secondary);font-size:0.875rem;line-height:1.6;max-width:440px;margin:0 auto 24px}
         .setup-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--color-accent);color:#000;border:none;border-radius:var(--radius-full);font-weight:700;font-size:0.9375rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px var(--color-accent-glow);transition:all 0.2s}
         .setup-btn:hover{background:var(--color-accent-hover);transform:translateY(-2px);box-shadow:0 8px 24px var(--color-accent-glow)}
         .setup-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
-        .setup-steps{text-align:left;margin-top:24px;padding:16px 20px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.8}
-        .setup-steps li{margin-bottom:4px}
-        .status-msg{margin-top:16px;padding:10px 16px;border-radius:var(--radius-md);font-size:0.8125rem;display:none}
+        .status-msg{margin-top:16px;padding:10px 16px;border-radius:var(--radius-md);font-size:0.8125rem;display:none;text-align:left;line-height:1.5}
         .status-msg.show{display:block}
         .status-msg.ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981}
         .status-msg.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
         .status-msg.warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);color:#f59e0b}
         .hidden{display:none!important}
         .kiro-note{max-width:640px;margin:16px auto 0;padding:12px 20px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);color:var(--color-accent-hover);font-size:0.8125rem;line-height:1.6}
+        .connecting-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(139,92,246,0.3);border-top-color:var(--color-accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .path-box{margin-top:16px;padding:12px 16px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);text-align:left}
+        .path-box-label{font-size:0.6875rem;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+        .path-box-value{font-family:var(--font-mono);font-size:0.8125rem;color:var(--color-accent);word-break:break-all;user-select:all;cursor:text}
     </style>
 </head>
 <body>
@@ -60,46 +62,36 @@
                         <p class="kiro-sub">Bulk import Kiro AI refresh tokens into 9Router. Zero install.</p>
                     </div>
 
-                    <!-- SETUP PHASE -->
-                    <div id="setupPhase" class="setup-section">
+                    <!-- CONNECTING PHASE (shown first, auto-tries) -->
+                    <div id="connectingPhase" class="setup-section">
+                        <div class="connecting-spinner"></div>
+                        <span style="color:var(--color-text-secondary)">Connecting to 9Router...</span>
+                    </div>
+
+                    <!-- SETUP PHASE (shown if auto-connect fails) -->
+                    <div id="setupPhase" class="setup-section hidden">
                         <div class="setup-icon">
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
                         </div>
-                        <div class="setup-title">Connect to 9Router</div>
+                        <div class="setup-title">One-Time Setup</div>
                         <div class="setup-desc">
-                            Click the button below. Your browser will ask permission to access a folder. Navigate to your <strong>9Router data folder</strong> and click Allow.
+                            A small bridge file needs to be saved in your 9Router folder. Click the button — your browser will ask where to save it.
                         </div>
-                        <button class="setup-btn" id="setupBtn" onclick="startSetup()">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                            Setup &amp; Connect
+
+                        <button class="setup-btn" id="setupBtn" onclick="saveAndConnect()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Save Bridge File
                         </button>
-                        <ol class="setup-steps">
-                            <li>Browser shows a folder picker</li>
-                            <li id="pathHint">Navigate to your 9Router data folder</li>
-                            <li>Click "Select Folder" → browser asks "Allow?" → click <strong>Allow</strong></li>
-                            <li>Auto-connected! Only needed once (browser remembers)</li>
-                        </ol>
-                        <script>
-                        // Auto-detect OS and show correct path
-                        (function(){
-                            const hint = document.getElementById('pathHint');
-                            const ua = navigator.userAgent.toLowerCase();
-                            let pathInfo = '';
-                            if (ua.includes('win')) {
-                                const user = '&lt;username&gt;';
-                                pathInfo = '<code style="color:var(--color-accent);background:var(--color-surface-base);padding:2px 6px;border-radius:4px;font-size:0.7rem;display:inline-block;margin-top:4px;">C:\\Users\\' + user + '\\AppData\\Roaming\\9router</code><br><span style="font-size:0.75rem;color:var(--color-text-tertiary);">Shortcut: type <code style="padding:1px 4px;background:var(--color-surface-base);border-radius:3px;font-size:0.7rem;">%APPDATA%\\9router</code> in the address bar of the folder picker</span>';
-                            } else if (ua.includes('mac') || ua.includes('darwin')) {
-                                pathInfo = '<code style="color:var(--color-accent);background:var(--color-surface-base);padding:2px 6px;border-radius:4px;font-size:0.7rem;display:inline-block;margin-top:4px;">~/.9router</code><br><span style="font-size:0.75rem;color:var(--color-text-tertiary);">Press Cmd+Shift+. to show hidden folders, then select .9router in your home directory</span>';
-                            } else {
-                                pathInfo = '<code style="color:var(--color-accent);background:var(--color-surface-base);padding:2px 6px;border-radius:4px;font-size:0.7rem;display:inline-block;margin-top:4px;">~/.9router</code><br><span style="font-size:0.75rem;color:var(--color-text-tertiary);">Show hidden files (Ctrl+H), then select .9router in your home directory</span>';
-                            }
-                            hint.innerHTML = 'Navigate to your 9Router data folder:<br>' + pathInfo;
-                        })();
-                        </script>
+
+                        <div class="path-box" id="pathBox">
+                            <div class="path-box-label">Save it inside this folder</div>
+                            <div class="path-box-value" id="pathValue"></div>
+                        </div>
+
                         <div class="status-msg" id="setupStatus"></div>
                     </div>
 
-                    <!-- IMPORT PHASE (hidden until connected) -->
+                    <!-- IMPORT PHASE (shown when connected) -->
                     <div id="importPhase" class="kiro-body hidden">
                         <div class="kiro-label">Refresh Tokens (one per line)</div>
                         <textarea id="tokens" class="kiro-textarea" placeholder="aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3" spellcheck="false"></textarea>
@@ -120,294 +112,238 @@
                     </div>
                 </div>
                 <div class="kiro-note">
-                    <strong>How it works:</strong> This tool uses the browser's File System Access API to write a helper file into your 9Router's public folder. Then it communicates with 9Router via that file (same-origin, no CORS). Your tokens never leave your device.
+                    <strong>How it works:</strong> A tiny bridge file runs inside 9Router's origin (localhost:20128), so your browser allows direct API access. Tokens never leave your device.
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Hidden iframe for same-origin communication with 9Router -->
     <iframe id="bridge" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
 
     <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-brand">&copy; 2025 Xixero.</div><div class="footer-right"><a href="https://github.com/jinkaka98" class="footer-link" target="_blank">GitHub</a></div></div></div></footer>
     <script src="../app.js"></script>
     <script>
-    // ═══════════════════════════════════════════════════════════════
-    // KIRO TOOLS - File System Access API + postMessage Bridge
-    // ═══════════════════════════════════════════════════════════════
-
     const $=id=>document.getElementById(id);
 
-    // The bridge HTML that gets written to 9Router's public folder.
-    // This file runs on localhost:20128 origin and handles API calls.
-    const BRIDGE_HTML = `<!DOCTYPE html>
+    // Bridge HTML content (written to 9Router's public folder)
+    const BRIDGE_HTML=`<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><title>Kiro Bridge</title></head>
 <body><script>
-window.addEventListener('message', async function(e) {
-    if (!e.data || e.data.type !== 'kiro-import') return;
-    const token = e.data.token;
-    const id = e.data.id;
-    try {
-        const res = await fetch('/api/oauth/kiro/import', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({refreshToken: token})
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-            e.source.postMessage({type:'kiro-result',id:id,status:'success',email:data.connection?.email||'ok'}, '*');
-        } else {
-            const err = (data.error||'').toLowerCase();
-            if (err.includes('duplicate')||err.includes('already')||err.includes('exists')) {
-                e.source.postMessage({type:'kiro-result',id:id,status:'skip',msg:'exists'}, '*');
-            } else {
-                e.source.postMessage({type:'kiro-result',id:id,status:'fail',msg:data.error||'Unknown'}, '*');
-            }
-        }
-    } catch(ex) {
-        e.source.postMessage({type:'kiro-result',id:id,status:'fail',msg:ex.message}, '*');
+window.addEventListener('message',async function(e){
+if(!e.data||e.data.type!=='kiro-import')return;
+var token=e.data.token,id=e.data.id;
+try{var res=await fetch('/api/oauth/kiro/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refreshToken:token})});
+var data=await res.json();
+if(res.ok&&data.success){e.source.postMessage({type:'kiro-result',id:id,status:'success',email:data.connection?.email||'ok'},'*');}
+else{var err=(data.error||'').toLowerCase();
+if(err.includes('duplicate')||err.includes('already')||err.includes('exists')){e.source.postMessage({type:'kiro-result',id:id,status:'skip',msg:'exists'},'*');}
+else{e.source.postMessage({type:'kiro-result',id:id,status:'fail',msg:data.error||'Unknown'},'*');}}}
+catch(ex){e.source.postMessage({type:'kiro-result',id:id,status:'fail',msg:ex.message},'*');}});
+window.parent.postMessage({type:'kiro-bridge-ready'},'*');
+<\\/script></body></html>`;
+
+    let bridgeReady=false;
+    let pendingResolves={};
+
+    // Detect OS for path hints
+    function getOS(){
+        const ua=navigator.userAgent;
+        if(/Win/.test(ua))return'win';
+        if(/Mac/.test(ua))return'mac';
+        return'linux';
     }
-});
-window.parent.postMessage({type:'kiro-bridge-ready'}, '*');
-<\/script></body></html>`;
 
-    let bridgeReady = false;
-    let pendingResolves = {};
+    function get9RouterPath(){
+        const os=getOS();
+        if(os==='win')return'C:\\Users\\<you>\\AppData\\Roaming\\9router\\public';
+        return'~/.9router/public';
+    }
 
-    // Listen for messages from bridge iframe
-    window.addEventListener('message', function(e) {
-        if (e.data && e.data.type === 'kiro-bridge-ready') {
-            bridgeReady = true;
-            showStatus('setupStatus', 'Connected to 9Router!', 'ok');
+    function get9RouterPathTip(){
+        const os=getOS();
+        if(os==='win')return'Windows: Open File Explorer → paste %APPDATA%\\9router\\public in the address bar';
+        if(os==='mac')return'macOS: Finder → Go → Go to Folder → type ~/.9router/public';
+        return'Linux: File Manager → Ctrl+L → type ~/.9router/public';
+    }
+
+    // Listen for bridge messages
+    window.addEventListener('message',function(e){
+        if(e.data&&e.data.type==='kiro-bridge-ready'){
+            bridgeReady=true;
+            $('connectingPhase').classList.add('hidden');
             $('setupPhase').classList.add('hidden');
             $('importPhase').classList.remove('hidden');
         }
-        if (e.data && e.data.type === 'kiro-result') {
-            const resolve = pendingResolves[e.data.id];
-            if (resolve) {
-                resolve(e.data);
-                delete pendingResolves[e.data.id];
-            }
+        if(e.data&&e.data.type==='kiro-result'){
+            const r=pendingResolves[e.data.id];
+            if(r){r(e.data);delete pendingResolves[e.data.id];}
         }
     });
 
-    function showStatus(id, msg, cls) {
-        const el = $(id);
-        el.textContent = msg;
-        el.className = 'status-msg show ' + cls;
+    function showStatus(id,msg,cls){
+        const el=$(id);el.textContent=msg;el.className='status-msg show '+cls;
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // SETUP: Write bridge file to 9Router public folder
+    // PHASE 1: Auto-connect (try loading bridge if it already exists)
     // ═══════════════════════════════════════════════════════════════
-    async function startSetup() {
-        const btn = $('setupBtn');
-        btn.disabled = true;
-        btn.textContent = 'Selecting folder...';
+    (async function autoConnect(){
+        $('bridge').src='http://localhost:20128/kiro-bridge.html';
 
-        // Check if File System Access API is supported
-        if (!('showDirectoryPicker' in window)) {
-            showStatus('setupStatus', 'Your browser does not support File System Access API. Use Chrome or Edge (version 86+).', 'err');
-            btn.disabled = false;
-            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+        // Wait up to 3 seconds for bridge ready
+        let waited=0;
+        const check=setInterval(()=>{
+            waited+=300;
+            if(bridgeReady){
+                clearInterval(check);
+            }else if(waited>3000){
+                clearInterval(check);
+                // Bridge not found — show setup
+                $('connectingPhase').classList.add('hidden');
+                $('setupPhase').classList.remove('hidden');
+                $('pathValue').textContent=get9RouterPath();
+            }
+        },300);
+    })();
+
+    // ═══════════════════════════════════════════════════════════════
+    // PHASE 2: Save bridge file via showSaveFilePicker
+    // ═══════════════════════════════════════════════════════════════
+    async function saveAndConnect(){
+        const btn=$('setupBtn');
+        btn.disabled=true;
+        btn.textContent='Saving...';
+
+        if(!('showSaveFilePicker' in window)){
+            // Fallback: download as blob
+            downloadBridgeFile();
+            showStatus('setupStatus','File downloaded! Move it to: '+get9RouterPath()+' then click Retry.','warn');
+            btn.disabled=false;
+            btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg> Retry Connect';
+            btn.onclick=retryConnect;
             return;
         }
 
-        try {
-            // Auto-copy path to clipboard so user can paste in folder picker address bar
-            const ua = navigator.userAgent.toLowerCase();
-            let suggestedPath = '';
-            if (ua.includes('win')) {
-                suggestedPath = '%APPDATA%\\9router';
-            } else {
-                suggestedPath = '~/.9router';
-            }
-            try {
-                await navigator.clipboard.writeText(suggestedPath);
-                showStatus('setupStatus', 'Path "' + suggestedPath + '" copied to clipboard! Paste it in the folder picker address bar.', 'warn');
-            } catch(e) { /* clipboard may fail, that's ok */ }
-
-            // Small delay so user sees the hint before picker opens
-            await new Promise(r => setTimeout(r, 800));
-
-            // Step 1: User picks the 9Router data directory
-            // Browser remembers last folder via 'id' — second time opens same folder
-            const dirHandle = await window.showDirectoryPicker({
-                id: '9router-data-folder',
-                mode: 'readwrite'
+        try{
+            const handle=await window.showSaveFilePicker({
+                suggestedName:'kiro-bridge.html',
+                types:[{description:'HTML file',accept:{'text/html':['.html']}}]
             });
 
-            showStatus('setupStatus', 'Verifying folder...', 'warn');
-
-            // Step 2: Verify this is a 9Router data folder
-            let is9Router = false;
-            try {
-                await dirHandle.getFileHandle('machine-id');
-                is9Router = true;
-            } catch(e) {
-                try {
-                    const dbDir = await dirHandle.getDirectoryHandle('db');
-                    await dbDir.getFileHandle('data.sqlite');
-                    is9Router = true;
-                } catch(e2) {}
-            }
-
-            if (!is9Router) {
-                const ua = navigator.userAgent.toLowerCase();
-                const pathTip = ua.includes('win')
-                    ? 'On Windows: C:\\Users\\<you>\\AppData\\Roaming\\9router (type %APPDATA%\\9router in address bar)'
-                    : 'On Mac/Linux: ~/.9router (enable hidden files first)';
-                showStatus('setupStatus', 'This is not a 9Router folder (no machine-id found). ' + pathTip, 'err');
-                btn.disabled = false;
-                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
-                return;
-            }
-
-            showStatus('setupStatus', '9Router folder confirmed. Writing bridge file...', 'warn');
-
-            // Step 3: Find or create "public" subfolder
-            let publicDir;
-            try {
-                publicDir = await dirHandle.getDirectoryHandle('public', { create: true });
-            } catch (e) {
-                showStatus('setupStatus', 'Cannot create "public" folder: ' + e.message, 'err');
-                btn.disabled = false;
-                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
-                return;
-            }
-
-            // Step 4: Write kiro-bridge.html to public folder
-            const fileHandle = await publicDir.getFileHandle('kiro-bridge.html', { create: true });
-            const writable = await fileHandle.createWritable();
+            const writable=await handle.createWritable();
             await writable.write(BRIDGE_HTML);
             await writable.close();
 
-            showStatus('setupStatus', 'Bridge file written. Connecting...', 'warn');
+            showStatus('setupStatus','File saved! Connecting...','warn');
 
-            // Step 4: Load the bridge via iframe (same-origin with 9Router)
-            const iframe = $('bridge');
-            iframe.src = 'http://localhost:20128/kiro-bridge.html';
+            // Try connect
+            await new Promise(r=>setTimeout(r,500));
+            $('bridge').src='http://localhost:20128/kiro-bridge.html';
 
-            // Wait for bridge ready (max 5 seconds)
-            let waited = 0;
-            const checkReady = setInterval(() => {
-                waited += 200;
-                if (bridgeReady) {
-                    clearInterval(checkReady);
-                } else if (waited > 5000) {
-                    clearInterval(checkReady);
-                    showStatus('setupStatus', '9Router is not responding. Make sure it is running on localhost:20128.', 'err');
-                    btn.disabled = false;
-                    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+            let waited=0;
+            const check=setInterval(()=>{
+                waited+=300;
+                if(bridgeReady){
+                    clearInterval(check);
+                }else if(waited>5000){
+                    clearInterval(check);
+                    showStatus('setupStatus','File saved but 9Router cannot serve it yet. Make sure the file is inside: '+get9RouterPath()+' — then click Retry.','err');
+                    btn.disabled=false;
+                    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg> Retry Connect';
+                    btn.onclick=retryConnect;
                 }
-            }, 200);
+            },300);
 
-        } catch (e) {
-            if (e.name === 'AbortError') {
-                showStatus('setupStatus', 'Folder selection cancelled.', 'warn');
-            } else {
-                showStatus('setupStatus', 'Error: ' + e.message, 'err');
+        }catch(e){
+            if(e.name==='AbortError'){
+                showStatus('setupStatus','Save cancelled.','warn');
+            }else{
+                showStatus('setupStatus','Error: '+e.message,'err');
             }
-            btn.disabled = false;
-            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+            btn.disabled=false;
+            btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Save Bridge File';
         }
     }
 
+    function downloadBridgeFile(){
+        const blob=new Blob([BRIDGE_HTML],{type:'text/html'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;a.download='kiro-bridge.html';
+        document.body.appendChild(a);a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function retryConnect(){
+        $('bridge').src='http://localhost:20128/kiro-bridge.html?t='+Date.now();
+        showStatus('setupStatus','Retrying...','warn');
+        const btn=$('setupBtn');
+        btn.disabled=true;
+        let waited=0;
+        const check=setInterval(()=>{
+            waited+=300;
+            if(bridgeReady){
+                clearInterval(check);
+            }else if(waited>5000){
+                clearInterval(check);
+                showStatus('setupStatus','Still cannot connect. Verify: 1) 9Router is running. 2) kiro-bridge.html is in '+get9RouterPath(),'err');
+                btn.disabled=false;
+            }
+        },300);
+    }
+
     // ═══════════════════════════════════════════════════════════════
-    // IMPORT: Send tokens via postMessage to bridge iframe
+    // PHASE 3: Import tokens via postMessage bridge
     // ═══════════════════════════════════════════════════════════════
-    function sendToRouter(token) {
-        return new Promise((resolve) => {
-            const id = Math.random().toString(36).slice(2);
-            pendingResolves[id] = resolve;
-            $('bridge').contentWindow.postMessage({ type: 'kiro-import', token: token, id: id }, '*');
-            // Timeout after 15s
-            setTimeout(() => {
-                if (pendingResolves[id]) {
-                    delete pendingResolves[id];
-                    resolve({ status: 'fail', msg: 'Timeout' });
-                }
-            }, 15000);
+    function sendToRouter(token){
+        return new Promise(resolve=>{
+            const id=Math.random().toString(36).slice(2);
+            pendingResolves[id]=resolve;
+            $('bridge').contentWindow.postMessage({type:'kiro-import',token:token,id:id},'*');
+            setTimeout(()=>{if(pendingResolves[id]){delete pendingResolves[id];resolve({status:'fail',msg:'Timeout'});}},15000);
         });
     }
 
-    function addLog(msg, cls) {
-        const d = document.createElement('div');
-        d.className = cls;
-        const t = new Date().toLocaleTimeString('en-GB', { hour12: false });
-        const ic = { s: '\u2713', k: '\u2298', f: '\u2717', i: '\u25CF' };
-        d.textContent = '[' + t + '] ' + (ic[cls] || '') + ' ' + msg;
-        $('log').appendChild(d);
-        $('log').scrollTop = $('log').scrollHeight;
+    function addLog(msg,cls){
+        const d=document.createElement('div');d.className=cls;
+        const t=new Date().toLocaleTimeString('en-GB',{hour12:false});
+        const ic={s:'\u2713',k:'\u2298',f:'\u2717',i:'\u25CF'};
+        d.textContent='['+t+'] '+(ic[cls]||'')+' '+msg;
+        $('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight;
     }
 
-    function clearAll() {
-        $('tokens').value = '';
-        $('log').innerHTML = '';
-        ['sT', 'sS', 'sK', 'sF'].forEach(x => $(x).textContent = '0');
-        addLog('Cleared.', 'i');
+    function clearAll(){
+        $('tokens').value='';$('log').innerHTML='';
+        ['sT','sS','sK','sF'].forEach(x=>$(x).textContent='0');
+        addLog('Cleared.','i');
     }
 
-    async function processTokens() {
-        const raw = $('tokens').value.trim();
-        if (!raw) return addLog('Paste at least one token.', 'f');
-        const tokens = raw.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
-        if (!tokens.length) return addLog('No valid tokens.', 'f');
+    async function processTokens(){
+        const raw=$('tokens').value.trim();
+        if(!raw)return addLog('Paste at least one token.','f');
+        const tokens=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+        if(!tokens.length)return addLog('No valid tokens.','f');
+        if(!bridgeReady)return addLog('Not connected to 9Router.','f');
 
-        if (!bridgeReady) return addLog('Not connected. Run Setup first.', 'f');
+        const btn=$('btnProc');btn.disabled=true;btn.textContent='Processing...';
+        $('log').innerHTML='';['sT','sS','sK','sF'].forEach(x=>$(x).textContent='0');
+        addLog('Starting import of '+tokens.length+' token(s)...','i');
 
-        const btn = $('btnProc');
-        btn.disabled = true;
-        btn.textContent = 'Processing...';
-        $('log').innerHTML = '';
-        ['sT', 'sS', 'sK', 'sF'].forEach(x => $(x).textContent = '0');
-        addLog('Starting import of ' + tokens.length + ' token(s)...', 'i');
-
-        let sc = 0, sk = 0, fl = 0;
-
-        for (let i = 0; i < tokens.length; i++) {
-            const tk = tokens[i];
-            const ms = tk.length > 14 ? tk.slice(0, 10) + '...' + tk.slice(-4) : tk.slice(0, 6) + '...';
-            addLog('[' + (i + 1) + '/' + tokens.length + '] ' + ms, 'i');
-
-            const result = await sendToRouter(tk);
-
-            if (result.status === 'success') {
-                addLog('Imported: ' + (result.email || 'ok'), 's');
-                sc++;
-            } else if (result.status === 'skip') {
-                addLog('Skipped: ' + (result.msg || 'exists'), 'k');
-                sk++;
-            } else {
-                addLog('Failed: ' + (result.msg || 'unknown'), 'f');
-                fl++;
-            }
-
-            $('sT').textContent = i + 1;
-            $('sS').textContent = sc;
-            $('sK').textContent = sk;
-            $('sF').textContent = fl;
-
-            if (i < tokens.length - 1) await new Promise(r => setTimeout(r, 500));
+        let sc=0,sk=0,fl=0;
+        for(let i=0;i<tokens.length;i++){
+            const tk=tokens[i],ms=tk.length>14?tk.slice(0,10)+'...'+tk.slice(-4):tk.slice(0,6)+'...';
+            addLog('['+(i+1)+'/'+tokens.length+'] '+ms,'i');
+            const r=await sendToRouter(tk);
+            if(r.status==='success'){addLog('Imported: '+(r.email||'ok'),'s');sc++;}
+            else if(r.status==='skip'){addLog('Skipped: '+(r.msg||'exists'),'k');sk++;}
+            else{addLog('Failed: '+(r.msg||'unknown'),'f');fl++;}
+            $('sT').textContent=i+1;$('sS').textContent=sc;$('sK').textContent=sk;$('sF').textContent=fl;
+            if(i<tokens.length-1)await new Promise(r=>setTimeout(r,500));
         }
-
-        addLog('Done: ' + sc + ' success, ' + sk + ' skip, ' + fl + ' fail.', 'i');
-        btn.disabled = false;
-        btn.textContent = 'Process';
+        addLog('Done: '+sc+' success, '+sk+' skip, '+fl+' fail.','i');
+        btn.disabled=false;btn.textContent='Process';
     }
-
-    // ═══════════════════════════════════════════════════════════════
-    // AUTO-CONNECT: Try loading bridge if it already exists
-    // ═══════════════════════════════════════════════════════════════
-    (function autoConnect() {
-        const iframe = $('bridge');
-        iframe.src = 'http://localhost:20128/kiro-bridge.html';
-        // If bridge already exists from previous setup, it will auto-connect
-        setTimeout(() => {
-            if (bridgeReady) return; // Already connected
-            // Not connected yet, show setup phase (already visible by default)
-        }, 3000);
-    })();
     </script>
 </body>
 </html>
