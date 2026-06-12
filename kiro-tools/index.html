@@ -11,7 +11,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <style>
         .kiro-app{padding:calc(72px + var(--space-13)) 0 var(--space-16)}
-        .kiro-card{max-width:640px;margin:0 auto;background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden}
+        .kiro-card{max-width:660px;margin:0 auto;background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden}
         .kiro-header{padding:32px 32px 24px;border-bottom:1px solid var(--color-border)}
         .kiro-title{font-size:1.5rem;font-weight:700;margin-bottom:6px}
         .kiro-sub{color:var(--color-text-secondary);font-size:0.9375rem;line-height:1.5}
@@ -19,21 +19,28 @@
         .kiro-label{font-size:0.75rem;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
         .kiro-textarea{width:100%;height:180px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);padding:14px;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.6;resize:vertical;outline:none}
         .kiro-textarea:focus{border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-glow)}
-        .kiro-actions{display:flex;gap:10px;margin-top:16px}
+        .kiro-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
         .btn-g{background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border);cursor:pointer;padding:12px 20px;border-radius:var(--radius-full);font-weight:600;font-size:0.875rem;font-family:inherit;transition:all 0.2s}
         .btn-g:hover{background:var(--color-surface-muted);border-color:var(--color-border-hover);color:var(--color-text-primary)}
-        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
         .step-box{margin-top:24px;padding:20px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md)}
-        .step-box-title{font-size:0.875rem;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-        .step-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5}
+        .step-box-title{font-size:0.9375rem;font-weight:600;color:var(--color-text-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+        .step-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.6}
         .step-item:last-child{margin-bottom:0}
-        .step-num{width:22px;height:22px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.6875rem;flex-shrink:0}
-        .step-item code{background:var(--color-surface-base);padding:1px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent)}
+        .step-num{width:24px;height:24px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.6875rem;flex-shrink:0;margin-top:1px}
+        .step-item code{background:var(--color-surface-base);padding:2px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent)}
         .step-item strong{color:var(--color-text-primary)}
-        .copied-msg{display:none;margin-top:12px;padding:10px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:0.8125rem;color:#10b981;text-align:center}
+        .copied-msg{display:none;margin-top:14px;padding:12px 16px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:0.8125rem;color:#10b981;text-align:center}
         .copied-msg.show{display:block}
-        .kiro-note{max-width:640px;margin:16px auto 0;padding:12px 20px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);color:var(--color-accent-hover);font-size:0.8125rem;line-height:1.6}
+        .kiro-note{max-width:660px;margin:16px auto 0;padding:12px 20px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);color:var(--color-accent-hover);font-size:0.8125rem;line-height:1.6}
         .hidden{display:none!important}
+        .tab-btns{display:flex;gap:0;margin-bottom:20px;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden}
+        .tab-btn{flex:1;padding:10px;background:transparent;border:none;color:var(--color-text-secondary);font-weight:500;font-size:0.8125rem;cursor:pointer;font-family:inherit;transition:all 0.2s;border-right:1px solid var(--color-border)}
+        .tab-btn:last-child{border-right:none}
+        .tab-btn.active{background:rgba(139,92,246,0.1);color:var(--color-accent)}
+        .tab-btn:hover:not(.active){background:var(--color-surface-muted)}
+        .tab-content{display:none}
+        .tab-content.active{display:block}
+        .img-hint{margin-top:12px;padding:12px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:8px;font-size:0.75rem;color:var(--color-text-tertiary);line-height:1.6}
     </style>
 </head>
 <body>
@@ -46,7 +53,7 @@
                 <div class="kiro-card">
                     <div class="kiro-header">
                         <h1 class="kiro-title">Kiro Bulk Import</h1>
-                        <p class="kiro-sub">Paste your Kiro refresh tokens, click Go, then paste the script in your 9Router console. It runs automatically.</p>
+                        <p class="kiro-sub">Paste tokens, click Generate, then run it on your 9Router page. No install, no modification needed.</p>
                     </div>
 
                     <div class="kiro-body">
@@ -54,47 +61,110 @@
                         <textarea id="tokens" class="kiro-textarea" placeholder="Paste your Kiro refresh tokens here...&#10;&#10;aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3" spellcheck="false"></textarea>
 
                         <div class="kiro-actions">
-                            <button id="btnGo" class="btn btn-primary" onclick="generateAndCopy()">
+                            <button class="btn btn-primary" onclick="generate()">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                Go — Copy Import Script
+                                Generate &amp; Copy Script
                             </button>
                             <button class="btn-g" onclick="document.getElementById('tokens').value=''">Clear</button>
                         </div>
 
                         <div class="copied-msg" id="copiedMsg"></div>
 
-                        <!-- Instructions (shown after copy) -->
-                        <div class="step-box hidden" id="instructions">
+                        <!-- How to run it -->
+                        <div class="step-box hidden" id="howToRun">
                             <div class="step-box-title">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                                Script copied! Now do this:
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                Script copied! Choose how to run it:
                             </div>
-                            <div class="step-item">
-                                <span class="step-num">1</span>
-                                <span>Open your 9Router dashboard: <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent);">localhost:20128</a></span>
+
+                            <div class="tab-btns">
+                                <button class="tab-btn active" onclick="showTab('bookmark')">Bookmark (Easiest)</button>
+                                <button class="tab-btn" onclick="showTab('addressbar')">Address Bar</button>
+                                <button class="tab-btn" onclick="showTab('console')">Console</button>
                             </div>
-                            <div class="step-item">
-                                <span class="step-num">2</span>
-                                <span>Press <code>F12</code> to open DevTools → click the <strong>Console</strong> tab</span>
+
+                            <!-- Tab: Bookmark -->
+                            <div class="tab-content active" id="tab-bookmark">
+                                <div class="step-item">
+                                    <span class="step-num">1</span>
+                                    <span>Right-click your <strong>bookmark bar</strong> → click <strong>"Add page"</strong> or <strong>"Add bookmark"</strong></span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">2</span>
+                                    <span>Name: <code>Kiro Import</code></span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">3</span>
+                                    <span>URL field: <strong>Ctrl+V</strong> (paste the script)</span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">4</span>
+                                    <span>Click <strong>Save</strong></span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">5</span>
+                                    <span>Open <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent)">localhost:20128</a> → click the <strong>"Kiro Import"</strong> bookmark → done!</span>
+                                </div>
+                                <div class="img-hint">
+                                    This bookmark stays forever. Next time you want to import new tokens, just come back here, paste new tokens, click Generate, then update the bookmark URL.
+                                </div>
                             </div>
-                            <div class="step-item">
-                                <span class="step-num">3</span>
-                                <span>Type <code>allow pasting</code> and press <strong>Enter</strong> (Chrome requires this once for security)</span>
+
+                            <!-- Tab: Address Bar -->
+                            <div class="tab-content" id="tab-addressbar">
+                                <div class="step-item">
+                                    <span class="step-num">1</span>
+                                    <span>Open <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent)">localhost:20128</a> in your browser</span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">2</span>
+                                    <span>Click the <strong>address bar</strong> (where the URL is)</span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">3</span>
+                                    <span>Type <code>javascript:</code> first (don't press Enter yet!)</span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">4</span>
+                                    <span>Then <strong>Ctrl+V</strong> to paste the script right after <code>javascript:</code></span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">5</span>
+                                    <span>Press <strong>Enter</strong> — watch it run!</span>
+                                </div>
+                                <div class="img-hint">
+                                    Note: Chrome strips "javascript:" when you paste. You MUST type it manually first, then paste the rest.
+                                </div>
                             </div>
-                            <div class="step-item">
-                                <span class="step-num">4</span>
-                                <span>Press <code>Ctrl+V</code> to paste the script, then <code>Enter</code></span>
-                            </div>
-                            <div class="step-item">
-                                <span class="step-num">5</span>
-                                <span>Watch it run — tokens imported one by one with color-coded status in console</span>
+
+                            <!-- Tab: Console -->
+                            <div class="tab-content" id="tab-console">
+                                <div class="step-item">
+                                    <span class="step-num">1</span>
+                                    <span>Open <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent)">localhost:20128</a> in your browser</span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">2</span>
+                                    <span>Press <code>F12</code> → click <strong>Console</strong> tab</span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">3</span>
+                                    <span>Click in the console area, type <code>allow pasting</code> then press <strong>Enter</strong></span>
+                                </div>
+                                <div class="step-item">
+                                    <span class="step-num">4</span>
+                                    <span><strong>Ctrl+V</strong> to paste, then <strong>Enter</strong></span>
+                                </div>
+                                <div class="img-hint">
+                                    If "allow pasting" doesn't work, try: click the console area first, then right-click → Paste. Or use the Bookmark method instead.
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="kiro-note">
-                    <strong>Why this works:</strong> The script runs inside your 9Router page (same-origin), so it has full access to the import API using your existing login session. No API keys needed, no extensions, no modifications to 9Router. Works on any OS.
+                    <strong>Why this works:</strong> The script runs inside your 9Router page (same-origin), using your existing login session. No API keys, no extensions, no server modifications. Works on Windows, Mac, Linux.
                 </div>
             </div>
         </section>
@@ -103,51 +173,42 @@
     <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-brand">&copy; 2025 Xixero.</div><div class="footer-right"><a href="https://github.com/jinkaka98" class="footer-link" target="_blank">GitHub</a></div></div></div></footer>
     <script src="../app.js"></script>
     <script>
-    function generateAndCopy() {
+    function showTab(id) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('tab-' + id).classList.add('active');
+    }
+
+    function generate() {
         const raw = document.getElementById('tokens').value.trim();
-        if (!raw) { alert('Paste at least one refresh token first.'); return; }
-
+        if (!raw) { alert('Paste at least one refresh token.'); return; }
         const tokens = raw.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
-        if (tokens.length === 0) { alert('No valid tokens found.'); return; }
+        if (!tokens.length) { alert('No valid tokens found.'); return; }
 
-        // Generate self-contained script that user pastes in 9Router console
-        const script = `(async()=>{
-const tokens=${JSON.stringify(tokens)};
-const delay=ms=>new Promise(r=>setTimeout(r,ms));
-let s=0,k=0,f=0;
-console.log('%c⚡ Kiro Bulk Import — Starting '+tokens.length+' token(s)...','color:#8b5cf6;font-weight:bold;font-size:14px');
-for(let i=0;i<tokens.length;i++){
-const tk=tokens[i];
-const mask=tk.length>14?tk.slice(0,10)+'...'+tk.slice(-4):tk.slice(0,6)+'...';
-try{
-const res=await fetch('/api/oauth/kiro/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refreshToken:tk})});
-const data=await res.json();
-if(res.ok&&data.success){console.log('%c✓ ['+(i+1)+'/'+tokens.length+'] Imported: '+(data.connection?.email||'ok'),'color:#10b981');s++;}
-else{const err=(data.error||'').toLowerCase();
-if(err.includes('duplicate')||err.includes('already')||err.includes('exists')){console.log('%c⊘ ['+(i+1)+'/'+tokens.length+'] Skipped: already exists','color:#f59e0b');k++;}
-else{console.log('%c✗ ['+(i+1)+'/'+tokens.length+'] Failed: '+(data.error||res.status),'color:#ef4444');f++;}}
-}catch(e){console.log('%c✗ ['+(i+1)+'/'+tokens.length+'] Error: '+e.message,'color:#ef4444');f++;}
-if(i<tokens.length-1)await delay(500);
-}
-console.log('%c⚡ Done: '+s+' success, '+k+' skipped, '+f+' failed','color:#8b5cf6;font-weight:bold;font-size:14px');
-})();`;
+        // Build the import script (runs in 9Router's console/bookmark)
+        const code = `(async()=>{const t=${JSON.stringify(tokens)};const d=ms=>new Promise(r=>setTimeout(r,ms));let s=0,k=0,f=0;console.log('%c⚡ Kiro Import: '+t.length+' token(s)','color:#8b5cf6;font-weight:bold;font-size:14px');for(let i=0;i<t.length;i++){const tk=t[i],m=tk.length>14?tk.slice(0,10)+'...'+tk.slice(-4):tk;try{const r=await fetch('/api/oauth/kiro/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refreshToken:tk})});const j=await r.json();if(r.ok&&j.success){console.log('%c✓ ['+(i+1)+'] '+(j.connection?.email||'ok'),'color:#10b981');s++}else{const e=(j.error||'').toLowerCase();if(e.includes('duplicate')||e.includes('already')||e.includes('exists')){console.log('%c⊘ ['+(i+1)+'] exists','color:#f59e0b');k++}else{console.log('%c✗ ['+(i+1)+'] '+j.error,'color:#ef4444');f++}}}catch(e){console.log('%c✗ ['+(i+1)+'] '+e.message,'color:#ef4444');f++}if(i<t.length-1)await d(500)}console.log('%c⚡ Done: '+s+' ok, '+k+' skip, '+f+' fail','color:#8b5cf6;font-weight:bold;font-size:14px')})()`;
 
-        // Copy to clipboard
-        navigator.clipboard.writeText(script).then(() => {
+        // For bookmark: needs javascript: prefix
+        const bookmarkCode = 'javascript:' + code;
+
+        navigator.clipboard.writeText(bookmarkCode).then(() => {
             const msg = document.getElementById('copiedMsg');
-            msg.textContent = '✓ Script with ' + tokens.length + ' token(s) copied to clipboard!';
+            msg.textContent = '✓ Script for ' + tokens.length + ' token(s) copied to clipboard!';
             msg.classList.add('show');
-            document.getElementById('instructions').classList.remove('hidden');
-        }).catch(err => {
-            // Fallback: show script in textarea for manual copy
+            document.getElementById('howToRun').classList.remove('hidden');
+        }).catch(() => {
+            // Fallback
             const msg = document.getElementById('copiedMsg');
-            msg.innerHTML = '⚠ Could not auto-copy. Select all text below and copy manually (Ctrl+A, Ctrl+C):';
+            msg.innerHTML = '⚠ Auto-copy failed. Manually copy from below:';
             msg.classList.add('show');
             const ta = document.createElement('textarea');
-            ta.value = script;
-            ta.style.cssText = 'width:100%;height:120px;margin-top:8px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-primary);padding:10px;font-family:monospace;font-size:0.75rem;';
+            ta.value = bookmarkCode;
+            ta.style.cssText = 'width:100%;height:80px;margin-top:8px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-primary);padding:10px;font-family:monospace;font-size:0.7rem;';
+            ta.readOnly = true;
+            ta.onclick = function() { this.select(); };
             msg.appendChild(ta);
-            document.getElementById('instructions').classList.remove('hidden');
+            document.getElementById('howToRun').classList.remove('hidden');
         });
     }
     </script>
