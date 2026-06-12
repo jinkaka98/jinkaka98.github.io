@@ -119,29 +119,15 @@
         </section>
     </main>
 
-    <iframe id="bridge" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
+
 
     <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-brand">&copy; 2025 Xixero.</div><div class="footer-right"><a href="https://github.com/jinkaka98" class="footer-link" target="_blank">GitHub</a></div></div></div></footer>
     <script src="../app.js"></script>
     <script>
     const $=id=>document.getElementById(id);
-    let bridgeReady=false;
-    let pendingResolves={};
+    let connected=false;
     let routerOnline=false;
-
-    // Listen for bridge messages
-    window.addEventListener('message',function(e){
-        if(e.data&&e.data.type==='kiro-bridge-ready'){
-            bridgeReady=true;
-            $('connectingPhase').classList.add('hidden');
-            $('setupPhase').classList.add('hidden');
-            $('importPhase').classList.remove('hidden');
-        }
-        if(e.data&&e.data.type==='kiro-result'){
-            const r=pendingResolves[e.data.id];
-            if(r){r(e.data);delete pendingResolves[e.data.id];}
-        }
-    });
+    const BASE='http://localhost:20128';
 
     function showStatus(id,msg,cls){
         const el=$(id);el.textContent=msg;el.className='status-msg show '+cls;
@@ -155,30 +141,39 @@
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // PHASE 1: Auto-connect
+    // PHASE 1: Auto-connect (direct fetch to localhost — CORS patched)
     // ═══════════════════════════════════════════════════════════════
     (async function autoConnect(){
-        // First check if 9Router is even running
         try{
-            const r=await fetch('http://localhost:20128/api/health',{signal:AbortSignal.timeout(3000)});
+            const r=await fetch(BASE+'/api/health',{signal:AbortSignal.timeout(3000)});
             if(r.ok) routerOnline=true;
         }catch(e){}
 
-        // Try loading bridge
-        $('bridge').src='http://localhost:20128/kiro-bridge.html';
+        if(!routerOnline){
+            $('connectingPhase').classList.add('hidden');
+            $('setupPhase').classList.remove('hidden');
+            showSetupInstructions();
+            return;
+        }
 
-        let waited=0;
-        const check=setInterval(()=>{
-            waited+=300;
-            if(bridgeReady){
-                clearInterval(check);
-            }else if(waited>4000){
-                clearInterval(check);
-                $('connectingPhase').classList.add('hidden');
-                $('setupPhase').classList.remove('hidden');
-                showSetupInstructions();
-            }
-        },300);
+        // Test CORS by doing a preflight-triggering request
+        try{
+            const r=await fetch(BASE+'/api/oauth/kiro/import',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({refreshToken:'test-cors-check'}),
+                signal:AbortSignal.timeout(5000)
+            });
+            // Any response (even 400/500) means CORS is working
+            connected=true;
+            $('connectingPhase').classList.add('hidden');
+            $('importPhase').classList.remove('hidden');
+        }catch(e){
+            // CORS blocked or network error
+            $('connectingPhase').classList.add('hidden');
+            $('setupPhase').classList.remove('hidden');
+            showSetupInstructions();
+        }
     })();
 
     function showSetupInstructions(){
@@ -408,43 +403,56 @@ fi
         btn.disabled=true;
         showStatus('setupStatus','Connecting...','warn');
 
-        // Re-check if router is online
         try{
-            const r=await fetch('http://localhost:20128/api/health',{signal:AbortSignal.timeout(3000)});
-            if(r.ok) routerOnline=true;
-            else routerOnline=false;
+            const r=await fetch(BASE+'/api/health',{signal:AbortSignal.timeout(3000)});
+            routerOnline=r.ok;
         }catch(e){routerOnline=false;}
 
-        $('bridge').src='http://localhost:20128/kiro-bridge.html?t='+Date.now();
+        if(!routerOnline){
+            showStatus('setupStatus','9Router is not running. Start it first, then Retry.','err');
+            btn.disabled=false;
+            return;
+        }
 
-        let waited=0;
-        const check=setInterval(()=>{
-            waited+=300;
-            if(bridgeReady){
-                clearInterval(check);
-            }else if(waited>5000){
-                clearInterval(check);
-                if(!routerOnline){
-                    showStatus('setupStatus','9Router is not running. Start it first, then Retry.','err');
-                }else{
-                    showStatus('setupStatus','9Router is running but bridge not found. Did you run the setup file and restart 9Router?','err');
-                }
-                btn.disabled=false;
-                showSetupInstructions();
-            }
-        },300);
+        try{
+            const r=await fetch(BASE+'/api/oauth/kiro/import',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({refreshToken:'test-cors-check'}),
+                signal:AbortSignal.timeout(5000)
+            });
+            connected=true;
+            $('setupPhase').classList.add('hidden');
+            $('importPhase').classList.remove('hidden');
+        }catch(e){
+            showStatus('setupStatus','9Router is running but CORS is not enabled. Did you run the setup file and restart 9Router?','err');
+            btn.disabled=false;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // IMPORT via postMessage bridge
+    // IMPORT — direct fetch to localhost:20128
     // ═══════════════════════════════════════════════════════════════
-    function sendToRouter(token){
-        return new Promise(resolve=>{
-            const id=Math.random().toString(36).slice(2);
-            pendingResolves[id]=resolve;
-            $('bridge').contentWindow.postMessage({type:'kiro-import',token:token,id:id},'*');
-            setTimeout(()=>{if(pendingResolves[id]){delete pendingResolves[id];resolve({status:'fail',msg:'Timeout'});}},15000);
-        });
+    async function sendToRouter(token){
+        try{
+            const r=await fetch(BASE+'/api/oauth/kiro/import',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({refreshToken:token})
+            });
+            const data=await r.json();
+            if(r.ok&&data.success){
+                return{status:'success',email:data.connection?.email||'ok'};
+            }else{
+                const err=(data.error||'').toLowerCase();
+                if(err.includes('duplicate')||err.includes('already')||err.includes('exists')){
+                    return{status:'skip',msg:'exists'};
+                }
+                return{status:'fail',msg:data.error||'HTTP '+r.status};
+            }
+        }catch(e){
+            return{status:'fail',msg:e.message};
+        }
     }
 
     function addLog(msg,cls){
@@ -466,7 +474,7 @@ fi
         if(!raw)return addLog('Paste at least one token.','f');
         const tokens=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
         if(!tokens.length)return addLog('No valid tokens.','f');
-        if(!bridgeReady)return addLog('Not connected to 9Router.','f');
+        if(!connected)return addLog('Not connected to 9Router.','f');
 
         const btn=$('btnProc');btn.disabled=true;btn.textContent='Processing...';
         $('log').innerHTML='';['sT','sS','sK','sF'].forEach(x=>$(x).textContent='0');
