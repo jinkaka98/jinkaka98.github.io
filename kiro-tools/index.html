@@ -94,6 +94,17 @@
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                             Connected to 9Router
                         </div>
+
+                        <!-- API Key -->
+                        <div style="margin-bottom:16px;">
+                            <div class="kiro-label">API Key / CLI Token <span style="text-transform:none;font-weight:400;color:var(--color-text-tertiary);">(from 9Router Settings)</span></div>
+                            <div style="display:flex;gap:8px;">
+                                <input type="password" id="apiKey" placeholder="Paste your 9Router API Key here" style="flex:1;padding:10px 14px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);font-family:var(--font-mono);font-size:0.8125rem;outline:none;" value="">
+                                <button class="btn-g" onclick="saveKey()" style="padding:10px 14px;font-size:0.75rem;">Save</button>
+                            </div>
+                            <div style="font-size:0.6875rem;color:var(--color-text-tertiary);margin-top:4px;">Find it in 9Router Dashboard → Settings → API Keys. Saved in browser localStorage.</div>
+                        </div>
+
                         <div class="kiro-label">Refresh Tokens (one per line)</div>
                         <textarea id="tokens" class="kiro-textarea" placeholder="aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3" spellcheck="false"></textarea>
                         <div class="kiro-actions">
@@ -128,6 +139,23 @@
     let connected=false;
     let routerOnline=false;
     const BASE='http://localhost:20128';
+    let apiKey=localStorage.getItem('9r_apiKey')||'';
+
+    function saveKey(){
+        apiKey=$('apiKey').value.trim();
+        localStorage.setItem('9r_apiKey',apiKey);
+        $('apiKey').style.borderColor='#10b981';
+        setTimeout(()=>{$('apiKey').style.borderColor='';},1000);
+    }
+
+    function getAuthHeaders(){
+        const h={'Content-Type':'application/json'};
+        if(apiKey){
+            h['Authorization']='Bearer '+apiKey;
+            h['x-api-key']=apiKey;
+        }
+        return h;
+    }
 
     function showStatus(id,msg,cls){
         const el=$(id);el.textContent=msg;el.className='status-msg show '+cls;
@@ -156,18 +184,20 @@
             return;
         }
 
-        // Test CORS by doing a preflight-triggering request
+        // Test CORS — any HTTP response (even 400/401) means CORS works
         try{
             const r=await fetch(BASE+'/api/oauth/kiro/import',{
                 method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({refreshToken:'test-cors-check'}),
+                headers:getAuthHeaders(),
+                body:JSON.stringify({refreshToken:'cors-test'}),
                 signal:AbortSignal.timeout(5000)
             });
-            // Any response (even 400/500) means CORS is working
+            // Got a response = CORS is working (even if 401/400)
             connected=true;
             $('connectingPhase').classList.add('hidden');
             $('importPhase').classList.remove('hidden');
+            // Load saved API key into input
+            if(apiKey) $('apiKey').value=apiKey;
         }catch(e){
             // CORS blocked or network error
             $('connectingPhase').classList.add('hidden');
@@ -417,13 +447,14 @@ fi
         try{
             const r=await fetch(BASE+'/api/oauth/kiro/import',{
                 method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({refreshToken:'test-cors-check'}),
+                headers:getAuthHeaders(),
+                body:JSON.stringify({refreshToken:'cors-test'}),
                 signal:AbortSignal.timeout(5000)
             });
             connected=true;
             $('setupPhase').classList.add('hidden');
             $('importPhase').classList.remove('hidden');
+            if(apiKey) $('apiKey').value=apiKey;
         }catch(e){
             showStatus('setupStatus','9Router is running but CORS is not enabled. Did you run the setup file and restart 9Router?','err');
             btn.disabled=false;
@@ -434,10 +465,13 @@ fi
     // IMPORT — direct fetch to localhost:20128
     // ═══════════════════════════════════════════════════════════════
     async function sendToRouter(token){
+        // Use latest key from input
+        apiKey=$('apiKey').value.trim();
+        localStorage.setItem('9r_apiKey',apiKey);
         try{
             const r=await fetch(BASE+'/api/oauth/kiro/import',{
                 method:'POST',
-                headers:{'Content-Type':'application/json'},
+                headers:getAuthHeaders(),
                 body:JSON.stringify({refreshToken:token})
             });
             const data=await r.json();
