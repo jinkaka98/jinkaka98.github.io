@@ -769,6 +769,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Network Info Banner -->
+                <div class="help-banner" style="margin-top:var(--space-10);">
+                    <div class="help-banner-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        How it works
+                    </div>
+                    <p>Enter your 9Router URL (e.g. <code>http://localhost:20128</code> or a Tailscale IP). Works from any device.</p>
+                    <p style="margin-top:var(--space-3);">If direct connection fails due to browser CORS, we automatically retry via a public CORS relay. For maximum privacy, use <code>Direct</code> mode or access this tool at <code>http://localhost:20128/kiro.html</code> inside 9Router's own network.</p>
+                </div>
             </div>
         </section>
     </main>
@@ -813,6 +823,18 @@
                 <input type="number" id="inputDelay" value="500" min="0" max="10000" class="form-input">
             </div>
 
+            <div class="form-group">
+                <label class="form-label" for="corsMode">CORS Handling <span class="form-hint">(if direct fails)</span></label>
+                <select id="corsMode" class="form-input" style="cursor:pointer;">
+                    <option value="auto">Auto (Direct → Proxy Fallback)</option>
+                    <option value="direct">Direct Only (No Proxy)</option>
+                    <option value="proxy">Force CORS Proxy</option>
+                </select>
+                <div class="form-hint" style="margin-top:var(--space-2);color:#f59e0b;">
+                    ⚠️ Proxy mode sends data via public relay. For max security, use Direct mode on same-network or kiro.html.
+                </div>
+            </div>
+
             <button onclick="saveSettings()" class="btn btn-primary" style="width:100%;justify-content:center;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                 Save &amp; Test Connection
@@ -833,8 +855,15 @@
             baseUrl: localStorage.getItem('9r_baseUrl') || 'http://localhost:20128',
             apiKey: localStorage.getItem('9r_apiKey') || '',
             cliToken: localStorage.getItem('9r_cliToken') || '',
-            delay: parseInt(localStorage.getItem('9r_delay')) || 500
+            delay: parseInt(localStorage.getItem('9r_delay')) || 500,
+            corsMode: localStorage.getItem('9r_corsMode') || 'auto'
         };
+        
+        // Public CORS proxies as fallback (order of reliability)
+        const CORS_PROXIES = [
+            'https://corsproxy.io/?',
+            'https://api.allorigins.win/raw?url=',
+        ];
 
         const $ = id => document.getElementById(id);
 
@@ -862,6 +891,7 @@
             $('inputApiKey').value = config.apiKey;
             $('inputCliToken').value = config.cliToken;
             $('inputDelay').value = config.delay;
+            $('corsMode').value = config.corsMode;
         }
 
         async function saveSettings() {
@@ -869,11 +899,13 @@
             config.apiKey = $('inputApiKey').value.trim();
             config.cliToken = $('inputCliToken').value.trim();
             config.delay = parseInt($('inputDelay').value) || 500;
+            config.corsMode = $('corsMode').value;
 
             localStorage.setItem('9r_baseUrl', config.baseUrl);
             localStorage.setItem('9r_apiKey', config.apiKey);
             localStorage.setItem('9r_cliToken', config.cliToken);
             localStorage.setItem('9r_delay', config.delay);
+            localStorage.setItem('9r_corsMode', config.corsMode);
 
             hideMsg('settingsError');
             hideMsg('settingsSuccess');
@@ -911,22 +943,46 @@
         }
 
         async function apiFetch(path, options = {}) {
-            const url = config.baseUrl + path;
+            const targetUrl = config.baseUrl + path;
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 15000);
-            try {
-                const res = await fetch(url, {
-                    ...options,
-                    headers: { ...getHeaders(), ...options.headers },
-                    signal: controller.signal
-                });
-                clearTimeout(timeout);
-                const data = await res.json().catch(() => ({}));
-                return { ok: res.ok, status: res.status, data };
-            } catch (err) {
-                clearTimeout(timeout);
-                return { ok: false, status: 0, error: err.message };
+            
+            const tryFetch = async (url, useProxy = false) => {
+                try {
+                    const res = await fetch(url, {
+                        ...options,
+                        headers: { ...getHeaders(), ...options.headers },
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeout);
+                    const data = await res.json().catch(() => ({}));
+                    return { ok: res.ok, status: res.status, data, usedProxy: useProxy };
+                } catch (err) {
+                    return { ok: false, status: 0, error: err.message, usedProxy: useProxy };
+                }
+            };
+
+            // Mode: Direct Only
+            if (config.corsMode === 'direct') {
+                return tryFetch(targetUrl, false);
             }
+
+            // Mode: Force Proxy
+            if (config.corsMode === 'proxy') {
+                const proxyUrl = CORS_PROXIES[0] + encodeURIComponent(targetUrl);
+                return tryFetch(proxyUrl, true);
+            }
+
+            // Mode: Auto (Direct first, fallback to proxy on network error)
+            const directRes = await tryFetch(targetUrl, false);
+            if (directRes.ok || directRes.status > 0) {
+                return directRes; // Success or actual HTTP error (not CORS)
+            }
+            
+            // Network error (likely CORS), try proxy fallback
+            addLog('Direct request blocked (CORS). Retrying via proxy...', 'sys');
+            const proxyUrl = CORS_PROXIES[0] + encodeURIComponent(targetUrl);
+            return tryFetch(proxyUrl, true);
         }
 
         // ==========================================
