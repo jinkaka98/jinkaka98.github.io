@@ -4,1156 +4,351 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiro Tools - Xixero</title>
-    <meta name="description" content="Bulk import Kiro AI refresh tokens into 9Router. Manage accounts from any device.">
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-
     <style>
-        /* ═══════════════════════════════════════════════════
-           Kiro Tools Page - Extends Xixero Design System
-           ═══════════════════════════════════════════════════ */
-
-        .kiro-page {
-            padding: calc(72px + var(--space-13)) 0 var(--space-16);
-        }
-
-        .kiro-grid {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: var(--space-10);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--space-9);
-        }
-
-        @media (max-width: 960px) {
-            .kiro-grid {
-                grid-template-columns: 1fr;
-                padding: 0 var(--space-7);
-            }
-        }
-
-        /* Connection Status Bar */
-        .conn-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: var(--space-7);
-            background: var(--color-surface-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-7) var(--space-9);
-            margin-bottom: var(--space-10);
-            flex-wrap: wrap;
-        }
-
-        .conn-info {
-            display: flex;
-            align-items: center;
-            gap: var(--space-6);
-        }
-
-        .conn-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #ef4444;
-            flex-shrink: 0;
-            transition: background var(--motion-fast);
-        }
-
-        .conn-dot.online {
-            background: #10b981;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-            animation: dot-pulse 2s ease-in-out infinite;
-        }
-
-        .conn-dot.connecting {
-            background: #f59e0b;
-            animation: dot-pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes dot-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .conn-text {
-            color: var(--color-text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .conn-text strong {
-            color: var(--color-text-primary);
-            font-weight: 600;
-        }
-
-        .conn-actions {
-            display: flex;
-            gap: var(--space-4);
-        }
-
-        .btn-sm {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-4) var(--space-7);
-            border-radius: var(--radius-full);
-            font-weight: 500;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border: 1px solid var(--color-border);
-            background: transparent;
-            color: var(--color-text-secondary);
-            transition: all var(--motion-fast);
-            font-family: inherit;
-        }
-
-        .btn-sm:hover {
-            border-color: var(--color-border-hover);
-            color: var(--color-text-primary);
-            background: var(--color-surface-muted);
-        }
-
-        .btn-sm.active {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-            background: rgba(139, 92, 246, 0.08);
-        }
-
-        /* Main Card */
-        .card {
-            background: var(--color-surface-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--space-7) var(--space-9);
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .card-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--color-text-primary);
-            display: flex;
-            align-items: center;
-            gap: var(--space-4);
-        }
-
-        .card-title-icon {
-            width: 32px;
-            height: 32px;
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-accent);
-        }
-
-        .card-badge {
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-full);
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background: rgba(139, 92, 246, 0.15);
-            color: var(--color-accent);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .card-body {
-            padding: var(--space-9);
-        }
-
-        /* Form Elements */
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--color-text-primary);
-            margin-bottom: var(--space-4);
-        }
-
-        .form-label span {
-            color: var(--color-text-tertiary);
-            font-weight: 400;
-        }
-
-        .token-textarea {
-            width: 100%;
-            min-height: 200px;
-            padding: var(--space-7);
-            background: var(--color-surface-base);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            color: var(--color-text-primary);
-            font-family: var(--font-mono);
-            font-size: 0.8125rem;
-            line-height: 1.6;
-            resize: vertical;
-            transition: border-color var(--motion-fast);
-            outline: none;
-        }
-
-        .token-textarea::placeholder {
-            color: var(--color-text-tertiary);
-        }
-
-        .token-textarea:focus {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px var(--color-accent-glow);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: var(--space-4);
-            margin-top: var(--space-7);
-        }
-
-        .form-actions .btn {
-            font-size: 0.9375rem;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--color-text-secondary);
-            border: 1px solid var(--color-border);
-        }
-
-        .btn-ghost:hover:not(:disabled) {
-            background: var(--color-surface-muted);
-            border-color: var(--color-border-hover);
-            color: var(--color-text-primary);
-        }
-
-        /* Log Console */
-        .log-section {
-            border-top: 1px solid var(--color-border);
-        }
-
-        .log-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--space-6) var(--space-9);
-            background: var(--color-surface-muted);
-        }
-
-        .log-header-title {
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--color-text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-        }
-
-        .log-clear-btn {
-            background: none;
-            border: none;
-            color: var(--color-text-tertiary);
-            font-size: 0.75rem;
-            cursor: pointer;
-            font-family: inherit;
-            transition: color var(--motion-fast);
-        }
-
-        .log-clear-btn:hover {
-            color: var(--color-text-primary);
-        }
-
-        .log-console {
-            height: 240px;
-            overflow-y: auto;
-            padding: var(--space-7);
-            background: var(--color-surface-base);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            line-height: 1.8;
-            color: var(--color-text-secondary);
-        }
-
-        .log-entry {
-            display: flex;
-            gap: var(--space-4);
-            padding: var(--space-2) 0;
-            animation: log-in var(--motion-fast) ease-out;
-        }
-
-        @keyframes log-in {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .log-time {
-            color: var(--color-text-tertiary);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .log-entry.success .log-icon { color: #10b981; }
-        .log-entry.skipped .log-icon { color: #f59e0b; }
-        .log-entry.failed .log-icon { color: #ef4444; }
-        .log-entry.info .log-icon { color: var(--color-accent); }
-        .log-entry.sys .log-icon { color: var(--color-text-tertiary); }
-
-        .log-icon {
-            width: 16px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .log-msg { flex: 1; word-break: break-all; }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-4);
-        }
-
-        .stat-card {
-            background: var(--color-surface-muted);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            padding: var(--space-7);
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: var(--space-2);
-        }
-
-        .stat-value.total { color: var(--color-text-primary); }
-        .stat-value.success { color: #10b981; }
-        .stat-value.skipped { color: #f59e0b; }
-        .stat-value.failed { color: #ef4444; }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--color-text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 500;
-        }
-
-        /* Accounts List */
-        .account-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-            max-height: 360px;
-            overflow-y: auto;
-        }
-
-        .account-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--space-6) var(--space-7);
-            background: var(--color-surface-muted);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            transition: border-color var(--motion-fast);
-        }
-
-        .account-item:hover {
-            border-color: var(--color-border-hover);
-        }
-
-        .account-email {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--color-text-primary);
-        }
-
-        .account-meta {
-            font-size: 0.75rem;
-            color: var(--color-text-tertiary);
-            margin-top: var(--space-1);
-        }
-
-        .account-status {
-            padding: var(--space-1) var(--space-4);
-            border-radius: var(--radius-full);
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .account-status.active {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .account-status.inactive {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .account-empty {
-            text-align: center;
-            color: var(--color-text-tertiary);
-            font-size: 0.875rem;
-            padding: var(--space-12) 0;
-        }
-
-        /* Settings Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 200;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-7);
-            opacity: 0;
-            visibility: hidden;
-            transition: all var(--motion-normal);
-        }
-
-        .modal-overlay.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background: var(--color-surface-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            width: 100%;
-            max-width: 480px;
-            padding: var(--space-10);
-            transform: translateY(16px);
-            transition: transform var(--motion-normal);
-        }
-
-        .modal-overlay.visible .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: var(--space-9);
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-text-primary);
-        }
-
-        .modal-close {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: none;
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-sm);
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            transition: all var(--motion-fast);
-            font-size: 1rem;
-        }
-
-        .modal-close:hover {
-            border-color: var(--color-border-hover);
-            color: var(--color-text-primary);
-            background: var(--color-surface-muted);
-        }
-
-        .form-group {
-            margin-bottom: var(--space-7);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: var(--space-6) var(--space-7);
-            background: var(--color-surface-base);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            color: var(--color-text-primary);
-            font-family: var(--font-primary);
-            font-size: 0.875rem;
-            outline: none;
-            transition: border-color var(--motion-fast);
-        }
-
-        .form-input::placeholder {
-            color: var(--color-text-tertiary);
-        }
-
-        .form-input:focus {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px var(--color-accent-glow);
-        }
-
-        .form-hint {
-            font-size: 0.75rem;
-            color: var(--color-text-tertiary);
-            margin-top: var(--space-2);
-        }
-
-        .form-msg {
-            padding: var(--space-4) var(--space-6);
-            border-radius: var(--radius-sm);
-            font-size: 0.8125rem;
-            margin-top: var(--space-4);
-            display: none;
-        }
-
-        .form-msg.visible { display: block; }
-        .form-msg.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
-        .form-msg.ok {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10b981;
-        }
-
-        /* Help Banner */
-        .help-banner {
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            border-radius: var(--radius-lg);
-            padding: var(--space-7) var(--space-9);
-            color: #f59e0b;
-            font-size: 0.8125rem;
-            line-height: 1.6;
-        }
-
-        .help-banner-title {
-            font-weight: 600;
-            font-size: 0.875rem;
-            margin-bottom: var(--space-3);
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-        }
-
-        .help-banner code {
-            background: rgba(245, 158, 11, 0.15);
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-sm);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-        }
-
-        /* Spinner */
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(0, 0, 0, 0.2);
-            border-top-color: var(--color-surface-base);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: inline-block;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .log-entry,
-            .conn-dot { 
-                animation: none;
-            }
-        }
+        .kiro-app{padding:calc(72px + var(--space-13)) 0 var(--space-16)}
+        .kiro-card{max-width:640px;margin:0 auto;background:var(--color-surface-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden}
+        .kiro-header{padding:32px 32px 24px;border-bottom:1px solid var(--color-border)}
+        .kiro-title{font-size:1.5rem;font-weight:700;margin-bottom:6px}
+        .kiro-sub{color:var(--color-text-secondary);font-size:0.9375rem;line-height:1.5}
+        .kiro-body{padding:32px}
+        .kiro-label{font-size:0.75rem;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
+        .kiro-textarea{width:100%;height:160px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);padding:14px;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.6;resize:vertical;outline:none}
+        .kiro-textarea:focus{border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-glow)}
+        .kiro-actions{display:flex;gap:10px;margin-top:16px}
+        .btn-g{background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border);cursor:pointer;padding:12px 20px;border-radius:var(--radius-full);font-weight:600;font-size:0.875rem;font-family:inherit;transition:all 0.2s}
+        .btn-g:hover{background:var(--color-surface-muted);border-color:var(--color-border-hover);color:var(--color-text-primary)}
+        .btn:disabled,.btn-g:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
+        .kiro-log{margin-top:16px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);height:200px;overflow-y:auto;padding:14px;font-family:var(--font-mono);font-size:0.6875rem;line-height:1.7;color:var(--color-text-secondary)}
+        .kiro-log div{margin-bottom:3px}
+        .kiro-log .s{color:#10b981}.kiro-log .k{color:#f59e0b}.kiro-log .f{color:#ef4444}.kiro-log .i{color:var(--color-accent)}
+        .kiro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);text-align:center}
+        .sv{font-size:1.25rem;font-weight:700}.sl{font-size:0.625rem;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+        /* Setup Section */
+        .setup-section{text-align:center;padding:40px 32px}
+        .setup-icon{width:64px;height:64px;margin:0 auto 20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center}
+        .setup-title{font-size:1.125rem;font-weight:600;margin-bottom:8px}
+        .setup-desc{color:var(--color-text-secondary);font-size:0.875rem;line-height:1.6;max-width:420px;margin:0 auto 24px}
+        .setup-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--color-accent);color:#000;border:none;border-radius:var(--radius-full);font-weight:700;font-size:0.9375rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px var(--color-accent-glow);transition:all 0.2s}
+        .setup-btn:hover{background:var(--color-accent-hover);transform:translateY(-2px);box-shadow:0 8px 24px var(--color-accent-glow)}
+        .setup-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
+        .setup-steps{text-align:left;margin-top:24px;padding:16px 20px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.8}
+        .setup-steps li{margin-bottom:4px}
+        .status-msg{margin-top:16px;padding:10px 16px;border-radius:var(--radius-md);font-size:0.8125rem;display:none}
+        .status-msg.show{display:block}
+        .status-msg.ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981}
+        .status-msg.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
+        .status-msg.warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);color:#f59e0b}
+        .hidden{display:none!important}
+        .kiro-note{max-width:640px;margin:16px auto 0;padding:12px 20px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);color:var(--color-accent-hover);font-size:0.8125rem;line-height:1.6}
     </style>
 </head>
 <body>
-    <!-- Skip to content for accessibility -->
     <a href="#main" class="skip-link">Skip to main content</a>
+    <nav class="navbar scrolled"><div class="nav-container"><div class="nav-brand"><a href="../index.html" style="text-decoration:none;display:flex;align-items:center;gap:12px;"><span class="logo">XIXERO</span><span class="version-badge">v0.1.4</span></a></div><div class="nav-menu"><a href="../index.html#features" class="nav-link">Features</a><a href="../download.html" class="nav-link">Download</a><a href="../changelog.html" class="nav-link">Changelog</a><a href="./" class="nav-link" style="color:var(--color-text-primary);">Kiro Tools</a><a href="https://discord.gg/TFErxnnEfY" class="nav-link nav-link-discord" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/></svg>Discord</a></div><button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button></div></nav>
 
-    <!-- Navigation -->
-    <nav class="navbar scrolled" id="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <a href="../index.html" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
-                    <span class="logo">XIXERO</span>
-                    <span class="version-badge" id="version-badge">v0.1.4</span>
-                </a>
-            </div>
-
-            <div class="nav-menu" id="nav-menu">
-                <a href="../index.html#features" class="nav-link">Features</a>
-                <a href="../download.html" class="nav-link">Download</a>
-                <a href="../changelog.html" class="nav-link">Changelog</a>
-                <a href="./" class="nav-link" style="color:var(--color-text-primary);">Kiro Tools</a>
-                <a href="https://discord.gg/TFErxnnEfY" class="nav-link nav-link-discord" target="_blank" rel="noopener" aria-label="Join Discord community">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                    </svg>
-                    Discord
-                </a>
-            </div>
-
-            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
     <main id="main">
-        <!-- Page Hero -->
-        <div class="page-hero">
-            <div class="page-hero-content">
-                <h1 class="page-hero-title">Kiro Tools</h1>
-                <p class="page-hero-subtitle">Bulk import Kiro AI refresh tokens into 9Router. Manage accounts from any device, anywhere.</p>
-            </div>
-        </div>
-
-        <!-- App Content -->
-        <section class="kiro-page">
+        <section class="kiro-app">
             <div class="container">
-
-                <!-- Connection Status Bar -->
-                <div class="conn-bar">
-                    <div class="conn-info">
-                        <div class="conn-dot" id="connDot" role="status" aria-label="Connection status"></div>
-                        <span class="conn-text" id="connText">Not connected</span>
+                <div class="kiro-card">
+                    <div class="kiro-header">
+                        <h1 class="kiro-title">Kiro Bulk Import</h1>
+                        <p class="kiro-sub">Bulk import Kiro AI refresh tokens into 9Router. Zero install.</p>
                     </div>
-                    <div class="conn-actions">
-                        <button class="btn-sm" id="btnSettings" onclick="toggleSettings()" aria-label="Open settings">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                            Settings
-                        </button>
-                        <button class="btn-sm" onclick="fetchProviders()" aria-label="Refresh accounts list">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
-                            Refresh
-                        </button>
-                    </div>
-                </div>
 
-                <div class="kiro-grid">
-                    <!-- Left Column: Import -->
-                    <div>
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <div class="card-title-icon">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M8 5H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4"/></svg>
-                                    </div>
-                                    Bulk Import
-                                </div>
-                                <span class="card-badge">Kiro AI</span>
-                            </div>
-                            <div class="card-body">
-                                <label class="form-label" for="tokenArea">
-                                    Refresh Tokens <span>(one per line)</span>
-                                </label>
-                                <textarea
-                                    id="tokenArea"
-                                    class="token-textarea"
-                                    placeholder="Paste Kiro refresh tokens here...&#10;&#10;aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3"
-                                    spellcheck="false"
-                                    autocomplete="off"
-                                    aria-label="Refresh tokens input"
-                                ></textarea>
-                                <div class="form-actions">
-                                    <button id="btnProcess" onclick="processTokens()" class="btn btn-primary">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                        <span id="btnProcessText">Process</span>
-                                    </button>
-                                    <button onclick="clearTokens()" class="btn btn-ghost">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                                        Clear
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Log Console -->
-                            <div class="log-section">
-                                <div class="log-header">
-                                    <div class="log-header-title">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-                                        Execution Log
-                                    </div>
-                                    <button onclick="clearLogs()" class="log-clear-btn">Clear</button>
-                                </div>
-                                <div class="log-console" id="logConsole" role="log" aria-live="polite">
-                                    <div class="log-entry sys">
-                                        <span class="log-time">[--:--:--]</span>
-                                        <span class="log-icon">•</span>
-                                        <span class="log-msg">Waiting for connection...</span>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- SETUP PHASE -->
+                    <div id="setupPhase" class="setup-section">
+                        <div class="setup-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
                         </div>
+                        <div class="setup-title">Connect to 9Router</div>
+                        <div class="setup-desc">
+                            Click the button below. Your browser will ask permission to access a folder. Navigate to your <strong>9Router data folder</strong> and click Allow.
+                        </div>
+                        <button class="setup-btn" id="setupBtn" onclick="startSetup()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            Setup &amp; Connect
+                        </button>
+                        <ol class="setup-steps">
+                            <li>Browser will show a folder picker dialog</li>
+                            <li>Navigate to: <code style="color:var(--color-accent);background:var(--color-surface-base);padding:1px 6px;border-radius:4px;font-size:0.75rem;">AppData/Roaming/9router</code></li>
+                            <li>Click "Select Folder" then "Allow" when prompted</li>
+                            <li>Done! Tool auto-connects to your 9Router</li>
+                        </ol>
+                        <div class="status-msg" id="setupStatus"></div>
                     </div>
 
-                    <!-- Right Column: Stats & Accounts -->
-                    <div>
-                        <!-- Summary Stats -->
-                        <div class="card" style="margin-bottom: var(--space-10);">
-                            <div class="card-header">
-                                <div class="card-title">Last Batch</div>
-                            </div>
-                            <div class="card-body">
-                                <div class="stats-grid">
-                                    <div class="stat-card">
-                                        <div class="stat-value total" id="statTotal">0</div>
-                                        <div class="stat-label">Total</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <div class="stat-value success" id="statSuccess">0</div>
-                                        <div class="stat-label">Success</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <div class="stat-value skipped" id="statSkipped">0</div>
-                                        <div class="stat-label">Skipped</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <div class="stat-value failed" id="statFailed">0</div>
-                                        <div class="stat-label">Failed</div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- IMPORT PHASE (hidden until connected) -->
+                    <div id="importPhase" class="kiro-body hidden">
+                        <div class="kiro-label">Refresh Tokens (one per line)</div>
+                        <textarea id="tokens" class="kiro-textarea" placeholder="aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3" spellcheck="false"></textarea>
+                        <div class="kiro-actions">
+                            <button id="btnProc" class="btn btn-primary" onclick="processTokens()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                Process
+                            </button>
+                            <button class="btn-g" onclick="clearAll()">Clear</button>
                         </div>
-
-                        <!-- Accounts List -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Kiro Accounts</div>
-                            </div>
-                            <div class="card-body">
-                                <div class="account-list" id="accountList">
-                                    <div class="account-empty">Connect to 9Router to view accounts</div>
-                                </div>
-                            </div>
+                        <div class="kiro-log" id="log"><div class="i">Connected. Paste tokens above and click Process.</div></div>
+                        <div class="kiro-stats">
+                            <div><div class="sv" id="sT" style="color:var(--color-text-primary)">0</div><div class="sl">Total</div></div>
+                            <div><div class="sv" id="sS" style="color:#10b981">0</div><div class="sl">Success</div></div>
+                            <div><div class="sv" id="sK" style="color:#f59e0b">0</div><div class="sl">Skip</div></div>
+                            <div><div class="sv" id="sF" style="color:#ef4444">0</div><div class="sl">Fail</div></div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Network Info Banner -->
-                <div class="help-banner" style="margin-top:var(--space-10);">
-                    <div class="help-banner-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        How it works
-                    </div>
-                    <p>Enter your 9Router URL (e.g. <code>http://localhost:20128</code> or a Tailscale IP). Works from any device.</p>
-                    <p style="margin-top:var(--space-3);">If direct connection fails due to browser CORS, we automatically retry via a public CORS relay. For maximum privacy, use <code>Direct</code> mode or access this tool at <code>http://localhost:20128/kiro.html</code> inside 9Router's own network.</p>
+                <div class="kiro-note">
+                    <strong>How it works:</strong> This tool uses the browser's File System Access API to write a helper file into your 9Router's public folder. Then it communicates with 9Router via that file (same-origin, no CORS). Your tokens never leave your device.
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">&copy; 2025 Xixero. All rights reserved.</div>
-                <div class="footer-right">
-                    <a href="https://github.com/jinkaka98" class="footer-link" target="_blank" rel="noopener">GitHub</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- Hidden iframe for same-origin communication with 9Router -->
+    <iframe id="bridge" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
 
-    <!-- Settings Modal -->
-    <div class="modal-overlay" id="settingsModal" role="dialog" aria-modal="true" aria-label="Connection Settings">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Connection Settings</h2>
-                <button class="modal-close" onclick="toggleSettings()" aria-label="Close settings">&times;</button>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="inputBaseUrl">9Router Base URL</label>
-                <input type="url" id="inputBaseUrl" placeholder="http://localhost:20128" class="form-input" autocomplete="url">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="inputApiKey">API Key <span class="form-hint">(Optional — Bearer token)</span></label>
-                <input type="password" id="inputApiKey" placeholder="9r-..." class="form-input" autocomplete="off">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="inputCliToken">CLI Token <span class="form-hint">(Optional — x-9r-cli-token)</span></label>
-                <input type="password" id="inputCliToken" placeholder="16-char hex..." class="form-input" autocomplete="off">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="inputDelay">Delay Between Calls <span class="form-hint">(ms)</span></label>
-                <input type="number" id="inputDelay" value="500" min="0" max="10000" class="form-input">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="corsMode">CORS Handling <span class="form-hint">(if direct fails)</span></label>
-                <select id="corsMode" class="form-input" style="cursor:pointer;">
-                    <option value="auto">Auto (Direct → Proxy Fallback)</option>
-                    <option value="direct">Direct Only (No Proxy)</option>
-                    <option value="proxy">Force CORS Proxy</option>
-                </select>
-                <div class="form-hint" style="margin-top:var(--space-2);color:#f59e0b;">
-                    ⚠️ Proxy mode sends data via public relay. For max security, use Direct mode on same-network or kiro.html.
-                </div>
-            </div>
-
-            <button onclick="saveSettings()" class="btn btn-primary" style="width:100%;justify-content:center;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Save &amp; Test Connection
-            </button>
-
-            <div id="settingsError" class="form-msg error" role="alert"></div>
-            <div id="settingsSuccess" class="form-msg ok" role="status"></div>
-        </div>
-    </div>
-
-    <!-- App Script -->
+    <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-brand">&copy; 2025 Xixero.</div><div class="footer-right"><a href="https://github.com/jinkaka98" class="footer-link" target="_blank">GitHub</a></div></div></div></footer>
     <script src="../app.js"></script>
     <script>
-        // ==========================================
-        // STATE & CONFIG
-        // ==========================================
-        let config = {
-            baseUrl: localStorage.getItem('9r_baseUrl') || 'http://localhost:20128',
-            apiKey: localStorage.getItem('9r_apiKey') || '',
-            cliToken: localStorage.getItem('9r_cliToken') || '',
-            delay: parseInt(localStorage.getItem('9r_delay')) || 500,
-            corsMode: localStorage.getItem('9r_corsMode') || 'auto'
-        };
-        
-        // Public CORS proxies as fallback (order of reliability)
-        const CORS_PROXIES = [
-            'https://corsproxy.io/?',
-            'https://api.allorigins.win/raw?url=',
-        ];
+    // ═══════════════════════════════════════════════════════════════
+    // KIRO TOOLS - File System Access API + postMessage Bridge
+    // ═══════════════════════════════════════════════════════════════
 
-        const $ = id => document.getElementById(id);
+    const $=id=>document.getElementById(id);
 
-        // ==========================================
-        // INITIALIZATION
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSettingsToUI();
-            if (config.baseUrl) testConnection();
+    // The bridge HTML that gets written to 9Router's public folder.
+    // This file runs on localhost:20128 origin and handles API calls.
+    const BRIDGE_HTML = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Kiro Bridge</title></head>
+<body><script>
+window.addEventListener('message', async function(e) {
+    if (!e.data || e.data.type !== 'kiro-import') return;
+    const token = e.data.token;
+    const id = e.data.id;
+    try {
+        const res = await fetch('/api/oauth/kiro/import', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({refreshToken: token})
         });
-
-        // ==========================================
-        // SETTINGS MODAL
-        // ==========================================
-        function toggleSettings() {
-            $('settingsModal').classList.toggle('visible');
-        }
-
-        document.getElementById('settingsModal').addEventListener('click', function(e) {
-            if (e.target === this) toggleSettings();
-        });
-
-        function loadSettingsToUI() {
-            $('inputBaseUrl').value = config.baseUrl;
-            $('inputApiKey').value = config.apiKey;
-            $('inputCliToken').value = config.cliToken;
-            $('inputDelay').value = config.delay;
-            $('corsMode').value = config.corsMode;
-        }
-
-        async function saveSettings() {
-            config.baseUrl = $('inputBaseUrl').value.trim().replace(/\/$/, '');
-            config.apiKey = $('inputApiKey').value.trim();
-            config.cliToken = $('inputCliToken').value.trim();
-            config.delay = parseInt($('inputDelay').value) || 500;
-            config.corsMode = $('corsMode').value;
-
-            localStorage.setItem('9r_baseUrl', config.baseUrl);
-            localStorage.setItem('9r_apiKey', config.apiKey);
-            localStorage.setItem('9r_cliToken', config.cliToken);
-            localStorage.setItem('9r_delay', config.delay);
-            localStorage.setItem('9r_corsMode', config.corsMode);
-
-            hideMsg('settingsError');
-            hideMsg('settingsSuccess');
-
-            const ok = await testConnection();
-            if (ok) {
-                showMsg('settingsSuccess', 'Connection successful.');
-                setTimeout(() => toggleSettings(), 1200);
-                fetchProviders();
+        const data = await res.json();
+        if (res.ok && data.success) {
+            e.source.postMessage({type:'kiro-result',id:id,status:'success',email:data.connection?.email||'ok'}, '*');
+        } else {
+            const err = (data.error||'').toLowerCase();
+            if (err.includes('duplicate')||err.includes('already')||err.includes('exists')) {
+                e.source.postMessage({type:'kiro-result',id:id,status:'skip',msg:'exists'}, '*');
             } else {
-                showMsg('settingsError', 'Could not connect to 9Router.');
+                e.source.postMessage({type:'kiro-result',id:id,status:'fail',msg:data.error||'Unknown'}, '*');
             }
         }
+    } catch(ex) {
+        e.source.postMessage({type:'kiro-result',id:id,status:'fail',msg:ex.message}, '*');
+    }
+});
+window.parent.postMessage({type:'kiro-bridge-ready'}, '*');
+<\/script></body></html>`;
 
-        function showMsg(id, text) {
-            const el = $(id);
-            el.textContent = text;
-            el.classList.add('visible');
+    let bridgeReady = false;
+    let pendingResolves = {};
+
+    // Listen for messages from bridge iframe
+    window.addEventListener('message', function(e) {
+        if (e.data && e.data.type === 'kiro-bridge-ready') {
+            bridgeReady = true;
+            showStatus('setupStatus', 'Connected to 9Router!', 'ok');
+            $('setupPhase').classList.add('hidden');
+            $('importPhase').classList.remove('hidden');
         }
-
-        function hideMsg(id) {
-            const el = $(id);
-            el.textContent = '';
-            el.classList.remove('visible');
-        }
-
-        // ==========================================
-        // API UTILITIES
-        // ==========================================
-        function getHeaders() {
-            const h = { 'Content-Type': 'application/json' };
-            if (config.apiKey) h['Authorization'] = 'Bearer ' + config.apiKey;
-            if (config.cliToken) h['x-9r-cli-token'] = config.cliToken;
-            return h;
-        }
-
-        async function apiFetch(path, options = {}) {
-            const targetUrl = config.baseUrl + path;
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 15000);
-            
-            const tryFetch = async (url, useProxy = false) => {
-                try {
-                    const res = await fetch(url, {
-                        ...options,
-                        headers: { ...getHeaders(), ...options.headers },
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeout);
-                    const data = await res.json().catch(() => ({}));
-                    return { ok: res.ok, status: res.status, data, usedProxy: useProxy };
-                } catch (err) {
-                    return { ok: false, status: 0, error: err.message, usedProxy: useProxy };
-                }
-            };
-
-            // Mode: Direct Only
-            if (config.corsMode === 'direct') {
-                return tryFetch(targetUrl, false);
-            }
-
-            // Mode: Force Proxy
-            if (config.corsMode === 'proxy') {
-                const proxyUrl = CORS_PROXIES[0] + encodeURIComponent(targetUrl);
-                return tryFetch(proxyUrl, true);
-            }
-
-            // Mode: Auto (Direct first, fallback to proxy on network error)
-            const directRes = await tryFetch(targetUrl, false);
-            if (directRes.ok || directRes.status > 0) {
-                return directRes; // Success or actual HTTP error (not CORS)
-            }
-            
-            // Network error (likely CORS), try proxy fallback
-            addLog('Direct request blocked (CORS). Retrying via proxy...', 'sys');
-            const proxyUrl = CORS_PROXIES[0] + encodeURIComponent(targetUrl);
-            return tryFetch(proxyUrl, true);
-        }
-
-        // ==========================================
-        // CONNECTION STATUS
-        // ==========================================
-        async function testConnection() {
-            setConnStatus('connecting', config.baseUrl);
-            const res = await apiFetch('/api/health');
-            if (res.ok) {
-                setConnStatus('online', config.baseUrl);
-                return true;
-            } else {
-                setConnStatus('offline', config.baseUrl);
-                return false;
+        if (e.data && e.data.type === 'kiro-result') {
+            const resolve = pendingResolves[e.data.id];
+            if (resolve) {
+                resolve(e.data);
+                delete pendingResolves[e.data.id];
             }
         }
+    });
 
-        function setConnStatus(state, url) {
-            const dot = $('connDot');
-            const text = $('connText');
-            dot.className = 'conn-dot';
-            if (state === 'online') {
-                dot.classList.add('online');
-                text.innerHTML = 'Connected to <strong>' + url + '</strong>';
-            } else if (state === 'connecting') {
-                dot.classList.add('connecting');
-                text.innerHTML = 'Connecting...';
-            } else {
-                text.innerHTML = 'Disconnected';
-            }
-        }
+    function showStatus(id, msg, cls) {
+        const el = $(id);
+        el.textContent = msg;
+        el.className = 'status-msg show ' + cls;
+    }
 
-        // ==========================================
-        // PROVIDERS LIST
-        // ==========================================
-        async function fetchProviders() {
-            const list = $('accountList');
-            list.innerHTML = '<div class="account-empty">Loading...</div>';
+    // ═══════════════════════════════════════════════════════════════
+    // SETUP: Write bridge file to 9Router public folder
+    // ═══════════════════════════════════════════════════════════════
+    async function startSetup() {
+        const btn = $('setupBtn');
+        btn.disabled = true;
+        btn.textContent = 'Selecting folder...';
 
-            const res = await apiFetch('/api/providers');
-            if (!res.ok) {
-                list.innerHTML = '<div class="account-empty">Failed to load: ' + (res.data?.error || res.error || 'Unknown error') + '</div>';
-                return;
-            }
-
-            const conns = (res.data.connections || []).filter(c => c.provider === 'kiro');
-            if (conns.length === 0) {
-                list.innerHTML = '<div class="account-empty">No Kiro accounts found</div>';
-                return;
-            }
-
-            list.innerHTML = conns.map(c => {
-                const name = c.email || c.name || 'Unknown';
-                const statusClass = c.isActive ? 'active' : 'inactive';
-                const statusLabel = c.isActive ? 'Active' : 'Disabled';
-                return `
-                    <div class="account-item">
-                        <div>
-                            <div class="account-email">${escHtml(name)}</div>
-                            <div class="account-meta">${escHtml(c.authType)} &middot; Priority ${c.priority || 1}</div>
-                        </div>
-                        <span class="account-status ${statusClass}">${statusLabel}</span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function escHtml(s) {
-            const d = document.createElement('div');
-            d.textContent = s;
-            return d.innerHTML;
-        }
-
-        // ==========================================
-        // LOGGING
-        // ==========================================
-        const LOG_ICONS = { success: '✓', skipped: '⊘', failed: '✗', info: '●', sys: '○' };
-
-        function addLog(message, type = 'sys') {
-            const con = $('logConsole');
-            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            const div = document.createElement('div');
-            div.className = 'log-entry ' + type;
-            div.innerHTML =
-                '<span class="log-time">[' + time + ']</span>' +
-                '<span class="log-icon">' + (LOG_ICONS[type] || '') + '</span>' +
-                '<span class="log-msg">' + message + '</span>';
-            con.appendChild(div);
-            con.scrollTop = con.scrollHeight;
-        }
-
-        function clearLogs() { $('logConsole').innerHTML = ''; }
-
-        // ==========================================
-        // KIRO BULK IMPORT
-        // ==========================================
-        async function processTokens() {
-            const raw = $('tokenArea').value.trim();
-            if (!raw) return addLog('Please paste at least one refresh token.', 'failed');
-
-            const tokens = raw.split('\n').map(t => t.trim()).filter(Boolean);
-            if (tokens.length === 0) return addLog('No valid tokens found.', 'failed');
-
-            const btn = $('btnProcess');
-            const btnText = $('btnProcessText');
-            btn.disabled = true;
-            btnText.innerHTML = '<span class="spinner"></span> Processing...';
-
-            clearLogs();
-            updateStats(0, 0, 0, 0);
-            addLog('Starting import of ' + tokens.length + ' token(s)...', 'info');
-
-            let success = 0, skipped = 0, failed = 0;
-
-            for (let i = 0; i < tokens.length; i++) {
-                const token = tokens[i];
-                const masked = maskToken(token);
-
-                addLog('[' + (i + 1) + '/' + tokens.length + '] Importing ' + masked + '...', 'sys');
-
-                const res = await apiFetch('/api/oauth/kiro/import', {
-                    method: 'POST',
-                    body: JSON.stringify({ refreshToken: token })
-                });
-
-                if (res.ok && res.data.success) {
-                    addLog('[' + (i + 1) + '/' + tokens.length + '] Imported — ' + escHtml(res.data.connection?.email || 'done'), 'success');
-                    success++;
-                } else {
-                    const errMsg = res.data?.error || res.error || ('HTTP ' + res.status);
-                    const lower = errMsg.toLowerCase();
-                    if (lower.includes('duplicate') || lower.includes('already') || lower.includes('exists')) {
-                        addLog('[' + (i + 1) + '/' + tokens.length + '] Skipped — already exists', 'skipped');
-                        skipped++;
-                    } else {
-                        addLog('[' + (i + 1) + '/' + tokens.length + '] Failed — ' + escHtml(errMsg), 'failed');
-                        failed++;
-                    }
-                }
-
-                updateStats(i + 1, success, skipped, failed);
-
-                if (config.delay > 0 && i < tokens.length - 1) {
-                    await new Promise(r => setTimeout(r, config.delay));
-                }
-            }
-
-            addLog('Batch complete: ' + success + ' success, ' + skipped + ' skipped, ' + failed + ' failed.', 'info');
-
+        // Check if File System Access API is supported
+        if (!('showDirectoryPicker' in window)) {
+            showStatus('setupStatus', 'Your browser does not support File System Access API. Use Chrome or Edge (version 86+).', 'err');
             btn.disabled = false;
-            btnText.textContent = 'Process';
-            fetchProviders();
+            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+            return;
         }
 
-        function maskToken(t) {
-            if (t.length <= 14) return t.substring(0, 6) + '...';
-            return t.substring(0, 10) + '...' + t.substring(t.length - 4);
+        try {
+            // Step 1: User picks the 9Router data directory
+            const dirHandle = await window.showDirectoryPicker({
+                id: 'kiro-9router-dir',
+                mode: 'readwrite',
+                startIn: 'desktop'
+            });
+
+            showStatus('setupStatus', 'Folder selected. Writing bridge file...', 'warn');
+
+            // Step 2: Find or create "public" subfolder
+            let publicDir;
+            try {
+                publicDir = await dirHandle.getDirectoryHandle('public', { create: true });
+            } catch (e) {
+                showStatus('setupStatus', 'Cannot create "public" folder: ' + e.message, 'err');
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+                return;
+            }
+
+            // Step 3: Write kiro-bridge.html to public folder
+            const fileHandle = await publicDir.getFileHandle('kiro-bridge.html', { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(BRIDGE_HTML);
+            await writable.close();
+
+            showStatus('setupStatus', 'Bridge file written. Connecting...', 'warn');
+
+            // Step 4: Load the bridge via iframe (same-origin with 9Router)
+            const iframe = $('bridge');
+            iframe.src = 'http://localhost:20128/kiro-bridge.html';
+
+            // Wait for bridge ready (max 5 seconds)
+            let waited = 0;
+            const checkReady = setInterval(() => {
+                waited += 200;
+                if (bridgeReady) {
+                    clearInterval(checkReady);
+                } else if (waited > 5000) {
+                    clearInterval(checkReady);
+                    showStatus('setupStatus', '9Router is not responding. Make sure it is running on localhost:20128.', 'err');
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+                }
+            }, 200);
+
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                showStatus('setupStatus', 'Folder selection cancelled.', 'warn');
+            } else {
+                showStatus('setupStatus', 'Error: ' + e.message, 'err');
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Setup & Connect';
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // IMPORT: Send tokens via postMessage to bridge iframe
+    // ═══════════════════════════════════════════════════════════════
+    function sendToRouter(token) {
+        return new Promise((resolve) => {
+            const id = Math.random().toString(36).slice(2);
+            pendingResolves[id] = resolve;
+            $('bridge').contentWindow.postMessage({ type: 'kiro-import', token: token, id: id }, '*');
+            // Timeout after 15s
+            setTimeout(() => {
+                if (pendingResolves[id]) {
+                    delete pendingResolves[id];
+                    resolve({ status: 'fail', msg: 'Timeout' });
+                }
+            }, 15000);
+        });
+    }
+
+    function addLog(msg, cls) {
+        const d = document.createElement('div');
+        d.className = cls;
+        const t = new Date().toLocaleTimeString('en-GB', { hour12: false });
+        const ic = { s: '\u2713', k: '\u2298', f: '\u2717', i: '\u25CF' };
+        d.textContent = '[' + t + '] ' + (ic[cls] || '') + ' ' + msg;
+        $('log').appendChild(d);
+        $('log').scrollTop = $('log').scrollHeight;
+    }
+
+    function clearAll() {
+        $('tokens').value = '';
+        $('log').innerHTML = '';
+        ['sT', 'sS', 'sK', 'sF'].forEach(x => $(x).textContent = '0');
+        addLog('Cleared.', 'i');
+    }
+
+    async function processTokens() {
+        const raw = $('tokens').value.trim();
+        if (!raw) return addLog('Paste at least one token.', 'f');
+        const tokens = raw.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+        if (!tokens.length) return addLog('No valid tokens.', 'f');
+
+        if (!bridgeReady) return addLog('Not connected. Run Setup first.', 'f');
+
+        const btn = $('btnProc');
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+        $('log').innerHTML = '';
+        ['sT', 'sS', 'sK', 'sF'].forEach(x => $(x).textContent = '0');
+        addLog('Starting import of ' + tokens.length + ' token(s)...', 'i');
+
+        let sc = 0, sk = 0, fl = 0;
+
+        for (let i = 0; i < tokens.length; i++) {
+            const tk = tokens[i];
+            const ms = tk.length > 14 ? tk.slice(0, 10) + '...' + tk.slice(-4) : tk.slice(0, 6) + '...';
+            addLog('[' + (i + 1) + '/' + tokens.length + '] ' + ms, 'i');
+
+            const result = await sendToRouter(tk);
+
+            if (result.status === 'success') {
+                addLog('Imported: ' + (result.email || 'ok'), 's');
+                sc++;
+            } else if (result.status === 'skip') {
+                addLog('Skipped: ' + (result.msg || 'exists'), 'k');
+                sk++;
+            } else {
+                addLog('Failed: ' + (result.msg || 'unknown'), 'f');
+                fl++;
+            }
+
+            $('sT').textContent = i + 1;
+            $('sS').textContent = sc;
+            $('sK').textContent = sk;
+            $('sF').textContent = fl;
+
+            if (i < tokens.length - 1) await new Promise(r => setTimeout(r, 500));
         }
 
-        function clearTokens() {
-            $('tokenArea').value = '';
-            clearLogs();
-            addLog('Cleared.', 'sys');
-        }
+        addLog('Done: ' + sc + ' success, ' + sk + ' skip, ' + fl + ' fail.', 'i');
+        btn.disabled = false;
+        btn.textContent = 'Process';
+    }
 
-        function updateStats(total, success, skipped, failed) {
-            $('statTotal').textContent = total;
-            $('statSuccess').textContent = success;
-            $('statSkipped').textContent = skipped;
-            $('statFailed').textContent = failed;
-        }
+    // ═══════════════════════════════════════════════════════════════
+    // AUTO-CONNECT: Try loading bridge if it already exists
+    // ═══════════════════════════════════════════════════════════════
+    (function autoConnect() {
+        const iframe = $('bridge');
+        iframe.src = 'http://localhost:20128/kiro-bridge.html';
+        // If bridge already exists from previous setup, it will auto-connect
+        setTimeout(() => {
+            if (bridgeReady) return; // Already connected
+            // Not connected yet, show setup phase (already visible by default)
+        }, 3000);
+    })();
     </script>
 </body>
 </html>
