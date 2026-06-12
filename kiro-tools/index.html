@@ -75,18 +75,41 @@
                         </div>
                         <div class="setup-title">One-Time Setup</div>
                         <div class="setup-desc">
-                            A small bridge file needs to be saved in your 9Router folder. Click the button — your browser will ask where to save it.
+                            A small bridge file needs to be placed in your 9Router folder. Two quick steps:
                         </div>
 
-                        <button class="setup-btn" id="setupBtn" onclick="saveAndConnect()">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Save Bridge File
+                        <div style="text-align:left;max-width:440px;margin:0 auto 20px;">
+                            <!-- Step 1: Download -->
+                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">1</span>
+                                <div style="flex:1;">
+                                    <div style="font-weight:600;font-size:0.875rem;margin-bottom:6px;">Download the bridge file</div>
+                                    <button class="setup-btn" onclick="downloadBridge()" style="padding:10px 20px;font-size:0.8125rem;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Download kiro-bridge.html
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Move file -->
+                            <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">2</span>
+                                <div style="flex:1;">
+                                    <div style="font-weight:600;font-size:0.875rem;margin-bottom:6px;">Move it to 9Router's public folder</div>
+                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);margin-bottom:8px;" id="moveInstructions"></div>
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <code id="folderPath" style="flex:1;padding:8px 12px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent);user-select:all;cursor:text;word-break:break-all;"></code>
+                                        <button onclick="copyFolderPath()" id="copyFolderBtn" style="background:none;border:1px solid var(--color-border);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;padding:6px 10px;font-size:0.75rem;font-family:inherit;white-space:nowrap;transition:all 0.2s;">Copy</button>
+                                    </div>
+                                    <div style="font-size:0.75rem;color:var(--color-text-tertiary);margin-top:6px;" id="pathTip"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="setup-btn" id="retryBtn" onclick="retryConnect()" style="background:transparent;border:1px solid var(--color-border);color:var(--color-text-primary);box-shadow:none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+                            Retry Connect
                         </button>
-
-                        <div class="path-box" id="pathBox">
-                            <div class="path-box-label">Save it inside this folder</div>
-                            <div class="path-box-value" id="pathValue"></div>
-                        </div>
 
                         <div class="status-msg" id="setupStatus"></div>
                     </div>
@@ -153,18 +176,7 @@ window.parent.postMessage({type:'kiro-bridge-ready'},'*');
         return'linux';
     }
 
-    function get9RouterPath(){
-        const os=getOS();
-        if(os==='win')return'C:\\Users\\<you>\\AppData\\Roaming\\9router\\public';
-        return'~/.9router/public';
-    }
 
-    function get9RouterPathTip(){
-        const os=getOS();
-        if(os==='win')return'Windows: Open File Explorer → paste %APPDATA%\\9router\\public in the address bar';
-        if(os==='mac')return'macOS: Finder → Go → Go to Folder → type ~/.9router/public';
-        return'Linux: File Manager → Ctrl+L → type ~/.9router/public';
-    }
 
     // Listen for bridge messages
     window.addEventListener('message',function(e){
@@ -184,6 +196,26 @@ window.parent.postMessage({type:'kiro-bridge-ready'},'*');
         const el=$(id);el.textContent=msg;el.className='status-msg show '+cls;
     }
 
+    async function copyFolderPath(){
+        const path=$('folderPath').textContent;
+        try{
+            await navigator.clipboard.writeText(path);
+            const btn=$('copyFolderBtn');
+            btn.textContent='Copied!';btn.style.color='#10b981';btn.style.borderColor='#10b981';
+            setTimeout(()=>{btn.textContent='Copy';btn.style.color='';btn.style.borderColor='';},1500);
+        }catch(e){}
+    }
+
+    function downloadBridge(){
+        const blob=new Blob([BRIDGE_HTML],{type:'text/html'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;a.download='kiro-bridge.html';
+        document.body.appendChild(a);a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // PHASE 1: Auto-connect (try loading bridge if it already exists)
     // ═══════════════════════════════════════════════════════════════
@@ -201,84 +233,31 @@ window.parent.postMessage({type:'kiro-bridge-ready'},'*');
                 // Bridge not found — show setup
                 $('connectingPhase').classList.add('hidden');
                 $('setupPhase').classList.remove('hidden');
-                $('pathValue').textContent=get9RouterPath();
+                const os=getOS();
+                if(os==='win'){
+                    $('folderPath').textContent='%APPDATA%\\9router\\public';
+                    $('moveInstructions').textContent='Open File Explorer, paste this path in the address bar, press Enter:';
+                    $('pathTip').textContent='If "public" folder doesn\'t exist, create it.';
+                }else if(os==='mac'){
+                    $('folderPath').textContent='~/.9router/public';
+                    $('moveInstructions').textContent='Open Finder → Go → Go to Folder → paste:';
+                    $('pathTip').textContent='Press Cmd+Shift+. to show hidden folders if needed.';
+                }else{
+                    $('folderPath').textContent='~/.9router/public';
+                    $('moveInstructions').textContent='Open File Manager → Ctrl+L → paste:';
+                    $('pathTip').textContent='Press Ctrl+H to show hidden folders if needed.';
+                }
             }
         },300);
     })();
 
     // ═══════════════════════════════════════════════════════════════
-    // PHASE 2: Save bridge file via showSaveFilePicker
+    // PHASE 2: Download bridge file + retry connect
     // ═══════════════════════════════════════════════════════════════
-    async function saveAndConnect(){
-        const btn=$('setupBtn');
-        btn.disabled=true;
-        btn.textContent='Saving...';
-
-        if(!('showSaveFilePicker' in window)){
-            // Fallback: download as blob
-            downloadBridgeFile();
-            showStatus('setupStatus','File downloaded! Move it to: '+get9RouterPath()+' then click Retry.','warn');
-            btn.disabled=false;
-            btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg> Retry Connect';
-            btn.onclick=retryConnect;
-            return;
-        }
-
-        try{
-            const handle=await window.showSaveFilePicker({
-                suggestedName:'kiro-bridge.html',
-                types:[{description:'HTML file',accept:{'text/html':['.html']}}]
-            });
-
-            const writable=await handle.createWritable();
-            await writable.write(BRIDGE_HTML);
-            await writable.close();
-
-            showStatus('setupStatus','File saved! Connecting...','warn');
-
-            // Try connect
-            await new Promise(r=>setTimeout(r,500));
-            $('bridge').src='http://localhost:20128/kiro-bridge.html';
-
-            let waited=0;
-            const check=setInterval(()=>{
-                waited+=300;
-                if(bridgeReady){
-                    clearInterval(check);
-                }else if(waited>5000){
-                    clearInterval(check);
-                    showStatus('setupStatus','File saved but 9Router cannot serve it yet. Make sure the file is inside: '+get9RouterPath()+' — then click Retry.','err');
-                    btn.disabled=false;
-                    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg> Retry Connect';
-                    btn.onclick=retryConnect;
-                }
-            },300);
-
-        }catch(e){
-            if(e.name==='AbortError'){
-                showStatus('setupStatus','Save cancelled.','warn');
-            }else{
-                showStatus('setupStatus','Error: '+e.message,'err');
-            }
-            btn.disabled=false;
-            btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Save Bridge File';
-        }
-    }
-
-    function downloadBridgeFile(){
-        const blob=new Blob([BRIDGE_HTML],{type:'text/html'});
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement('a');
-        a.href=url;a.download='kiro-bridge.html';
-        document.body.appendChild(a);a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
     function retryConnect(){
         $('bridge').src='http://localhost:20128/kiro-bridge.html?t='+Date.now();
-        showStatus('setupStatus','Retrying...','warn');
-        const btn=$('setupBtn');
+        showStatus('setupStatus','Connecting...','warn');
+        const btn=$('retryBtn');
         btn.disabled=true;
         let waited=0;
         const check=setInterval(()=>{
@@ -287,7 +266,7 @@ window.parent.postMessage({type:'kiro-bridge-ready'},'*');
                 clearInterval(check);
             }else if(waited>5000){
                 clearInterval(check);
-                showStatus('setupStatus','Still cannot connect. Verify: 1) 9Router is running. 2) kiro-bridge.html is in '+get9RouterPath(),'err');
+                showStatus('setupStatus','Cannot connect. Make sure: 1) 9Router is running 2) kiro-bridge.html is in the public folder shown above.','err');
                 btn.disabled=false;
             }
         },300);
