@@ -53,6 +53,16 @@
                     </div>
 
                     <div class="kiro-body">
+                        <!-- URL Config -->
+                        <div style="margin-bottom:16px;">
+                            <div class="kiro-label">9Router URL</div>
+                            <div style="display:flex;gap:8px;">
+                                <input type="text" id="routerUrl" value="http://localhost:20128" placeholder="http://localhost:20128" style="flex:1;padding:10px 14px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);font-family:var(--font-mono);font-size:0.8125rem;outline:none;">
+                                <button class="btn-g" onclick="reconnect()" style="padding:10px 14px;font-size:0.75rem;white-space:nowrap;">Connect</button>
+                            </div>
+                            <div style="font-size:0.6875rem;color:var(--color-text-tertiary);margin-top:4px;">Default: <code style="font-size:0.6875rem;">http://localhost:20128</code> — atau masukkan domain custom (misal <code style="font-size:0.6875rem;">https://router2.alpakyros.com</code>)</div>
+                        </div>
+
                         <!-- Status -->
                         <div class="status-bar loading" id="status">
                             <span class="spinner"></span> Menghubungkan ke 9Router...
@@ -61,41 +71,77 @@
                         <!-- Setup message (if not connected) -->
                         <div class="setup-msg hidden" id="setupMsg" style="text-align:left;padding:24px;">
                             <p style="font-size:1.125rem;font-weight:700;color:var(--color-text-primary);margin-bottom:16px;text-align:center;">Setup Pertama Kali</p>
-                            <p style="color:var(--color-text-secondary);margin-bottom:20px;text-align:center;">Kamu perlu menjalankan file setup sekali saja agar Kiro Tools bisa terhubung ke 9Router kamu.</p>
+                            <p style="color:var(--color-text-secondary);margin-bottom:20px;text-align:center;">Jalankan file setup sekali saja agar Kiro Tools bisa terhubung ke 9Router kamu.</p>
 
-                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
-                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">1</span>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:6px;">Download file setup</div>
-                                    <button class="big-btn" onclick="downloadSetup()" style="width:auto;display:inline-block;padding:12px 24px;font-size:0.875rem;margin:0;">Download setup-kiro-tools.bat</button>
+                            <!-- Tabs: Lokal vs VPS -->
+                            <div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;">
+                                <button onclick="showSetupTab('local')" id="tabLocal" style="flex:1;padding:10px;background:rgba(139,92,246,0.1);border:none;color:var(--color-accent);font-weight:600;font-size:0.8125rem;cursor:pointer;font-family:inherit;">PC / Laptop (Lokal)</button>
+                                <button onclick="showSetupTab('vps')" id="tabVps" style="flex:1;padding:10px;background:transparent;border:none;border-left:1px solid var(--color-border);color:var(--color-text-secondary);font-weight:500;font-size:0.8125rem;cursor:pointer;font-family:inherit;">VPS / Server / Domain</button>
+                            </div>
+
+                            <!-- TAB: LOCAL (PC/Laptop) -->
+                            <div id="setupLocal">
+                                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                    <span style="width:26px;height:26px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.75rem;flex-shrink:0;">1</span>
+                                    <div>
+                                        <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:6px;">Download file setup</div>
+                                        <button class="big-btn" onclick="downloadSetup()" style="width:auto;display:inline-block;padding:10px 20px;font-size:0.8125rem;margin:0;">Download setup-kiro-tools.bat</button>
+                                    </div>
+                                </div>
+                                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                    <span style="width:26px;height:26px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.75rem;flex-shrink:0;">2</span>
+                                    <div>
+                                        <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:4px;">Double-click file tersebut</div>
+                                        <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;">Buka <strong>setup-kiro-tools.bat</strong> di folder Downloads. Kalau muncul peringatan Windows, klik "More info" → "Run anyway".</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                    <span style="width:26px;height:26px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.75rem;flex-shrink:0;">3</span>
+                                    <div>
+                                        <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:4px;">Restart 9Router</div>
+                                        <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;">Tutup 9Router (Ctrl+C), jalankan ulang: <code style="background:var(--color-surface-base);padding:2px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent);">9router</code></div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;">
+                                    <span style="width:26px;height:26px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#10b981;font-size:0.75rem;flex-shrink:0;">4</span>
+                                    <div>
+                                        <div style="font-weight:600;font-size:0.875rem;color:#10b981;margin-bottom:4px;">Kembali ke sini</div>
+                                        <div style="font-size:0.8125rem;color:var(--color-text-secondary);"><a href="javascript:location.reload()" style="color:var(--color-accent);font-weight:600;text-decoration:underline;">Refresh halaman ini</a> — langsung terhubung.</div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
-                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">2</span>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:4px;">Buka file yang sudah di-download</div>
-                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;">Double-click file <strong>setup-kiro-tools.bat</strong> di folder Downloads kamu. Kalau muncul peringatan Windows, klik "More info" lalu "Run anyway".</div>
+                            <!-- TAB: VPS / Server / Domain -->
+                            <div id="setupVps" style="display:none;">
+                                <p style="font-size:0.8125rem;color:var(--color-text-secondary);margin-bottom:16px;line-height:1.6;">Untuk 9Router yang di-install di VPS/server dan diakses via domain (misal <code style="font-size:0.75rem;">https://router2.alpakyros.com</code>), jalankan perintah berikut di server via SSH:</p>
+
+                                <div style="padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;margin-bottom:12px;">
+                                    <div style="font-weight:600;font-size:0.8125rem;color:var(--color-text-primary);margin-bottom:8px;">Jika install via NPM:</div>
+                                    <code style="display:block;padding:10px 12px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent);line-height:1.6;word-break:break-all;user-select:all;">curl -sL https://jinkaka98.github.io/kiro-tools/patch.js | node -</code>
+                                    <div style="font-size:0.6875rem;color:var(--color-text-tertiary);margin-top:6px;">File patch.js akan otomatis cari lokasi 9Router di server.</div>
+                                </div>
+
+                                <div style="padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;margin-bottom:12px;">
+                                    <div style="font-weight:600;font-size:0.8125rem;color:var(--color-text-primary);margin-bottom:8px;">Jika install via Docker:</div>
+                                    <code style="display:block;padding:10px 12px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:6px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent);line-height:1.6;word-break:break-all;user-select:all;">docker exec -it 9router sh -c "curl -sL https://jinkaka98.github.io/kiro-tools/patch.js | node -"</code>
+                                    <div style="font-size:0.6875rem;color:var(--color-text-tertiary);margin-top:6px;">Jalankan di dalam container 9Router.</div>
+                                </div>
+
+                                <div style="padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;margin-bottom:12px;">
+                                    <div style="font-weight:600;font-size:0.8125rem;color:var(--color-text-primary);margin-bottom:8px;">Setelah patch, restart:</div>
+                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.6;">
+                                        NPM: <code style="font-size:0.75rem;">pm2 restart 9router</code> atau tutup & jalankan ulang <code style="font-size:0.75rem;">9router</code><br>
+                                        Docker: <code style="font-size:0.75rem;">docker restart 9router</code>
+                                    </div>
+                                </div>
+
+                                <div style="padding:14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;">
+                                    <div style="font-weight:600;font-size:0.8125rem;color:#10b981;margin-bottom:4px;">Lalu kembali ke sini</div>
+                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);">Masukkan URL domain kamu di kolom "9Router URL" di atas (misal <code style="font-size:0.75rem;">https://router2.alpakyros.com</code>), klik Connect, lalu <a href="javascript:location.reload()" style="color:var(--color-accent);text-decoration:underline;">refresh</a>.</div>
                                 </div>
                             </div>
 
-                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
-                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">3</span>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:4px;">Restart 9Router</div>
-                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;">Tutup 9Router (Ctrl+C di terminal), lalu jalankan ulang dengan ketik <code style="background:var(--color-surface-base);padding:2px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent);">9router</code></div>
-                                </div>
-                            </div>
-
-                            <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;">
-                                <span style="width:28px;height:28px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#10b981;font-size:0.8125rem;flex-shrink:0;">4</span>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.875rem;color:#10b981;margin-bottom:4px;">Kembali ke sini</div>
-                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;"><a href="javascript:location.reload()" style="color:var(--color-accent);font-weight:600;text-decoration:underline;">Refresh halaman ini</a> — seharusnya langsung terhubung dan siap dipakai.</div>
-                                </div>
-                            </div>
-
-                            <p style="margin-top:16px;font-size:0.75rem;color:var(--color-text-tertiary);text-align:center;">Setup ini cuma perlu dilakukan 1x saja. Setelah itu, halaman ini langsung bisa dipakai kapanpun.</p>
+                            <p style="margin-top:16px;font-size:0.75rem;color:var(--color-text-tertiary);text-align:center;">Setup cuma 1x. Setelah itu halaman ini langsung bisa dipakai kapanpun.</p>
                         </div>
 
                         <!-- Import form (when connected) -->
@@ -129,14 +175,26 @@
     <script>
     const $=id=>document.getElementById(id);
     let bridgeReady=false, pending={};
+    let BASE=localStorage.getItem('9r_url')||'http://localhost:20128';
+    $('routerUrl').value=BASE;
+
+    function showSetupTab(tab){
+        $('setupLocal').style.display=tab==='local'?'block':'none';
+        $('setupVps').style.display=tab==='vps'?'block':'none';
+        $('tabLocal').style.background=tab==='local'?'rgba(139,92,246,0.1)':'transparent';
+        $('tabLocal').style.color=tab==='local'?'var(--color-accent)':'var(--color-text-secondary)';
+        $('tabVps').style.background=tab==='vps'?'rgba(139,92,246,0.1)':'transparent';
+        $('tabVps').style.color=tab==='vps'?'var(--color-accent)':'var(--color-text-secondary)';
+    }
 
     // Listen for bridge messages
     window.addEventListener('message',e=>{
         if(e.data?.type==='kiro-bridge-ready'){
             bridgeReady=true;
             $('status').className='status-bar ok';
-            $('status').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Terhubung ke 9Router';
+            $('status').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Terhubung ke ' + BASE;
             $('importForm').classList.remove('hidden');
+            $('setupMsg').classList.add('hidden');
         }
         if(e.data?.type==='kiro-result'){
             const r=pending[e.data.id];
@@ -144,13 +202,31 @@
         }
     });
 
-    // Try connect
-    (function(){
-        $('bridge').src='http://localhost:20128/kiro-bridge.html';
+    function reconnect(){
+        BASE=$('routerUrl').value.trim().replace(/\/$/,'');
+        localStorage.setItem('9r_url',BASE);
+        bridgeReady=false;
+        $('status').className='status-bar loading';
+        $('status').innerHTML='<span class="spinner"></span> Menghubungkan ke '+BASE+'...';
+        $('importForm').classList.add('hidden');
+        $('setupMsg').classList.add('hidden');
+        $('bridge').src=BASE+'/kiro-bridge.html?t='+Date.now();
         setTimeout(()=>{
             if(!bridgeReady){
                 $('status').className='status-bar err';
-                $('status').textContent='Tidak dapat terhubung ke 9Router';
+                $('status').textContent='Tidak dapat terhubung ke '+BASE;
+                $('setupMsg').classList.remove('hidden');
+            }
+        },4000);
+    }
+
+    // Auto-connect on load
+    (function(){
+        $('bridge').src=BASE+'/kiro-bridge.html';
+        setTimeout(()=>{
+            if(!bridgeReady){
+                $('status').className='status-bar err';
+                $('status').textContent='Tidak dapat terhubung ke '+BASE;
                 $('setupMsg').classList.remove('hidden');
             }
         },4000);
