@@ -59,12 +59,43 @@
                         </div>
 
                         <!-- Setup message (if not connected) -->
-                        <div class="setup-msg hidden" id="setupMsg">
-                            <p style="font-size:1.125rem;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">9Router belum terhubung</p>
-                            <p>Pastikan 9Router sudah berjalan dan sudah di-setup.<br>
-                            Download file setup (.bat), jalankan sekali, restart 9Router.</p>
-                            <button class="big-btn" onclick="downloadSetup()" style="margin-top:16px;width:auto;display:inline-block;padding:14px 28px;">Download Setup (.bat)</button>
-                            <p style="margin-top:16px;font-size:0.8125rem;color:var(--color-text-tertiary);">Setelah setup selesai dan 9Router di-restart, <a href="javascript:location.reload()">refresh halaman ini</a>.</p>
+                        <div class="setup-msg hidden" id="setupMsg" style="text-align:left;padding:24px;">
+                            <p style="font-size:1.125rem;font-weight:700;color:var(--color-text-primary);margin-bottom:16px;text-align:center;">Setup Pertama Kali</p>
+                            <p style="color:var(--color-text-secondary);margin-bottom:20px;text-align:center;">Kamu perlu menjalankan file setup sekali saja agar Kiro Tools bisa terhubung ke 9Router kamu.</p>
+
+                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">1</span>
+                                <div>
+                                    <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:6px;">Download file setup</div>
+                                    <button class="big-btn" onclick="downloadSetup()" style="width:auto;display:inline-block;padding:12px 24px;font-size:0.875rem;margin:0;">Download setup-kiro-tools.bat</button>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">2</span>
+                                <div>
+                                    <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:4px;">Buka file yang sudah di-download</div>
+                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;">Double-click file <strong>setup-kiro-tools.bat</strong> di folder Downloads kamu. Kalau muncul peringatan Windows, klik "More info" lalu "Run anyway".</div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;">
+                                <span style="width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0;">3</span>
+                                <div>
+                                    <div style="font-weight:600;font-size:0.875rem;color:var(--color-text-primary);margin-bottom:4px;">Restart 9Router</div>
+                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;">Tutup 9Router (Ctrl+C di terminal), lalu jalankan ulang dengan ketik <code style="background:var(--color-surface-base);padding:2px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent);">9router</code></div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;">
+                                <span style="width:28px;height:28px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#10b981;font-size:0.8125rem;flex-shrink:0;">4</span>
+                                <div>
+                                    <div style="font-weight:600;font-size:0.875rem;color:#10b981;margin-bottom:4px;">Kembali ke sini</div>
+                                    <div style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5;"><a href="javascript:location.reload()" style="color:var(--color-accent);font-weight:600;text-decoration:underline;">Refresh halaman ini</a> — seharusnya langsung terhubung dan siap dipakai.</div>
+                                </div>
+                            </div>
+
+                            <p style="margin-top:16px;font-size:0.75rem;color:var(--color-text-tertiary);text-align:center;">Setup ini cuma perlu dilakukan 1x saja. Setelah itu, halaman ini langsung bisa dipakai kapanpun.</p>
                         </div>
 
                         <!-- Import form (when connected) -->
