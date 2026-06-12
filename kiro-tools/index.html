@@ -17,38 +17,23 @@
         .kiro-sub{color:var(--color-text-secondary);font-size:0.9375rem;line-height:1.5}
         .kiro-body{padding:32px}
         .kiro-label{font-size:0.75rem;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
-        .kiro-textarea{width:100%;height:160px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);padding:14px;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.6;resize:vertical;outline:none}
+        .kiro-textarea{width:100%;height:180px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);padding:14px;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.6;resize:vertical;outline:none}
         .kiro-textarea:focus{border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-glow)}
         .kiro-actions{display:flex;gap:10px;margin-top:16px}
         .btn-g{background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border);cursor:pointer;padding:12px 20px;border-radius:var(--radius-full);font-weight:600;font-size:0.875rem;font-family:inherit;transition:all 0.2s}
         .btn-g:hover{background:var(--color-surface-muted);border-color:var(--color-border-hover);color:var(--color-text-primary)}
-        .btn:disabled,.btn-g:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
-        .kiro-log{margin-top:16px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);height:200px;overflow-y:auto;padding:14px;font-family:var(--font-mono);font-size:0.6875rem;line-height:1.7;color:var(--color-text-secondary)}
-        .kiro-log div{margin-bottom:3px}
-        .kiro-log .s{color:#10b981}.kiro-log .k{color:#f59e0b}.kiro-log .f{color:#ef4444}.kiro-log .i{color:var(--color-accent)}
-        .kiro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;padding:14px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);text-align:center}
-        .sv{font-size:1.25rem;font-weight:700}.sl{font-size:0.625rem;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
-        .setup-section{text-align:center;padding:40px 32px}
-        .setup-icon{width:64px;height:64px;margin:0 auto 20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center}
-        .setup-title{font-size:1.125rem;font-weight:600;margin-bottom:8px}
-        .setup-desc{color:var(--color-text-secondary);font-size:0.875rem;line-height:1.6;max-width:440px;margin:0 auto 24px}
-        .setup-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--color-accent);color:#000;border:none;border-radius:var(--radius-full);font-weight:700;font-size:0.9375rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px var(--color-accent-glow);transition:all 0.2s}
-        .setup-btn:hover{background:var(--color-accent-hover);transform:translateY(-2px);box-shadow:0 8px 24px var(--color-accent-glow)}
-        .setup-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
-        .status-msg{margin-top:16px;padding:10px 16px;border-radius:var(--radius-md);font-size:0.8125rem;display:none;text-align:left;line-height:1.5}
-        .status-msg.show{display:block}
-        .status-msg.ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981}
-        .status-msg.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
-        .status-msg.warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);color:#f59e0b}
-        .hidden{display:none!important}
-        .connecting-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(139,92,246,0.3);border-top-color:var(--color-accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .step-card{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;padding:16px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:10px;text-align:left}
-        .step-num{width:28px;height:28px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.8125rem;flex-shrink:0}
-        .step-label{font-weight:600;font-size:0.875rem;margin-bottom:4px}
-        .step-text{font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5}
-        .step-text code{background:var(--color-surface-base);padding:2px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent)}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
+        .step-box{margin-top:24px;padding:20px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md)}
+        .step-box-title{font-size:0.875rem;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .step-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.5}
+        .step-item:last-child{margin-bottom:0}
+        .step-num{width:22px;height:22px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-accent);font-size:0.6875rem;flex-shrink:0}
+        .step-item code{background:var(--color-surface-base);padding:1px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-accent)}
+        .step-item strong{color:var(--color-text-primary)}
+        .copied-msg{display:none;margin-top:12px;padding:10px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:0.8125rem;color:#10b981;text-align:center}
+        .copied-msg.show{display:block}
         .kiro-note{max-width:640px;margin:16px auto 0;padding:12px 20px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);color:var(--color-accent-hover);font-size:0.8125rem;line-height:1.6}
+        .hidden{display:none!important}
     </style>
 </head>
 <body>
@@ -61,494 +46,105 @@
                 <div class="kiro-card">
                     <div class="kiro-header">
                         <h1 class="kiro-title">Kiro Bulk Import</h1>
-                        <p class="kiro-sub">Bulk import Kiro AI refresh tokens into 9Router. Zero install.</p>
+                        <p class="kiro-sub">Paste your Kiro refresh tokens, click Go, then paste the script in your 9Router console. It runs automatically.</p>
                     </div>
 
-                    <!-- CONNECTING -->
-                    <div id="connectingPhase" class="setup-section">
-                        <div class="connecting-spinner"></div>
-                        <span style="color:var(--color-text-secondary)">Connecting to 9Router...</span>
-                    </div>
-
-                    <!-- SETUP (if auto-connect fails) -->
-                    <div id="setupPhase" class="setup-section hidden">
-                        <div class="setup-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-                        </div>
-                        <div class="setup-title" id="setupTitle">Cannot connect to 9Router</div>
-                        <div class="setup-desc" id="setupDesc"></div>
-
-                        <div style="text-align:left;max-width:460px;margin:0 auto 20px;" id="setupSteps"></div>
-
-                        <button class="setup-btn" id="retryBtn" onclick="retryConnect()" style="background:transparent;border:1px solid var(--color-border);color:var(--color-text-primary);box-shadow:none;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
-                            Retry
-                        </button>
-
-                        <div class="status-msg" id="setupStatus"></div>
-                    </div>
-
-                    <!-- IMPORT (when connected) -->
-                    <div id="importPhase" class="kiro-body hidden">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:8px 14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;font-size:0.8125rem;color:#10b981;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            Connected to 9Router
-                        </div>
-
-                        <!-- API Key Section -->
-                        <div style="margin-bottom:20px;padding:16px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);">
-                            <div class="kiro-label" style="margin-bottom:10px;">9Router API Key <span style="text-transform:none;font-weight:400;color:var(--color-text-tertiary);">(required)</span></div>
-                            <div style="display:flex;gap:8px;margin-bottom:10px;">
-                                <input type="password" id="apiKey" placeholder="Paste API Key here..." style="flex:1;padding:10px 14px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);font-family:var(--font-mono);font-size:0.8125rem;outline:none;" value="">
-                                <button class="btn-g" onclick="toggleKeyVis()" id="toggleKeyBtn" style="padding:10px 12px;font-size:0.75rem;" title="Show/Hide">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                                <button class="btn-g" onclick="saveKey()" style="padding:10px 14px;font-size:0.75rem;">Save</button>
-                            </div>
-
-                            <!-- How to get API Key -->
-                            <details style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.6;">
-                                <summary style="cursor:pointer;color:var(--color-accent);font-weight:500;margin-bottom:8px;">How to get your API Key?</summary>
-                                <ol style="padding-left:18px;margin:0;">
-                                    <li style="margin-bottom:6px;">Open your 9Router dashboard: <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent);text-decoration:underline;">localhost:20128</a></li>
-                                    <li style="margin-bottom:6px;">Go to <strong>Settings</strong> (gear icon in sidebar)</li>
-                                    <li style="margin-bottom:6px;">Scroll to <strong>API Keys</strong> section</li>
-                                    <li style="margin-bottom:6px;">Click <strong>Create API Key</strong></li>
-                                    <li>Copy the key and paste it above</li>
-                                </ol>
-                                <div style="margin-top:8px;padding:8px 12px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15);border-radius:6px;font-size:0.75rem;color:var(--color-accent-hover);">
-                                    Your API Key is saved locally in your browser. You only need to do this once.
-                                </div>
-                            </details>
-                        </div>
-
+                    <div class="kiro-body">
                         <div class="kiro-label">Refresh Tokens (one per line)</div>
-                        <textarea id="tokens" class="kiro-textarea" placeholder="aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3" spellcheck="false"></textarea>
+                        <textarea id="tokens" class="kiro-textarea" placeholder="Paste your Kiro refresh tokens here...&#10;&#10;aorAAAAAG...token1&#10;aorAAAAAG...token2&#10;aorAAAAAG...token3" spellcheck="false"></textarea>
+
                         <div class="kiro-actions">
-                            <button id="btnProc" class="btn btn-primary" onclick="processTokens()">
+                            <button id="btnGo" class="btn btn-primary" onclick="generateAndCopy()">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                Process
+                                Go — Copy Import Script
                             </button>
-                            <button class="btn-g" onclick="clearAll()">Clear</button>
+                            <button class="btn-g" onclick="document.getElementById('tokens').value=''">Clear</button>
                         </div>
-                        <div class="kiro-log" id="log"><div class="i">Ready. Paste tokens above and click Process.</div></div>
-                        <div class="kiro-stats">
-                            <div><div class="sv" id="sT" style="color:var(--color-text-primary)">0</div><div class="sl">Total</div></div>
-                            <div><div class="sv" id="sS" style="color:#10b981">0</div><div class="sl">Success</div></div>
-                            <div><div class="sv" id="sK" style="color:#f59e0b">0</div><div class="sl">Skip</div></div>
-                            <div><div class="sv" id="sF" style="color:#ef4444">0</div><div class="sl">Fail</div></div>
+
+                        <div class="copied-msg" id="copiedMsg"></div>
+
+                        <!-- Instructions (shown after copy) -->
+                        <div class="step-box hidden" id="instructions">
+                            <div class="step-box-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                                Script copied! Now do this:
+                            </div>
+                            <div class="step-item">
+                                <span class="step-num">1</span>
+                                <span>Open your 9Router dashboard: <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent);">localhost:20128</a></span>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-num">2</span>
+                                <span>Press <code>F12</code> to open DevTools → click <strong>Console</strong> tab</span>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-num">3</span>
+                                <span>Click in the console, press <code>Ctrl+V</code> to paste, then <code>Enter</code></span>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-num">4</span>
+                                <span>Watch it run automatically — tokens imported one by one with live status</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="kiro-note">
-                    <strong>How it works:</strong> This tool communicates with your local 9Router via a bridge page. Your tokens never leave your device — they go directly from your browser to your 9Router.
+                    <strong>Why this works:</strong> The script runs inside your 9Router page (same-origin), so it has full access to the import API using your existing login session. No API keys needed, no extensions, no modifications to 9Router. Works on any OS.
                 </div>
             </div>
         </section>
     </main>
 
-
-
     <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-brand">&copy; 2025 Xixero.</div><div class="footer-right"><a href="https://github.com/jinkaka98" class="footer-link" target="_blank">GitHub</a></div></div></div></footer>
     <script src="../app.js"></script>
     <script>
-    const $=id=>document.getElementById(id);
-    let connected=false;
-    let routerOnline=false;
-    const BASE='http://localhost:20128';
-    let apiKey=localStorage.getItem('9r_apiKey')||'';
+    function generateAndCopy() {
+        const raw = document.getElementById('tokens').value.trim();
+        if (!raw) { alert('Paste at least one refresh token first.'); return; }
 
-    function saveKey(){
-        apiKey=$('apiKey').value.trim();
-        localStorage.setItem('9r_apiKey',apiKey);
-        $('apiKey').style.borderColor='#10b981';
-        setTimeout(()=>{$('apiKey').style.borderColor='';},1000);
-    }
+        const tokens = raw.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+        if (tokens.length === 0) { alert('No valid tokens found.'); return; }
 
-    function toggleKeyVis(){
-        const inp=$('apiKey');
-        inp.type=inp.type==='password'?'text':'password';
-    }
+        // Generate self-contained script that user pastes in 9Router console
+        const script = `(async()=>{
+const tokens=${JSON.stringify(tokens)};
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+let s=0,k=0,f=0;
+console.log('%c⚡ Kiro Bulk Import — Starting '+tokens.length+' token(s)...','color:#8b5cf6;font-weight:bold;font-size:14px');
+for(let i=0;i<tokens.length;i++){
+const tk=tokens[i];
+const mask=tk.length>14?tk.slice(0,10)+'...'+tk.slice(-4):tk.slice(0,6)+'...';
+try{
+const res=await fetch('/api/oauth/kiro/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refreshToken:tk})});
+const data=await res.json();
+if(res.ok&&data.success){console.log('%c✓ ['+(i+1)+'/'+tokens.length+'] Imported: '+(data.connection?.email||'ok'),'color:#10b981');s++;}
+else{const err=(data.error||'').toLowerCase();
+if(err.includes('duplicate')||err.includes('already')||err.includes('exists')){console.log('%c⊘ ['+(i+1)+'/'+tokens.length+'] Skipped: already exists','color:#f59e0b');k++;}
+else{console.log('%c✗ ['+(i+1)+'/'+tokens.length+'] Failed: '+(data.error||res.status),'color:#ef4444');f++;}}
+}catch(e){console.log('%c✗ ['+(i+1)+'/'+tokens.length+'] Error: '+e.message,'color:#ef4444');f++;}
+if(i<tokens.length-1)await delay(500);
+}
+console.log('%c⚡ Done: '+s+' success, '+k+' skipped, '+f+' failed','color:#8b5cf6;font-weight:bold;font-size:14px');
+})();`;
 
-    function getAuthHeaders(){
-        const h={'Content-Type':'application/json'};
-        if(apiKey){
-            h['Authorization']='Bearer '+apiKey;
-            h['x-api-key']=apiKey;
-        }
-        return h;
-    }
-
-    function showStatus(id,msg,cls){
-        const el=$(id);el.textContent=msg;el.className='status-msg show '+cls;
-    }
-
-    function getOS(){
-        const ua=navigator.userAgent;
-        if(/Win/.test(ua))return'win';
-        if(/Mac/.test(ua))return'mac';
-        return'linux';
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // PHASE 1: Auto-connect (direct fetch to localhost — CORS patched)
-    // ═══════════════════════════════════════════════════════════════
-    (async function autoConnect(){
-        try{
-            const r=await fetch(BASE+'/api/health',{signal:AbortSignal.timeout(3000)});
-            if(r.ok) routerOnline=true;
-        }catch(e){}
-
-        if(!routerOnline){
-            $('connectingPhase').classList.add('hidden');
-            $('setupPhase').classList.remove('hidden');
-            showSetupInstructions();
-            return;
-        }
-
-        // Test CORS — any HTTP response (even 400/401) means CORS works
-        try{
-            const r=await fetch(BASE+'/api/oauth/kiro/import',{
-                method:'POST',
-                headers:getAuthHeaders(),
-                body:JSON.stringify({refreshToken:'cors-test'}),
-                signal:AbortSignal.timeout(5000)
-            });
-            // Got a response = CORS is working (even if 401/400)
-            connected=true;
-            $('connectingPhase').classList.add('hidden');
-            $('importPhase').classList.remove('hidden');
-            // Load saved API key into input
-            if(apiKey) $('apiKey').value=apiKey;
-        }catch(e){
-            // CORS blocked or network error
-            $('connectingPhase').classList.add('hidden');
-            $('setupPhase').classList.remove('hidden');
-            showSetupInstructions();
-        }
-    })();
-
-    function showSetupInstructions(){
-        const os=getOS();
-        const steps=$('setupSteps');
-
-        if(!routerOnline){
-            // 9Router not running at all
-            $('setupTitle').textContent='9Router is not running';
-            $('setupDesc').textContent='Start 9Router first, then click Retry.';
-            steps.innerHTML=`
-                <div class="step-card">
-                    <span class="step-num">1</span>
-                    <div>
-                        <div class="step-label">Start 9Router</div>
-                        <div class="step-text">${os==='win'
-                            ?'Open a terminal and run: <code>9router</code><br>Or double-click the 9Router shortcut if you have one.'
-                            :'Open a terminal and run: <code>9router</code>'}</div>
-                    </div>
-                </div>
-                <div class="step-card">
-                    <span class="step-num">2</span>
-                    <div>
-                        <div class="step-label">Come back here</div>
-                        <div class="step-text">Once 9Router is running, click <strong>Retry</strong> below.</div>
-                    </div>
-                </div>`;
-            return;
-        }
-
-        // 9Router is running but bridge not found — first-time setup needed
-        $('setupTitle').textContent='First-Time Setup';
-        $('setupDesc').textContent='9Router is running but needs a small one-time patch to enable this tool. Download the setup file and double-click it.';
-
-        const patchFileName=os==='win'?'setup-kiro-tools.bat':'setup-kiro-tools.sh';
-
-        steps.innerHTML=`
-            <div class="step-card">
-                <span class="step-num">1</span>
-                <div>
-                    <div class="step-label">Download the setup file</div>
-                    <div class="step-text" style="margin-bottom:8px;">This adds Kiro Tools support to your 9Router. One-time only.</div>
-                    <button class="setup-btn" onclick="downloadPatch()" style="padding:10px 20px;font-size:0.8125rem;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Download ${patchFileName}
-                    </button>
-                </div>
-            </div>
-            <div class="step-card">
-                <span class="step-num">2</span>
-                <div>
-                    <div class="step-label">Run it</div>
-                    <div class="step-text">${os==='win'
-                        ?'Double-click <code>setup-kiro-tools.bat</code> in your Downloads folder. If Windows SmartScreen appears, click "More info" → "Run anyway".'
-                        :'Open Terminal, run: <code>chmod +x ~/Downloads/setup-kiro-tools.sh && ~/Downloads/setup-kiro-tools.sh</code>'}</div>
-                </div>
-            </div>
-            <div class="step-card">
-                <span class="step-num">3</span>
-                <div>
-                    <div class="step-label">Restart 9Router</div>
-                    <div class="step-text">Close 9Router (Ctrl+C in terminal) and start it again: <code>9router</code>. Then click <strong>Retry</strong> below.</div>
-                </div>
-            </div>`;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // PATCH SCRIPTS (auto-generated .bat / .sh)
-    // ═══════════════════════════════════════════════════════════════
-    function downloadPatch(){
-        const os=getOS();
-        if(os==='win'){
-            downloadWinPatch();
-        }else{
-            downloadUnixPatch();
-        }
-    }
-
-    function downloadWinPatch(){
-        const bat=`@echo off
-title Kiro Tools Setup for 9Router
-echo.
-echo ========================================
-echo   Kiro Tools - One-Time Setup
-echo ========================================
-echo.
-
-set "SERVER=%APPDATA%\\npm\\node_modules\\9router\\app\\server.js"
-
-if not exist "%SERVER%" (
-    echo ERROR: 9Router not found at %SERVER%
-    echo Make sure 9Router is installed: npm install -g 9router
-    pause
-    exit /b 1
-)
-
-findstr /C:"kiro-bridge" "%SERVER%" >nul 2>&1
-if %errorlevel%==0 (
-    echo Already patched! Nothing to do.
-    echo Just restart 9Router and you're good.
-    pause
-    exit /b 0
-)
-
-echo Backing up server.js...
-copy "%SERVER%" "%SERVER%.backup" >nul
-
-echo Patching server.js...
-
-set "TMPFILE=%TEMP%\\kiro-patch-%RANDOM%.js"
-
-echo const http = require('http') > "%TMPFILE%"
-echo const _bridgeHTML = '^^^<!DOCTYPE html^^^>^^^<html^^^>^^^<head^^^>^^^<meta charset="UTF-8"^^^>^^^</head^^^>^^^<body^^^>^^^<script^^^>window.addEventListener("message",async function(e){if(!e.data^|^|e.data.type!=="kiro-import")return;var token=e.data.token,id=e.data.id;try{var res=await fetch("/api/oauth/kiro/import",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refreshToken:token})});var data=await res.json();if(res.ok^&^&data.success){e.source.postMessage({type:"kiro-result",id:id,status:"success",email:data.connection?.email^|^|"ok"},"*")}else{var err=(data.error^|^|"").toLowerCase();if(err.includes("duplicate")^|^|err.includes("already")^|^|err.includes("exists")){e.source.postMessage({type:"kiro-result",id:id,status:"skip",msg:"exists"},"*")}else{e.source.postMessage({type:"kiro-result",id:id,status:"fail",msg:data.error^|^|"Unknown"},"*")}}}catch(ex){e.source.postMessage({type:"kiro-result",id:id,status:"fail",msg:ex.message},"*")}});window.parent.postMessage({type:"kiro-bridge-ready"},"*");^^^</script^^^>^^^</body^^^>^^^</html^^^>' >> "%TMPFILE%"
-echo. >> "%TMPFILE%"
-
-echo ERROR: Batch file patching is complex. Using Node.js instead... 
-
-del "%TMPFILE%" 2>nul
-
-node -e "const fs=require('fs'),p=require('path');const f=p.join(process.env.APPDATA,'npm','node_modules','9router','app','server.js');let c=fs.readFileSync(f,'utf8');if(c.includes('kiro-bridge')){console.log('Already patched!');process.exit(0);}const patch=\`const http=require('http');const _bHTML='<!DOCTYPE html><html><head><meta charset=\\"UTF-8\\"></head><body><scr'+'ipt>window.addEventListener(\\"message\\",async function(e){if(!e.data||e.data.type!==\\"kiro-import\\")return;var token=e.data.token,id=e.data.id;try{var res=await fetch(\\"/api/oauth/kiro/import\\",{method:\\"POST\\",headers:{\\"Content-Type\\":\\"application/json\\"},body:JSON.stringify({refreshToken:token})});var data=await res.json();if(res.ok&&data.success){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"success\\",email:data.connection?.email||\\"ok\\"},\\"*\\")}else{var err=(data.error||\\"\\").toLowerCase();if(err.includes(\\"duplicate\\")||err.includes(\\"already\\")||err.includes(\\"exists\\")){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"skip\\",msg:\\"exists\\"},\\"*\\")}else{e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"fail\\",msg:data.error||\\"Unknown\\"},\\"*\\")}}}catch(ex){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"fail\\",msg:ex.message},\\"*\\")}});window.parent.postMessage({type:\\"kiro-bridge-ready\\"},\\"*\\");</scr'+'ipt></body></html>';const _ocs=http.createServer;http.createServer=function(...a){const s=_ocs.apply(this,a);const _ol=s.listeners('request').slice();s.removeAllListeners('request');s.on('request',(req,res)=>{if(req.url==='/kiro-bridge.html'){res.writeHead(200,{'Content-Type':'text/html','Access-Control-Allow-Origin':'*'});res.end(_bHTML);return}if(req.url==='/api/oauth/kiro/import'&&req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type,Authorization,x-9r-cli-token','Access-Control-Max-Age':'86400'});res.end();return}if(req.url==='/api/oauth/kiro/import'&&req.method==='POST'){res.setHeader('Access-Control-Allow-Origin','*')}for(const l of _ol)l.call(s,req,res)});return s};\n\`;fs.writeFileSync(f,patch+c);console.log('Patched successfully!');"
-
-if %errorlevel%==0 (
-    echo.
-    echo ========================================
-    echo   SUCCESS! Now restart 9Router:
-    echo   1. Close 9Router (Ctrl+C)
-    echo   2. Run: 9router
-    echo   3. Open Kiro Tools in your browser
-    echo ========================================
-) else (
-    echo.
-    echo ERROR: Patch failed. Make sure Node.js is installed.
-    echo Restoring backup...
-    copy "%SERVER%.backup" "%SERVER%" >nul
-)
-echo.
-pause
-`;
-        downloadFile(bat,'setup-kiro-tools.bat','text/plain');
-    }
-
-    function downloadUnixPatch(){
-        const sh=`#!/bin/bash
-echo ""
-echo "========================================"
-echo "  Kiro Tools - One-Time Setup"
-echo "========================================"
-echo ""
-
-if [ -d "$HOME/.nvm" ]; then
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-fi
-
-SERVER=""
-if [ -f "$HOME/.npm/node_modules/9router/app/server.js" ]; then
-    SERVER="$HOME/.npm/node_modules/9router/app/server.js"
-elif [ -f "/usr/local/lib/node_modules/9router/app/server.js" ]; then
-    SERVER="/usr/local/lib/node_modules/9router/app/server.js"
-elif [ -f "/usr/lib/node_modules/9router/app/server.js" ]; then
-    SERVER="/usr/lib/node_modules/9router/app/server.js"
-else
-    NPM_ROOT=$(npm root -g 2>/dev/null)
-    if [ -f "$NPM_ROOT/9router/app/server.js" ]; then
-        SERVER="$NPM_ROOT/9router/app/server.js"
-    fi
-fi
-
-if [ -z "$SERVER" ]; then
-    echo "ERROR: 9Router not found."
-    echo "Make sure 9Router is installed: npm install -g 9router"
-    exit 1
-fi
-
-echo "Found 9Router: $SERVER"
-
-if grep -q "kiro-bridge" "$SERVER" 2>/dev/null; then
-    echo "Already patched! Just restart 9Router."
-    exit 0
-fi
-
-cp "$SERVER" "$SERVER.backup"
-echo "Backup created: $SERVER.backup"
-
-node -e "
-const fs=require('fs');
-const f='$SERVER';
-let c=fs.readFileSync(f,'utf8');
-if(c.includes('kiro-bridge')){console.log('Already patched!');process.exit(0);}
-const patch=\\\`const http=require('http');const _bHTML='<!DOCTYPE html><html><head><meta charset=\\"UTF-8\\"></head><body><scr'+'ipt>window.addEventListener(\\"message\\",async function(e){if(!e.data||e.data.type!==\\"kiro-import\\")return;var token=e.data.token,id=e.data.id;try{var res=await fetch(\\"/api/oauth/kiro/import\\",{method:\\"POST\\",headers:{\\"Content-Type\\":\\"application/json\\"},body:JSON.stringify({refreshToken:token})});var data=await res.json();if(res.ok&&data.success){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"success\\",email:data.connection?.email||\\"ok\\"},\\"*\\")}else{var err=(data.error||\\"\\").toLowerCase();if(err.includes(\\"duplicate\\")||err.includes(\\"already\\")||err.includes(\\"exists\\")){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"skip\\",msg:\\"exists\\"},\\"*\\")}else{e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"fail\\",msg:data.error||\\"Unknown\\"},\\"*\\")}}}catch(ex){e.source.postMessage({type:\\"kiro-result\\",id:id,status:\\"fail\\",msg:ex.message},\\"*\\")}});window.parent.postMessage({type:\\"kiro-bridge-ready\\"},\\"*\\");</scr'+'ipt></body></html>';const _ocs=http.createServer;http.createServer=function(...a){const s=_ocs.apply(this,a);const _ol=s.listeners('request').slice();s.removeAllListeners('request');s.on('request',(req,res)=>{if(req.url==='/kiro-bridge.html'){res.writeHead(200,{'Content-Type':'text/html','Access-Control-Allow-Origin':'*'});res.end(_bHTML);return}if(req.url==='/api/oauth/kiro/import'&&req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type,Authorization,x-9r-cli-token','Access-Control-Max-Age':'86400'});res.end();return}if(req.url==='/api/oauth/kiro/import'&&req.method==='POST'){res.setHeader('Access-Control-Allow-Origin','*')}for(const l of _ol)l.call(s,req,res)});return s};\\n\\\`;
-fs.writeFileSync(f,patch+c);
-console.log('Patched successfully!');
-"
-
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "========================================"
-    echo "  SUCCESS! Now restart 9Router:"
-    echo "  1. Close 9Router (Ctrl+C)"
-    echo "  2. Run: 9router"
-    echo "  3. Open Kiro Tools in your browser"
-    echo "========================================"
-else
-    echo "ERROR: Patch failed."
-    cp "$SERVER.backup" "$SERVER"
-    echo "Backup restored."
-fi
-`;
-        downloadFile(sh,'setup-kiro-tools.sh','text/plain');
-    }
-
-    function downloadFile(content,name,type){
-        const blob=new Blob([content],{type});
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement('a');
-        a.href=url;a.download=name;
-        document.body.appendChild(a);a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // RETRY
-    // ═══════════════════════════════════════════════════════════════
-    async function retryConnect(){
-        const btn=$('retryBtn');
-        btn.disabled=true;
-        showStatus('setupStatus','Connecting...','warn');
-
-        try{
-            const r=await fetch(BASE+'/api/health',{signal:AbortSignal.timeout(3000)});
-            routerOnline=r.ok;
-        }catch(e){routerOnline=false;}
-
-        if(!routerOnline){
-            showStatus('setupStatus','9Router is not running. Start it first, then Retry.','err');
-            btn.disabled=false;
-            return;
-        }
-
-        try{
-            const r=await fetch(BASE+'/api/oauth/kiro/import',{
-                method:'POST',
-                headers:getAuthHeaders(),
-                body:JSON.stringify({refreshToken:'cors-test'}),
-                signal:AbortSignal.timeout(5000)
-            });
-            connected=true;
-            $('setupPhase').classList.add('hidden');
-            $('importPhase').classList.remove('hidden');
-            if(apiKey) $('apiKey').value=apiKey;
-        }catch(e){
-            showStatus('setupStatus','9Router is running but CORS is not enabled. Did you run the setup file and restart 9Router?','err');
-            btn.disabled=false;
-        }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // IMPORT — direct fetch to localhost:20128
-    // ═══════════════════════════════════════════════════════════════
-    async function sendToRouter(token){
-        // Use latest key from input
-        apiKey=$('apiKey').value.trim();
-        localStorage.setItem('9r_apiKey',apiKey);
-        try{
-            const r=await fetch(BASE+'/api/oauth/kiro/import',{
-                method:'POST',
-                headers:getAuthHeaders(),
-                body:JSON.stringify({refreshToken:token})
-            });
-            const data=await r.json();
-            if(r.ok&&data.success){
-                return{status:'success',email:data.connection?.email||'ok'};
-            }else{
-                const err=(data.error||'').toLowerCase();
-                if(err.includes('duplicate')||err.includes('already')||err.includes('exists')){
-                    return{status:'skip',msg:'exists'};
-                }
-                return{status:'fail',msg:data.error||'HTTP '+r.status};
-            }
-        }catch(e){
-            return{status:'fail',msg:e.message};
-        }
-    }
-
-    function addLog(msg,cls){
-        const d=document.createElement('div');d.className=cls;
-        const t=new Date().toLocaleTimeString('en-GB',{hour12:false});
-        const ic={s:'\u2713',k:'\u2298',f:'\u2717',i:'\u25CF'};
-        d.textContent='['+t+'] '+(ic[cls]||'')+' '+msg;
-        $('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight;
-    }
-
-    function clearAll(){
-        $('tokens').value='';$('log').innerHTML='';
-        ['sT','sS','sK','sF'].forEach(x=>$(x).textContent='0');
-        addLog('Cleared.','i');
-    }
-
-    async function processTokens(){
-        const raw=$('tokens').value.trim();
-        if(!raw)return addLog('Paste at least one token.','f');
-        const tokens=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-        if(!tokens.length)return addLog('No valid tokens.','f');
-        if(!connected)return addLog('Not connected to 9Router.','f');
-
-        const btn=$('btnProc');btn.disabled=true;btn.textContent='Processing...';
-        $('log').innerHTML='';['sT','sS','sK','sF'].forEach(x=>$(x).textContent='0');
-        addLog('Starting import of '+tokens.length+' token(s)...','i');
-
-        let sc=0,sk=0,fl=0;
-        for(let i=0;i<tokens.length;i++){
-            const tk=tokens[i],ms=tk.length>14?tk.slice(0,10)+'...'+tk.slice(-4):tk.slice(0,6)+'...';
-            addLog('['+(i+1)+'/'+tokens.length+'] '+ms,'i');
-            const r=await sendToRouter(tk);
-            if(r.status==='success'){addLog('Imported: '+(r.email||'ok'),'s');sc++;}
-            else if(r.status==='skip'){addLog('Skipped: '+(r.msg||'exists'),'k');sk++;}
-            else{addLog('Failed: '+(r.msg||'unknown'),'f');fl++;}
-            $('sT').textContent=i+1;$('sS').textContent=sc;$('sK').textContent=sk;$('sF').textContent=fl;
-            if(i<tokens.length-1)await new Promise(r=>setTimeout(r,500));
-        }
-        addLog('Done: '+sc+' success, '+sk+' skip, '+fl+' fail.','i');
-        btn.disabled=false;btn.textContent='Process';
+        // Copy to clipboard
+        navigator.clipboard.writeText(script).then(() => {
+            const msg = document.getElementById('copiedMsg');
+            msg.textContent = '✓ Script with ' + tokens.length + ' token(s) copied to clipboard!';
+            msg.classList.add('show');
+            document.getElementById('instructions').classList.remove('hidden');
+        }).catch(err => {
+            // Fallback: show script in textarea for manual copy
+            const msg = document.getElementById('copiedMsg');
+            msg.innerHTML = '⚠ Could not auto-copy. Select all text below and copy manually (Ctrl+A, Ctrl+C):';
+            msg.classList.add('show');
+            const ta = document.createElement('textarea');
+            ta.value = script;
+            ta.style.cssText = 'width:100%;height:120px;margin-top:8px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-primary);padding:10px;font-family:monospace;font-size:0.75rem;';
+            msg.appendChild(ta);
+            document.getElementById('instructions').classList.remove('hidden');
+        });
     }
     </script>
 </body>
