@@ -214,6 +214,22 @@ window.parent.postMessage({type:'kiro-bridge-ready'}, '*');
         }
 
         try {
+            // Auto-copy path to clipboard so user can paste in folder picker address bar
+            const ua = navigator.userAgent.toLowerCase();
+            let suggestedPath = '';
+            if (ua.includes('win')) {
+                suggestedPath = '%APPDATA%\\9router';
+            } else {
+                suggestedPath = '~/.9router';
+            }
+            try {
+                await navigator.clipboard.writeText(suggestedPath);
+                showStatus('setupStatus', 'Path "' + suggestedPath + '" copied to clipboard! Paste it in the folder picker address bar.', 'warn');
+            } catch(e) { /* clipboard may fail, that's ok */ }
+
+            // Small delay so user sees the hint before picker opens
+            await new Promise(r => setTimeout(r, 800));
+
             // Step 1: User picks the 9Router data directory
             // Browser remembers last folder via 'id' — second time opens same folder
             const dirHandle = await window.showDirectoryPicker({
