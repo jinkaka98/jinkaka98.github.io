@@ -95,14 +95,31 @@
                             Connected to 9Router
                         </div>
 
-                        <!-- API Key -->
-                        <div style="margin-bottom:16px;">
-                            <div class="kiro-label">API Key / CLI Token <span style="text-transform:none;font-weight:400;color:var(--color-text-tertiary);">(from 9Router Settings)</span></div>
-                            <div style="display:flex;gap:8px;">
-                                <input type="password" id="apiKey" placeholder="Paste your 9Router API Key here" style="flex:1;padding:10px 14px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);font-family:var(--font-mono);font-size:0.8125rem;outline:none;" value="">
+                        <!-- API Key Section -->
+                        <div style="margin-bottom:20px;padding:16px;background:var(--color-surface-muted);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+                            <div class="kiro-label" style="margin-bottom:10px;">9Router API Key <span style="text-transform:none;font-weight:400;color:var(--color-text-tertiary);">(required)</span></div>
+                            <div style="display:flex;gap:8px;margin-bottom:10px;">
+                                <input type="password" id="apiKey" placeholder="Paste API Key here..." style="flex:1;padding:10px 14px;background:var(--color-surface-base);border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-text-primary);font-family:var(--font-mono);font-size:0.8125rem;outline:none;" value="">
+                                <button class="btn-g" onclick="toggleKeyVis()" id="toggleKeyBtn" style="padding:10px 12px;font-size:0.75rem;" title="Show/Hide">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
                                 <button class="btn-g" onclick="saveKey()" style="padding:10px 14px;font-size:0.75rem;">Save</button>
                             </div>
-                            <div style="font-size:0.6875rem;color:var(--color-text-tertiary);margin-top:4px;">Find it in 9Router Dashboard → Settings → API Keys. Saved in browser localStorage.</div>
+
+                            <!-- How to get API Key -->
+                            <details style="font-size:0.8125rem;color:var(--color-text-secondary);line-height:1.6;">
+                                <summary style="cursor:pointer;color:var(--color-accent);font-weight:500;margin-bottom:8px;">How to get your API Key?</summary>
+                                <ol style="padding-left:18px;margin:0;">
+                                    <li style="margin-bottom:6px;">Open your 9Router dashboard: <a href="http://localhost:20128" target="_blank" style="color:var(--color-accent);text-decoration:underline;">localhost:20128</a></li>
+                                    <li style="margin-bottom:6px;">Go to <strong>Settings</strong> (gear icon in sidebar)</li>
+                                    <li style="margin-bottom:6px;">Scroll to <strong>API Keys</strong> section</li>
+                                    <li style="margin-bottom:6px;">Click <strong>Create API Key</strong></li>
+                                    <li>Copy the key and paste it above</li>
+                                </ol>
+                                <div style="margin-top:8px;padding:8px 12px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15);border-radius:6px;font-size:0.75rem;color:var(--color-accent-hover);">
+                                    Your API Key is saved locally in your browser. You only need to do this once.
+                                </div>
+                            </details>
                         </div>
 
                         <div class="kiro-label">Refresh Tokens (one per line)</div>
@@ -146,6 +163,11 @@
         localStorage.setItem('9r_apiKey',apiKey);
         $('apiKey').style.borderColor='#10b981';
         setTimeout(()=>{$('apiKey').style.borderColor='';},1000);
+    }
+
+    function toggleKeyVis(){
+        const inp=$('apiKey');
+        inp.type=inp.type==='password'?'text':'password';
     }
 
     function getAuthHeaders(){
